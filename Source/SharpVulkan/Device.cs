@@ -38,7 +38,7 @@ namespace SharpVulkan
 
         public unsafe byte[] GetPipelineCacheData(PipelineCache pipelineCache)
         {
-            ulong count = 0;
+            PointerSize count = 0;
             GetPipelineCacheData(pipelineCache, ref count, IntPtr.Zero);
 
             var result = new byte[count];

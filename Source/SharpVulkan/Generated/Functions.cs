@@ -627,13 +627,13 @@ namespace SharpVulkan
         [DllImport("vulkan-1.dll", EntryPoint = "vkDestroyQueryPool", CallingConvention = CallingConvention.Cdecl)]
         internal static extern unsafe void DestroyQueryPool_(Device device, QueryPool queryPool, AllocationCallbacks* allocator);
 
-        public unsafe void GetQueryPoolResults(QueryPool queryPool, uint firstQuery, uint queryCount, ulong dataSize, IntPtr data, ulong stride, QueryResultFlags flags)
+        public unsafe void GetQueryPoolResults(QueryPool queryPool, uint firstQuery, uint queryCount, PointerSize dataSize, IntPtr data, ulong stride, QueryResultFlags flags)
         {
             GetQueryPoolResults_(this, queryPool, firstQuery, queryCount, dataSize, data, stride, flags).CheckError();
         }
 
         [DllImport("vulkan-1.dll", EntryPoint = "vkGetQueryPoolResults", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern unsafe Result GetQueryPoolResults_(Device device, QueryPool queryPool, uint firstQuery, uint queryCount, ulong dataSize, IntPtr data, ulong stride, QueryResultFlags flags);
+        internal static extern unsafe Result GetQueryPoolResults_(Device device, QueryPool queryPool, uint firstQuery, uint queryCount, PointerSize dataSize, IntPtr data, ulong stride, QueryResultFlags flags);
 
         public unsafe Buffer CreateBuffer(ref BufferCreateInfo createInfo, AllocationCallbacks* allocator = null)
         {
@@ -772,16 +772,16 @@ namespace SharpVulkan
         [DllImport("vulkan-1.dll", EntryPoint = "vkDestroyPipelineCache", CallingConvention = CallingConvention.Cdecl)]
         internal static extern unsafe void DestroyPipelineCache_(Device device, PipelineCache pipelineCache, AllocationCallbacks* allocator);
 
-        public unsafe void GetPipelineCacheData(PipelineCache pipelineCache, ref ulong dataSize, IntPtr data)
+        public unsafe void GetPipelineCacheData(PipelineCache pipelineCache, ref PointerSize dataSize, IntPtr data)
         {
-            fixed (ulong* __dataSize__ = &dataSize)
+            fixed (PointerSize* __dataSize__ = &dataSize)
             {
                 GetPipelineCacheData_(this, pipelineCache, __dataSize__, data).CheckError();
             }
         }
 
         [DllImport("vulkan-1.dll", EntryPoint = "vkGetPipelineCacheData", CallingConvention = CallingConvention.Cdecl)]
-        internal static extern unsafe Result GetPipelineCacheData_(Device device, PipelineCache pipelineCache, ulong* dataSize, IntPtr data);
+        internal static extern unsafe Result GetPipelineCacheData_(Device device, PipelineCache pipelineCache, PointerSize* dataSize, IntPtr data);
 
         public unsafe void MergePipelineCaches(PipelineCache destinationCache, uint sourceCacheCount, PipelineCache srcCaches)
         {

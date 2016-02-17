@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
-    </Compile>  
+    </Compile>
     <Compile Include="Device.cs" />
     <Compile Include="Extent2D.cs" />
     <Compile Include="Extent3D.cs" />
@@ -55,6 +55,7 @@
     <Compile Include="Offset2D.cs" />
     <Compile Include="Offset3D.cs" />
     <Compile Include="PhysicalDevice.cs" />
+    <Compile Include="PointerSize.cs" />
     <Compile Include="RawBool.cs" />
     <Compile Include="RawColor4.cs" />
     <Compile Include="RawInt4.cs" />

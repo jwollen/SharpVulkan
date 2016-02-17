@@ -75,7 +75,7 @@ namespace SharpVulkan
     {
         public readonly static Semaphore Null = new Semaphore();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(Semaphore left, Semaphore right)
         {
@@ -109,7 +109,7 @@ namespace SharpVulkan
     {
         public readonly static Fence Null = new Fence();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(Fence left, Fence right)
         {
@@ -126,7 +126,7 @@ namespace SharpVulkan
     {
         public readonly static DeviceMemory Null = new DeviceMemory();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(DeviceMemory left, DeviceMemory right)
         {
@@ -143,7 +143,7 @@ namespace SharpVulkan
     {
         public readonly static Buffer Null = new Buffer();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(Buffer left, Buffer right)
         {
@@ -160,7 +160,7 @@ namespace SharpVulkan
     {
         public readonly static Image Null = new Image();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(Image left, Image right)
         {
@@ -177,7 +177,7 @@ namespace SharpVulkan
     {
         public readonly static Event Null = new Event();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(Event left, Event right)
         {
@@ -194,7 +194,7 @@ namespace SharpVulkan
     {
         public readonly static QueryPool Null = new QueryPool();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(QueryPool left, QueryPool right)
         {
@@ -211,7 +211,7 @@ namespace SharpVulkan
     {
         public readonly static BufferView Null = new BufferView();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(BufferView left, BufferView right)
         {
@@ -228,7 +228,7 @@ namespace SharpVulkan
     {
         public readonly static ImageView Null = new ImageView();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(ImageView left, ImageView right)
         {
@@ -245,7 +245,7 @@ namespace SharpVulkan
     {
         public readonly static ShaderModule Null = new ShaderModule();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(ShaderModule left, ShaderModule right)
         {
@@ -262,7 +262,7 @@ namespace SharpVulkan
     {
         public readonly static PipelineCache Null = new PipelineCache();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(PipelineCache left, PipelineCache right)
         {
@@ -279,7 +279,7 @@ namespace SharpVulkan
     {
         public readonly static PipelineLayout Null = new PipelineLayout();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(PipelineLayout left, PipelineLayout right)
         {
@@ -296,7 +296,7 @@ namespace SharpVulkan
     {
         public readonly static RenderPass Null = new RenderPass();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(RenderPass left, RenderPass right)
         {
@@ -313,7 +313,7 @@ namespace SharpVulkan
     {
         public readonly static Pipeline Null = new Pipeline();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(Pipeline left, Pipeline right)
         {
@@ -330,7 +330,7 @@ namespace SharpVulkan
     {
         public readonly static DescriptorSetLayout Null = new DescriptorSetLayout();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(DescriptorSetLayout left, DescriptorSetLayout right)
         {
@@ -347,7 +347,7 @@ namespace SharpVulkan
     {
         public readonly static Sampler Null = new Sampler();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(Sampler left, Sampler right)
         {
@@ -364,7 +364,7 @@ namespace SharpVulkan
     {
         public readonly static DescriptorPool Null = new DescriptorPool();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(DescriptorPool left, DescriptorPool right)
         {
@@ -381,7 +381,7 @@ namespace SharpVulkan
     {
         public readonly static DescriptorSet Null = new DescriptorSet();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(DescriptorSet left, DescriptorSet right)
         {
@@ -398,7 +398,7 @@ namespace SharpVulkan
     {
         public readonly static Framebuffer Null = new Framebuffer();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(Framebuffer left, Framebuffer right)
         {
@@ -415,7 +415,7 @@ namespace SharpVulkan
     {
         public readonly static CommandPool Null = new CommandPool();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(CommandPool left, CommandPool right)
         {
@@ -789,7 +789,7 @@ namespace SharpVulkan
 
         public uint ViewportSubPixelBits;
 
-        public ulong MinMemoryMapAlignment;
+        public PointerSize MinMemoryMapAlignment;
 
         public ulong MinTexelBufferOffsetAlignment;
 
@@ -3558,7 +3558,7 @@ namespace SharpVulkan
 
         public ShaderModuleCreateFlags Flags;
 
-        public ulong CodeSize;
+        public PointerSize CodeSize;
 
         public IntPtr Code;
     }
@@ -3571,7 +3571,7 @@ namespace SharpVulkan
 
         public PipelineCacheCreateFlags Flags;
 
-        public ulong InitialDataSize;
+        public PointerSize InitialDataSize;
 
         public IntPtr InitialData;
     }
@@ -3582,7 +3582,7 @@ namespace SharpVulkan
 
         public uint Offset;
 
-        public ulong Size;
+        public PointerSize Size;
     }
 
     public partial struct SpecializationInfo
@@ -3591,7 +3591,7 @@ namespace SharpVulkan
 
         public IntPtr MapEntries;
 
-        public ulong DataSize;
+        public PointerSize DataSize;
 
         public IntPtr Data;
     }
@@ -4569,7 +4569,7 @@ namespace SharpVulkan
     {
         public readonly static Surface Null = new Surface();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(Surface left, Surface right)
         {
@@ -4616,7 +4616,7 @@ namespace SharpVulkan
     {
         public readonly static Swapchain Null = new Swapchain();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(Swapchain left, Swapchain right)
         {
@@ -4691,7 +4691,7 @@ namespace SharpVulkan
     {
         public readonly static Display Null = new Display();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(Display left, Display right)
         {
@@ -4708,7 +4708,7 @@ namespace SharpVulkan
     {
         public readonly static DisplayMode Null = new DisplayMode();
 
-        internal IntPtr NativeHandle;
+        internal ulong NativeHandle;
 
         public static bool operator ==(DisplayMode left, DisplayMode right)
         {
