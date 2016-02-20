@@ -1423,25 +1423,17 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern unsafe void vkCmdResetEvent(CommandBuffer commandBuffer, Event @event, PipelineStageFlags stageMask);
 
-        public unsafe void WaitEvents(uint eventCount, Event events, PipelineStageFlags sourceStageMask, PipelineStageFlags destinationStageMask, uint memoryBarrierCount, ref MemoryBarrier memoryBarriers, uint bufferMemoryBarrierCount, ref BufferMemoryBarrier bufferMemoryBarriers, uint imageMemoryBarrierCount, ImageMemoryBarrier* imageMemoryBarriers)
+        public unsafe void WaitEvents(uint eventCount, Event events, PipelineStageFlags sourceStageMask, PipelineStageFlags destinationStageMask, uint memoryBarrierCount, MemoryBarrier* memoryBarriers, uint bufferMemoryBarrierCount, BufferMemoryBarrier* bufferMemoryBarriers, uint imageMemoryBarrierCount, ImageMemoryBarrier* imageMemoryBarriers)
         {
-            fixed (BufferMemoryBarrier* __bufferMemoryBarriers__ = &bufferMemoryBarriers)
-            fixed (MemoryBarrier* __memoryBarriers__ = &memoryBarriers)
-            {
-                vkCmdWaitEvents(this, eventCount, &events, sourceStageMask, destinationStageMask, memoryBarrierCount, __memoryBarriers__, bufferMemoryBarrierCount, __bufferMemoryBarriers__, imageMemoryBarrierCount, imageMemoryBarriers);
-            }
+            vkCmdWaitEvents(this, eventCount, &events, sourceStageMask, destinationStageMask, memoryBarrierCount, memoryBarriers, bufferMemoryBarrierCount, bufferMemoryBarriers, imageMemoryBarrierCount, imageMemoryBarriers);
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern unsafe void vkCmdWaitEvents(CommandBuffer commandBuffer, uint eventCount, Event* events, PipelineStageFlags sourceStageMask, PipelineStageFlags destinationStageMask, uint memoryBarrierCount, MemoryBarrier* memoryBarriers, uint bufferMemoryBarrierCount, BufferMemoryBarrier* bufferMemoryBarriers, uint imageMemoryBarrierCount, ImageMemoryBarrier* imageMemoryBarriers);
 
-        public unsafe void PipelineBarrier(PipelineStageFlags sourceStageMask, PipelineStageFlags destinationStageMask, DependencyFlags dependencyFlags, uint memoryBarrierCount, ref MemoryBarrier memoryBarriers, uint bufferMemoryBarrierCount, ref BufferMemoryBarrier bufferMemoryBarriers, uint imageMemoryBarrierCount, ImageMemoryBarrier* imageMemoryBarriers)
+        public unsafe void PipelineBarrier(PipelineStageFlags sourceStageMask, PipelineStageFlags destinationStageMask, DependencyFlags dependencyFlags, uint memoryBarrierCount, MemoryBarrier* memoryBarriers, uint bufferMemoryBarrierCount, BufferMemoryBarrier* bufferMemoryBarriers, uint imageMemoryBarrierCount, ImageMemoryBarrier* imageMemoryBarriers)
         {
-            fixed (BufferMemoryBarrier* __bufferMemoryBarriers__ = &bufferMemoryBarriers)
-            fixed (MemoryBarrier* __memoryBarriers__ = &memoryBarriers)
-            {
-                vkCmdPipelineBarrier(this, sourceStageMask, destinationStageMask, dependencyFlags, memoryBarrierCount, __memoryBarriers__, bufferMemoryBarrierCount, __bufferMemoryBarriers__, imageMemoryBarrierCount, imageMemoryBarriers);
-            }
+            vkCmdPipelineBarrier(this, sourceStageMask, destinationStageMask, dependencyFlags, memoryBarrierCount, memoryBarriers, bufferMemoryBarrierCount, bufferMemoryBarriers, imageMemoryBarrierCount, imageMemoryBarriers);
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.Cdecl)]
