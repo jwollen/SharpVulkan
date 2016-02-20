@@ -54,15 +54,7 @@ namespace SharpVulkan
 
         ErrorIncompatibleDisplay = -1000003001,
 
-        ErrorValidationFailedExt = -1000011001,
-
-        ResultBeginRange = -11,
-
-        ResultEndRange = 5,
-
-        ResultRangeSize = 17,
-
-        ResultMaxEnum = 2147483647,
+        ErrorValidationFailed = -1000011001,
     }
 
     public enum StructureType : int
@@ -187,7 +179,7 @@ namespace SharpVulkan
 
         Win32SurfaceCreateInfo = 1000009000,
 
-        DebugReportCreateInfoExt = 1000011000,
+        DebugReportCreateInfo = 1000011000,
     }
 
     public enum SystemAllocationScope : int
@@ -588,14 +580,6 @@ namespace SharpVulkan
         Image2D = 1,
 
         Image3D = 2,
-
-        ImageBeginRange = 0,
-
-        ImageEndRange = 2,
-
-        ImageRangeSize = 3,
-
-        ImageMaxEnum = 2147483647,
     }
 
     public enum ImageTiling : int
@@ -672,14 +656,6 @@ namespace SharpVulkan
         Image2DArray = 5,
 
         ImageCubeArray = 6,
-
-        ImageBeginRange = 0,
-
-        ImageEndRange = 6,
-
-        ImageRangeSize = 7,
-
-        ImageMaxEnum = 2147483647,
     }
 
     public enum ComponentSwizzle : int
