@@ -45,12 +45,14 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ComponentMapping.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="Extent2D.cs" />
     <Compile Include="Extent3D.cs" />
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
     <Compile Include="Generated\Structures.cs" />
+    <Compile Include="ImageSubresourceRange.cs" />
     <Compile Include="Instance.cs" />
     <Compile Include="Offset2D.cs" />
     <Compile Include="Offset3D.cs" />
@@ -59,9 +61,11 @@
     <Compile Include="RawBool.cs" />
     <Compile Include="RawColor4.cs" />
     <Compile Include="RawInt4.cs" />
+    <Compile Include="Rect2D.cs" />
     <Compile Include="ResultExtensions.cs" />
     <Compile Include="SharpVulkanException.cs" />
     <Compile Include="Version.cs" />
+    <Compile Include="Viewport.cs" />
     <Compile Include="Vulkan.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
