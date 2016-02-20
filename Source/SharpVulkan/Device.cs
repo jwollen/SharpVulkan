@@ -66,7 +66,7 @@ namespace SharpVulkan
             fixed (SwapchainCreateInfo* __createInfos__ = &createInfos[0])
             fixed (Swapchain* __swapchains__ = &swapchains[0])
             {
-                CreateSharedSwapchains_(this, (uint)createInfos.Length, __createInfos__, &allocator, __swapchains__).CheckError();
+                vkCreateSharedSwapchainsKHR(this, (uint)createInfos.Length, __createInfos__, &allocator, __swapchains__).CheckError();
             }
             return swapchains;
         }
