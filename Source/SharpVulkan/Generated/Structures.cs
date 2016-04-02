@@ -623,7 +623,7 @@ namespace SharpVulkan
         public ulong MaxResourceSize;
     }
 
-    public unsafe partial struct PhysicalDeviceLimits
+    public partial struct PhysicalDeviceLimits
     {
         public uint MaxImageDimension1D;
 
@@ -729,11 +729,29 @@ namespace SharpVulkan
 
         public uint MaxComputeSharedMemorySize;
 
-        public fixed uint MaxComputeWorkGroupCount[3];
+        public struct MaxComputeWorkGroupCountArray
+        {
+            public uint Value0;
+
+            public uint Value1;
+
+            public uint Value2;
+        }
+
+        public MaxComputeWorkGroupCountArray MaxComputeWorkGroupCount;
 
         public uint MaxComputeWorkGroupInvocations;
 
-        public fixed uint MaxComputeWorkGroupSize[3];
+        public struct MaxComputeWorkGroupSizeArray
+        {
+            public uint Value0;
+
+            public uint Value1;
+
+            public uint Value2;
+        }
+
+        public MaxComputeWorkGroupSizeArray MaxComputeWorkGroupSize;
 
         public uint SubPixelPrecisionBits;
 
@@ -751,9 +769,23 @@ namespace SharpVulkan
 
         public uint MaxViewports;
 
-        public fixed uint MaxViewportDimensions[2];
+        public struct MaxViewportDimensionsArray
+        {
+            public uint Value0;
 
-        public fixed float ViewportBoundsRange[2];
+            public uint Value1;
+        }
+
+        public MaxViewportDimensionsArray MaxViewportDimensions;
+
+        public struct ViewportBoundsRangeArray
+        {
+            public float Value0;
+
+            public float Value1;
+        }
+
+        public ViewportBoundsRangeArray ViewportBoundsRange;
 
         public uint ViewportSubPixelBits;
 
@@ -819,9 +851,23 @@ namespace SharpVulkan
 
         public uint DiscreteQueuePriorities;
 
-        public fixed float PointSizeRange[2];
+        public struct PointSizeRangeArray
+        {
+            public float Value0;
 
-        public fixed float LineWidthRange[2];
+            public float Value1;
+        }
+
+        public PointSizeRangeArray PointSizeRange;
+
+        public struct LineWidthRangeArray
+        {
+            public float Value0;
+
+            public float Value1;
+        }
+
+        public LineWidthRangeArray LineWidthRange;
 
         public float PointSizeGranularity;
 
@@ -851,7 +897,7 @@ namespace SharpVulkan
         public RawBool ResidencyNonResidentStrict;
     }
 
-    public unsafe partial struct PhysicalDeviceProperties
+    public partial struct PhysicalDeviceProperties
     {
         public uint ApiVersion;
 
@@ -863,9 +909,559 @@ namespace SharpVulkan
 
         public PhysicalDeviceType DeviceType;
 
-        public fixed byte DeviceName[256];
+        public struct DeviceNameArray
+        {
+            public byte Value0;
 
-        public fixed byte PipelineCacheUuid[16];
+            public byte Value1;
+
+            public byte Value2;
+
+            public byte Value3;
+
+            public byte Value4;
+
+            public byte Value5;
+
+            public byte Value6;
+
+            public byte Value7;
+
+            public byte Value8;
+
+            public byte Value9;
+
+            public byte Value10;
+
+            public byte Value11;
+
+            public byte Value12;
+
+            public byte Value13;
+
+            public byte Value14;
+
+            public byte Value15;
+
+            public byte Value16;
+
+            public byte Value17;
+
+            public byte Value18;
+
+            public byte Value19;
+
+            public byte Value20;
+
+            public byte Value21;
+
+            public byte Value22;
+
+            public byte Value23;
+
+            public byte Value24;
+
+            public byte Value25;
+
+            public byte Value26;
+
+            public byte Value27;
+
+            public byte Value28;
+
+            public byte Value29;
+
+            public byte Value30;
+
+            public byte Value31;
+
+            public byte Value32;
+
+            public byte Value33;
+
+            public byte Value34;
+
+            public byte Value35;
+
+            public byte Value36;
+
+            public byte Value37;
+
+            public byte Value38;
+
+            public byte Value39;
+
+            public byte Value40;
+
+            public byte Value41;
+
+            public byte Value42;
+
+            public byte Value43;
+
+            public byte Value44;
+
+            public byte Value45;
+
+            public byte Value46;
+
+            public byte Value47;
+
+            public byte Value48;
+
+            public byte Value49;
+
+            public byte Value50;
+
+            public byte Value51;
+
+            public byte Value52;
+
+            public byte Value53;
+
+            public byte Value54;
+
+            public byte Value55;
+
+            public byte Value56;
+
+            public byte Value57;
+
+            public byte Value58;
+
+            public byte Value59;
+
+            public byte Value60;
+
+            public byte Value61;
+
+            public byte Value62;
+
+            public byte Value63;
+
+            public byte Value64;
+
+            public byte Value65;
+
+            public byte Value66;
+
+            public byte Value67;
+
+            public byte Value68;
+
+            public byte Value69;
+
+            public byte Value70;
+
+            public byte Value71;
+
+            public byte Value72;
+
+            public byte Value73;
+
+            public byte Value74;
+
+            public byte Value75;
+
+            public byte Value76;
+
+            public byte Value77;
+
+            public byte Value78;
+
+            public byte Value79;
+
+            public byte Value80;
+
+            public byte Value81;
+
+            public byte Value82;
+
+            public byte Value83;
+
+            public byte Value84;
+
+            public byte Value85;
+
+            public byte Value86;
+
+            public byte Value87;
+
+            public byte Value88;
+
+            public byte Value89;
+
+            public byte Value90;
+
+            public byte Value91;
+
+            public byte Value92;
+
+            public byte Value93;
+
+            public byte Value94;
+
+            public byte Value95;
+
+            public byte Value96;
+
+            public byte Value97;
+
+            public byte Value98;
+
+            public byte Value99;
+
+            public byte Value100;
+
+            public byte Value101;
+
+            public byte Value102;
+
+            public byte Value103;
+
+            public byte Value104;
+
+            public byte Value105;
+
+            public byte Value106;
+
+            public byte Value107;
+
+            public byte Value108;
+
+            public byte Value109;
+
+            public byte Value110;
+
+            public byte Value111;
+
+            public byte Value112;
+
+            public byte Value113;
+
+            public byte Value114;
+
+            public byte Value115;
+
+            public byte Value116;
+
+            public byte Value117;
+
+            public byte Value118;
+
+            public byte Value119;
+
+            public byte Value120;
+
+            public byte Value121;
+
+            public byte Value122;
+
+            public byte Value123;
+
+            public byte Value124;
+
+            public byte Value125;
+
+            public byte Value126;
+
+            public byte Value127;
+
+            public byte Value128;
+
+            public byte Value129;
+
+            public byte Value130;
+
+            public byte Value131;
+
+            public byte Value132;
+
+            public byte Value133;
+
+            public byte Value134;
+
+            public byte Value135;
+
+            public byte Value136;
+
+            public byte Value137;
+
+            public byte Value138;
+
+            public byte Value139;
+
+            public byte Value140;
+
+            public byte Value141;
+
+            public byte Value142;
+
+            public byte Value143;
+
+            public byte Value144;
+
+            public byte Value145;
+
+            public byte Value146;
+
+            public byte Value147;
+
+            public byte Value148;
+
+            public byte Value149;
+
+            public byte Value150;
+
+            public byte Value151;
+
+            public byte Value152;
+
+            public byte Value153;
+
+            public byte Value154;
+
+            public byte Value155;
+
+            public byte Value156;
+
+            public byte Value157;
+
+            public byte Value158;
+
+            public byte Value159;
+
+            public byte Value160;
+
+            public byte Value161;
+
+            public byte Value162;
+
+            public byte Value163;
+
+            public byte Value164;
+
+            public byte Value165;
+
+            public byte Value166;
+
+            public byte Value167;
+
+            public byte Value168;
+
+            public byte Value169;
+
+            public byte Value170;
+
+            public byte Value171;
+
+            public byte Value172;
+
+            public byte Value173;
+
+            public byte Value174;
+
+            public byte Value175;
+
+            public byte Value176;
+
+            public byte Value177;
+
+            public byte Value178;
+
+            public byte Value179;
+
+            public byte Value180;
+
+            public byte Value181;
+
+            public byte Value182;
+
+            public byte Value183;
+
+            public byte Value184;
+
+            public byte Value185;
+
+            public byte Value186;
+
+            public byte Value187;
+
+            public byte Value188;
+
+            public byte Value189;
+
+            public byte Value190;
+
+            public byte Value191;
+
+            public byte Value192;
+
+            public byte Value193;
+
+            public byte Value194;
+
+            public byte Value195;
+
+            public byte Value196;
+
+            public byte Value197;
+
+            public byte Value198;
+
+            public byte Value199;
+
+            public byte Value200;
+
+            public byte Value201;
+
+            public byte Value202;
+
+            public byte Value203;
+
+            public byte Value204;
+
+            public byte Value205;
+
+            public byte Value206;
+
+            public byte Value207;
+
+            public byte Value208;
+
+            public byte Value209;
+
+            public byte Value210;
+
+            public byte Value211;
+
+            public byte Value212;
+
+            public byte Value213;
+
+            public byte Value214;
+
+            public byte Value215;
+
+            public byte Value216;
+
+            public byte Value217;
+
+            public byte Value218;
+
+            public byte Value219;
+
+            public byte Value220;
+
+            public byte Value221;
+
+            public byte Value222;
+
+            public byte Value223;
+
+            public byte Value224;
+
+            public byte Value225;
+
+            public byte Value226;
+
+            public byte Value227;
+
+            public byte Value228;
+
+            public byte Value229;
+
+            public byte Value230;
+
+            public byte Value231;
+
+            public byte Value232;
+
+            public byte Value233;
+
+            public byte Value234;
+
+            public byte Value235;
+
+            public byte Value236;
+
+            public byte Value237;
+
+            public byte Value238;
+
+            public byte Value239;
+
+            public byte Value240;
+
+            public byte Value241;
+
+            public byte Value242;
+
+            public byte Value243;
+
+            public byte Value244;
+
+            public byte Value245;
+
+            public byte Value246;
+
+            public byte Value247;
+
+            public byte Value248;
+
+            public byte Value249;
+
+            public byte Value250;
+
+            public byte Value251;
+
+            public byte Value252;
+
+            public byte Value253;
+
+            public byte Value254;
+
+            public byte Value255;
+        }
+
+        public DeviceNameArray DeviceName;
+
+        public struct PipelineCacheUuidArray
+        {
+            public byte Value0;
+
+            public byte Value1;
+
+            public byte Value2;
+
+            public byte Value3;
+
+            public byte Value4;
+
+            public byte Value5;
+
+            public byte Value6;
+
+            public byte Value7;
+
+            public byte Value8;
+
+            public byte Value9;
+
+            public byte Value10;
+
+            public byte Value11;
+
+            public byte Value12;
+
+            public byte Value13;
+
+            public byte Value14;
+
+            public byte Value15;
+        }
+
+        public PipelineCacheUuidArray PipelineCacheUuid;
 
         public PhysicalDeviceLimits Limits;
 
@@ -1048,22 +1644,1567 @@ namespace SharpVulkan
         public IntPtr EnabledFeatures;
     }
 
-    public unsafe partial struct ExtensionProperties
+    public partial struct ExtensionProperties
     {
-        public fixed byte ExtensionName[256];
+        public struct ExtensionNameArray
+        {
+            public byte Value0;
+
+            public byte Value1;
+
+            public byte Value2;
+
+            public byte Value3;
+
+            public byte Value4;
+
+            public byte Value5;
+
+            public byte Value6;
+
+            public byte Value7;
+
+            public byte Value8;
+
+            public byte Value9;
+
+            public byte Value10;
+
+            public byte Value11;
+
+            public byte Value12;
+
+            public byte Value13;
+
+            public byte Value14;
+
+            public byte Value15;
+
+            public byte Value16;
+
+            public byte Value17;
+
+            public byte Value18;
+
+            public byte Value19;
+
+            public byte Value20;
+
+            public byte Value21;
+
+            public byte Value22;
+
+            public byte Value23;
+
+            public byte Value24;
+
+            public byte Value25;
+
+            public byte Value26;
+
+            public byte Value27;
+
+            public byte Value28;
+
+            public byte Value29;
+
+            public byte Value30;
+
+            public byte Value31;
+
+            public byte Value32;
+
+            public byte Value33;
+
+            public byte Value34;
+
+            public byte Value35;
+
+            public byte Value36;
+
+            public byte Value37;
+
+            public byte Value38;
+
+            public byte Value39;
+
+            public byte Value40;
+
+            public byte Value41;
+
+            public byte Value42;
+
+            public byte Value43;
+
+            public byte Value44;
+
+            public byte Value45;
+
+            public byte Value46;
+
+            public byte Value47;
+
+            public byte Value48;
+
+            public byte Value49;
+
+            public byte Value50;
+
+            public byte Value51;
+
+            public byte Value52;
+
+            public byte Value53;
+
+            public byte Value54;
+
+            public byte Value55;
+
+            public byte Value56;
+
+            public byte Value57;
+
+            public byte Value58;
+
+            public byte Value59;
+
+            public byte Value60;
+
+            public byte Value61;
+
+            public byte Value62;
+
+            public byte Value63;
+
+            public byte Value64;
+
+            public byte Value65;
+
+            public byte Value66;
+
+            public byte Value67;
+
+            public byte Value68;
+
+            public byte Value69;
+
+            public byte Value70;
+
+            public byte Value71;
+
+            public byte Value72;
+
+            public byte Value73;
+
+            public byte Value74;
+
+            public byte Value75;
+
+            public byte Value76;
+
+            public byte Value77;
+
+            public byte Value78;
+
+            public byte Value79;
+
+            public byte Value80;
+
+            public byte Value81;
+
+            public byte Value82;
+
+            public byte Value83;
+
+            public byte Value84;
+
+            public byte Value85;
+
+            public byte Value86;
+
+            public byte Value87;
+
+            public byte Value88;
+
+            public byte Value89;
+
+            public byte Value90;
+
+            public byte Value91;
+
+            public byte Value92;
+
+            public byte Value93;
+
+            public byte Value94;
+
+            public byte Value95;
+
+            public byte Value96;
+
+            public byte Value97;
+
+            public byte Value98;
+
+            public byte Value99;
+
+            public byte Value100;
+
+            public byte Value101;
+
+            public byte Value102;
+
+            public byte Value103;
+
+            public byte Value104;
+
+            public byte Value105;
+
+            public byte Value106;
+
+            public byte Value107;
+
+            public byte Value108;
+
+            public byte Value109;
+
+            public byte Value110;
+
+            public byte Value111;
+
+            public byte Value112;
+
+            public byte Value113;
+
+            public byte Value114;
+
+            public byte Value115;
+
+            public byte Value116;
+
+            public byte Value117;
+
+            public byte Value118;
+
+            public byte Value119;
+
+            public byte Value120;
+
+            public byte Value121;
+
+            public byte Value122;
+
+            public byte Value123;
+
+            public byte Value124;
+
+            public byte Value125;
+
+            public byte Value126;
+
+            public byte Value127;
+
+            public byte Value128;
+
+            public byte Value129;
+
+            public byte Value130;
+
+            public byte Value131;
+
+            public byte Value132;
+
+            public byte Value133;
+
+            public byte Value134;
+
+            public byte Value135;
+
+            public byte Value136;
+
+            public byte Value137;
+
+            public byte Value138;
+
+            public byte Value139;
+
+            public byte Value140;
+
+            public byte Value141;
+
+            public byte Value142;
+
+            public byte Value143;
+
+            public byte Value144;
+
+            public byte Value145;
+
+            public byte Value146;
+
+            public byte Value147;
+
+            public byte Value148;
+
+            public byte Value149;
+
+            public byte Value150;
+
+            public byte Value151;
+
+            public byte Value152;
+
+            public byte Value153;
+
+            public byte Value154;
+
+            public byte Value155;
+
+            public byte Value156;
+
+            public byte Value157;
+
+            public byte Value158;
+
+            public byte Value159;
+
+            public byte Value160;
+
+            public byte Value161;
+
+            public byte Value162;
+
+            public byte Value163;
+
+            public byte Value164;
+
+            public byte Value165;
+
+            public byte Value166;
+
+            public byte Value167;
+
+            public byte Value168;
+
+            public byte Value169;
+
+            public byte Value170;
+
+            public byte Value171;
+
+            public byte Value172;
+
+            public byte Value173;
+
+            public byte Value174;
+
+            public byte Value175;
+
+            public byte Value176;
+
+            public byte Value177;
+
+            public byte Value178;
+
+            public byte Value179;
+
+            public byte Value180;
+
+            public byte Value181;
+
+            public byte Value182;
+
+            public byte Value183;
+
+            public byte Value184;
+
+            public byte Value185;
+
+            public byte Value186;
+
+            public byte Value187;
+
+            public byte Value188;
+
+            public byte Value189;
+
+            public byte Value190;
+
+            public byte Value191;
+
+            public byte Value192;
+
+            public byte Value193;
+
+            public byte Value194;
+
+            public byte Value195;
+
+            public byte Value196;
+
+            public byte Value197;
+
+            public byte Value198;
+
+            public byte Value199;
+
+            public byte Value200;
+
+            public byte Value201;
+
+            public byte Value202;
+
+            public byte Value203;
+
+            public byte Value204;
+
+            public byte Value205;
+
+            public byte Value206;
+
+            public byte Value207;
+
+            public byte Value208;
+
+            public byte Value209;
+
+            public byte Value210;
+
+            public byte Value211;
+
+            public byte Value212;
+
+            public byte Value213;
+
+            public byte Value214;
+
+            public byte Value215;
+
+            public byte Value216;
+
+            public byte Value217;
+
+            public byte Value218;
+
+            public byte Value219;
+
+            public byte Value220;
+
+            public byte Value221;
+
+            public byte Value222;
+
+            public byte Value223;
+
+            public byte Value224;
+
+            public byte Value225;
+
+            public byte Value226;
+
+            public byte Value227;
+
+            public byte Value228;
+
+            public byte Value229;
+
+            public byte Value230;
+
+            public byte Value231;
+
+            public byte Value232;
+
+            public byte Value233;
+
+            public byte Value234;
+
+            public byte Value235;
+
+            public byte Value236;
+
+            public byte Value237;
+
+            public byte Value238;
+
+            public byte Value239;
+
+            public byte Value240;
+
+            public byte Value241;
+
+            public byte Value242;
+
+            public byte Value243;
+
+            public byte Value244;
+
+            public byte Value245;
+
+            public byte Value246;
+
+            public byte Value247;
+
+            public byte Value248;
+
+            public byte Value249;
+
+            public byte Value250;
+
+            public byte Value251;
+
+            public byte Value252;
+
+            public byte Value253;
+
+            public byte Value254;
+
+            public byte Value255;
+        }
+
+        public ExtensionNameArray ExtensionName;
 
         public uint SpecVersion;
     }
 
-    public unsafe partial struct LayerProperties
+    public partial struct LayerProperties
     {
-        public fixed byte LayerName[256];
+        public struct LayerNameArray
+        {
+            public byte Value0;
+
+            public byte Value1;
+
+            public byte Value2;
+
+            public byte Value3;
+
+            public byte Value4;
+
+            public byte Value5;
+
+            public byte Value6;
+
+            public byte Value7;
+
+            public byte Value8;
+
+            public byte Value9;
+
+            public byte Value10;
+
+            public byte Value11;
+
+            public byte Value12;
+
+            public byte Value13;
+
+            public byte Value14;
+
+            public byte Value15;
+
+            public byte Value16;
+
+            public byte Value17;
+
+            public byte Value18;
+
+            public byte Value19;
+
+            public byte Value20;
+
+            public byte Value21;
+
+            public byte Value22;
+
+            public byte Value23;
+
+            public byte Value24;
+
+            public byte Value25;
+
+            public byte Value26;
+
+            public byte Value27;
+
+            public byte Value28;
+
+            public byte Value29;
+
+            public byte Value30;
+
+            public byte Value31;
+
+            public byte Value32;
+
+            public byte Value33;
+
+            public byte Value34;
+
+            public byte Value35;
+
+            public byte Value36;
+
+            public byte Value37;
+
+            public byte Value38;
+
+            public byte Value39;
+
+            public byte Value40;
+
+            public byte Value41;
+
+            public byte Value42;
+
+            public byte Value43;
+
+            public byte Value44;
+
+            public byte Value45;
+
+            public byte Value46;
+
+            public byte Value47;
+
+            public byte Value48;
+
+            public byte Value49;
+
+            public byte Value50;
+
+            public byte Value51;
+
+            public byte Value52;
+
+            public byte Value53;
+
+            public byte Value54;
+
+            public byte Value55;
+
+            public byte Value56;
+
+            public byte Value57;
+
+            public byte Value58;
+
+            public byte Value59;
+
+            public byte Value60;
+
+            public byte Value61;
+
+            public byte Value62;
+
+            public byte Value63;
+
+            public byte Value64;
+
+            public byte Value65;
+
+            public byte Value66;
+
+            public byte Value67;
+
+            public byte Value68;
+
+            public byte Value69;
+
+            public byte Value70;
+
+            public byte Value71;
+
+            public byte Value72;
+
+            public byte Value73;
+
+            public byte Value74;
+
+            public byte Value75;
+
+            public byte Value76;
+
+            public byte Value77;
+
+            public byte Value78;
+
+            public byte Value79;
+
+            public byte Value80;
+
+            public byte Value81;
+
+            public byte Value82;
+
+            public byte Value83;
+
+            public byte Value84;
+
+            public byte Value85;
+
+            public byte Value86;
+
+            public byte Value87;
+
+            public byte Value88;
+
+            public byte Value89;
+
+            public byte Value90;
+
+            public byte Value91;
+
+            public byte Value92;
+
+            public byte Value93;
+
+            public byte Value94;
+
+            public byte Value95;
+
+            public byte Value96;
+
+            public byte Value97;
+
+            public byte Value98;
+
+            public byte Value99;
+
+            public byte Value100;
+
+            public byte Value101;
+
+            public byte Value102;
+
+            public byte Value103;
+
+            public byte Value104;
+
+            public byte Value105;
+
+            public byte Value106;
+
+            public byte Value107;
+
+            public byte Value108;
+
+            public byte Value109;
+
+            public byte Value110;
+
+            public byte Value111;
+
+            public byte Value112;
+
+            public byte Value113;
+
+            public byte Value114;
+
+            public byte Value115;
+
+            public byte Value116;
+
+            public byte Value117;
+
+            public byte Value118;
+
+            public byte Value119;
+
+            public byte Value120;
+
+            public byte Value121;
+
+            public byte Value122;
+
+            public byte Value123;
+
+            public byte Value124;
+
+            public byte Value125;
+
+            public byte Value126;
+
+            public byte Value127;
+
+            public byte Value128;
+
+            public byte Value129;
+
+            public byte Value130;
+
+            public byte Value131;
+
+            public byte Value132;
+
+            public byte Value133;
+
+            public byte Value134;
+
+            public byte Value135;
+
+            public byte Value136;
+
+            public byte Value137;
+
+            public byte Value138;
+
+            public byte Value139;
+
+            public byte Value140;
+
+            public byte Value141;
+
+            public byte Value142;
+
+            public byte Value143;
+
+            public byte Value144;
+
+            public byte Value145;
+
+            public byte Value146;
+
+            public byte Value147;
+
+            public byte Value148;
+
+            public byte Value149;
+
+            public byte Value150;
+
+            public byte Value151;
+
+            public byte Value152;
+
+            public byte Value153;
+
+            public byte Value154;
+
+            public byte Value155;
+
+            public byte Value156;
+
+            public byte Value157;
+
+            public byte Value158;
+
+            public byte Value159;
+
+            public byte Value160;
+
+            public byte Value161;
+
+            public byte Value162;
+
+            public byte Value163;
+
+            public byte Value164;
+
+            public byte Value165;
+
+            public byte Value166;
+
+            public byte Value167;
+
+            public byte Value168;
+
+            public byte Value169;
+
+            public byte Value170;
+
+            public byte Value171;
+
+            public byte Value172;
+
+            public byte Value173;
+
+            public byte Value174;
+
+            public byte Value175;
+
+            public byte Value176;
+
+            public byte Value177;
+
+            public byte Value178;
+
+            public byte Value179;
+
+            public byte Value180;
+
+            public byte Value181;
+
+            public byte Value182;
+
+            public byte Value183;
+
+            public byte Value184;
+
+            public byte Value185;
+
+            public byte Value186;
+
+            public byte Value187;
+
+            public byte Value188;
+
+            public byte Value189;
+
+            public byte Value190;
+
+            public byte Value191;
+
+            public byte Value192;
+
+            public byte Value193;
+
+            public byte Value194;
+
+            public byte Value195;
+
+            public byte Value196;
+
+            public byte Value197;
+
+            public byte Value198;
+
+            public byte Value199;
+
+            public byte Value200;
+
+            public byte Value201;
+
+            public byte Value202;
+
+            public byte Value203;
+
+            public byte Value204;
+
+            public byte Value205;
+
+            public byte Value206;
+
+            public byte Value207;
+
+            public byte Value208;
+
+            public byte Value209;
+
+            public byte Value210;
+
+            public byte Value211;
+
+            public byte Value212;
+
+            public byte Value213;
+
+            public byte Value214;
+
+            public byte Value215;
+
+            public byte Value216;
+
+            public byte Value217;
+
+            public byte Value218;
+
+            public byte Value219;
+
+            public byte Value220;
+
+            public byte Value221;
+
+            public byte Value222;
+
+            public byte Value223;
+
+            public byte Value224;
+
+            public byte Value225;
+
+            public byte Value226;
+
+            public byte Value227;
+
+            public byte Value228;
+
+            public byte Value229;
+
+            public byte Value230;
+
+            public byte Value231;
+
+            public byte Value232;
+
+            public byte Value233;
+
+            public byte Value234;
+
+            public byte Value235;
+
+            public byte Value236;
+
+            public byte Value237;
+
+            public byte Value238;
+
+            public byte Value239;
+
+            public byte Value240;
+
+            public byte Value241;
+
+            public byte Value242;
+
+            public byte Value243;
+
+            public byte Value244;
+
+            public byte Value245;
+
+            public byte Value246;
+
+            public byte Value247;
+
+            public byte Value248;
+
+            public byte Value249;
+
+            public byte Value250;
+
+            public byte Value251;
+
+            public byte Value252;
+
+            public byte Value253;
+
+            public byte Value254;
+
+            public byte Value255;
+        }
+
+        public LayerNameArray LayerName;
 
         public uint SpecVersion;
 
         public uint ImplementationVersion;
 
-        public fixed byte Description[256];
+        public struct DescriptionArray
+        {
+            public byte Value0;
+
+            public byte Value1;
+
+            public byte Value2;
+
+            public byte Value3;
+
+            public byte Value4;
+
+            public byte Value5;
+
+            public byte Value6;
+
+            public byte Value7;
+
+            public byte Value8;
+
+            public byte Value9;
+
+            public byte Value10;
+
+            public byte Value11;
+
+            public byte Value12;
+
+            public byte Value13;
+
+            public byte Value14;
+
+            public byte Value15;
+
+            public byte Value16;
+
+            public byte Value17;
+
+            public byte Value18;
+
+            public byte Value19;
+
+            public byte Value20;
+
+            public byte Value21;
+
+            public byte Value22;
+
+            public byte Value23;
+
+            public byte Value24;
+
+            public byte Value25;
+
+            public byte Value26;
+
+            public byte Value27;
+
+            public byte Value28;
+
+            public byte Value29;
+
+            public byte Value30;
+
+            public byte Value31;
+
+            public byte Value32;
+
+            public byte Value33;
+
+            public byte Value34;
+
+            public byte Value35;
+
+            public byte Value36;
+
+            public byte Value37;
+
+            public byte Value38;
+
+            public byte Value39;
+
+            public byte Value40;
+
+            public byte Value41;
+
+            public byte Value42;
+
+            public byte Value43;
+
+            public byte Value44;
+
+            public byte Value45;
+
+            public byte Value46;
+
+            public byte Value47;
+
+            public byte Value48;
+
+            public byte Value49;
+
+            public byte Value50;
+
+            public byte Value51;
+
+            public byte Value52;
+
+            public byte Value53;
+
+            public byte Value54;
+
+            public byte Value55;
+
+            public byte Value56;
+
+            public byte Value57;
+
+            public byte Value58;
+
+            public byte Value59;
+
+            public byte Value60;
+
+            public byte Value61;
+
+            public byte Value62;
+
+            public byte Value63;
+
+            public byte Value64;
+
+            public byte Value65;
+
+            public byte Value66;
+
+            public byte Value67;
+
+            public byte Value68;
+
+            public byte Value69;
+
+            public byte Value70;
+
+            public byte Value71;
+
+            public byte Value72;
+
+            public byte Value73;
+
+            public byte Value74;
+
+            public byte Value75;
+
+            public byte Value76;
+
+            public byte Value77;
+
+            public byte Value78;
+
+            public byte Value79;
+
+            public byte Value80;
+
+            public byte Value81;
+
+            public byte Value82;
+
+            public byte Value83;
+
+            public byte Value84;
+
+            public byte Value85;
+
+            public byte Value86;
+
+            public byte Value87;
+
+            public byte Value88;
+
+            public byte Value89;
+
+            public byte Value90;
+
+            public byte Value91;
+
+            public byte Value92;
+
+            public byte Value93;
+
+            public byte Value94;
+
+            public byte Value95;
+
+            public byte Value96;
+
+            public byte Value97;
+
+            public byte Value98;
+
+            public byte Value99;
+
+            public byte Value100;
+
+            public byte Value101;
+
+            public byte Value102;
+
+            public byte Value103;
+
+            public byte Value104;
+
+            public byte Value105;
+
+            public byte Value106;
+
+            public byte Value107;
+
+            public byte Value108;
+
+            public byte Value109;
+
+            public byte Value110;
+
+            public byte Value111;
+
+            public byte Value112;
+
+            public byte Value113;
+
+            public byte Value114;
+
+            public byte Value115;
+
+            public byte Value116;
+
+            public byte Value117;
+
+            public byte Value118;
+
+            public byte Value119;
+
+            public byte Value120;
+
+            public byte Value121;
+
+            public byte Value122;
+
+            public byte Value123;
+
+            public byte Value124;
+
+            public byte Value125;
+
+            public byte Value126;
+
+            public byte Value127;
+
+            public byte Value128;
+
+            public byte Value129;
+
+            public byte Value130;
+
+            public byte Value131;
+
+            public byte Value132;
+
+            public byte Value133;
+
+            public byte Value134;
+
+            public byte Value135;
+
+            public byte Value136;
+
+            public byte Value137;
+
+            public byte Value138;
+
+            public byte Value139;
+
+            public byte Value140;
+
+            public byte Value141;
+
+            public byte Value142;
+
+            public byte Value143;
+
+            public byte Value144;
+
+            public byte Value145;
+
+            public byte Value146;
+
+            public byte Value147;
+
+            public byte Value148;
+
+            public byte Value149;
+
+            public byte Value150;
+
+            public byte Value151;
+
+            public byte Value152;
+
+            public byte Value153;
+
+            public byte Value154;
+
+            public byte Value155;
+
+            public byte Value156;
+
+            public byte Value157;
+
+            public byte Value158;
+
+            public byte Value159;
+
+            public byte Value160;
+
+            public byte Value161;
+
+            public byte Value162;
+
+            public byte Value163;
+
+            public byte Value164;
+
+            public byte Value165;
+
+            public byte Value166;
+
+            public byte Value167;
+
+            public byte Value168;
+
+            public byte Value169;
+
+            public byte Value170;
+
+            public byte Value171;
+
+            public byte Value172;
+
+            public byte Value173;
+
+            public byte Value174;
+
+            public byte Value175;
+
+            public byte Value176;
+
+            public byte Value177;
+
+            public byte Value178;
+
+            public byte Value179;
+
+            public byte Value180;
+
+            public byte Value181;
+
+            public byte Value182;
+
+            public byte Value183;
+
+            public byte Value184;
+
+            public byte Value185;
+
+            public byte Value186;
+
+            public byte Value187;
+
+            public byte Value188;
+
+            public byte Value189;
+
+            public byte Value190;
+
+            public byte Value191;
+
+            public byte Value192;
+
+            public byte Value193;
+
+            public byte Value194;
+
+            public byte Value195;
+
+            public byte Value196;
+
+            public byte Value197;
+
+            public byte Value198;
+
+            public byte Value199;
+
+            public byte Value200;
+
+            public byte Value201;
+
+            public byte Value202;
+
+            public byte Value203;
+
+            public byte Value204;
+
+            public byte Value205;
+
+            public byte Value206;
+
+            public byte Value207;
+
+            public byte Value208;
+
+            public byte Value209;
+
+            public byte Value210;
+
+            public byte Value211;
+
+            public byte Value212;
+
+            public byte Value213;
+
+            public byte Value214;
+
+            public byte Value215;
+
+            public byte Value216;
+
+            public byte Value217;
+
+            public byte Value218;
+
+            public byte Value219;
+
+            public byte Value220;
+
+            public byte Value221;
+
+            public byte Value222;
+
+            public byte Value223;
+
+            public byte Value224;
+
+            public byte Value225;
+
+            public byte Value226;
+
+            public byte Value227;
+
+            public byte Value228;
+
+            public byte Value229;
+
+            public byte Value230;
+
+            public byte Value231;
+
+            public byte Value232;
+
+            public byte Value233;
+
+            public byte Value234;
+
+            public byte Value235;
+
+            public byte Value236;
+
+            public byte Value237;
+
+            public byte Value238;
+
+            public byte Value239;
+
+            public byte Value240;
+
+            public byte Value241;
+
+            public byte Value242;
+
+            public byte Value243;
+
+            public byte Value244;
+
+            public byte Value245;
+
+            public byte Value246;
+
+            public byte Value247;
+
+            public byte Value248;
+
+            public byte Value249;
+
+            public byte Value250;
+
+            public byte Value251;
+
+            public byte Value252;
+
+            public byte Value253;
+
+            public byte Value254;
+
+            public byte Value255;
+        }
+
+        public DescriptionArray Description;
     }
 
     public partial struct SubmitInfo
@@ -1699,7 +3840,7 @@ namespace SharpVulkan
         public ColorComponentFlags ColorWriteMask;
     }
 
-    public unsafe partial struct PipelineColorBlendStateCreateInfo
+    public partial struct PipelineColorBlendStateCreateInfo
     {
         public StructureType StructureType;
 
@@ -1715,7 +3856,18 @@ namespace SharpVulkan
 
         public IntPtr Attachments;
 
-        public fixed float BlendConstants[4];
+        public struct BlendConstantsArray
+        {
+            public float Value0;
+
+            public float Value1;
+
+            public float Value2;
+
+            public float Value3;
+        }
+
+        public BlendConstantsArray BlendConstants;
     }
 
     public partial struct PipelineDynamicStateCreateInfo
@@ -2215,16 +4367,49 @@ namespace SharpVulkan
     }
 
     [StructLayout(LayoutKind.Explicit, Size = 16)]
-    public unsafe partial struct ClearColorValue
+    public partial struct ClearColorValue
     {
-        [FieldOffset(0)]
-        public fixed float Float32[4];
+        public struct Float32Array
+        {
+            public float Value0;
+
+            public float Value1;
+
+            public float Value2;
+
+            public float Value3;
+        }
 
         [FieldOffset(0)]
-        public fixed int Int32[4];
+        public Float32Array Float32;
+
+        public struct Int32Array
+        {
+            public int Value0;
+
+            public int Value1;
+
+            public int Value2;
+
+            public int Value3;
+        }
 
         [FieldOffset(0)]
-        public fixed uint Uint32[4];
+        public Int32Array Int32;
+
+        public struct Uint32Array
+        {
+            public uint Value0;
+
+            public uint Value1;
+
+            public uint Value2;
+
+            public uint Value3;
+        }
+
+        [FieldOffset(0)]
+        public Uint32Array Uint32;
     }
 
     public partial struct ClearDepthStencilValue
@@ -2653,5 +4838,18 @@ namespace SharpVulkan
         public IntPtr InstanceHandle;
 
         public IntPtr WindowHandle;
+    }
+
+    public partial struct DebugReportCallbackCreateInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public uint Flags;
+
+        public IntPtr Callback;
+
+        public IntPtr UserData;
     }
 }
