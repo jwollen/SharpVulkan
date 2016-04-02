@@ -104,6 +104,38 @@ namespace SharpVulkan
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe Result vkCreateWin32SurfaceKHR(Instance instance, Win32SurfaceCreateInfo* createInfo, AllocationCallbacks* allocator, Surface* surface);
+
+        public unsafe DebugReportCallback CreateDebugReportCallback(ref DebugReportCallbackCreateInfo createInfo, AllocationCallbacks* allocator = null)
+        {
+            DebugReportCallback callback;
+            fixed (DebugReportCallbackCreateInfo* __createInfo__ = &createInfo)
+            {
+                vkCreateDebugReportCallbackEXT(this, __createInfo__, allocator, &callback).CheckError();
+            }
+            return callback;
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkCreateDebugReportCallbackEXT(Instance instance, DebugReportCallbackCreateInfo* createInfo, AllocationCallbacks* allocator, DebugReportCallback* callback);
+
+        public unsafe void DestroyDebugReportCallback(DebugReportCallback callback, AllocationCallbacks* allocator = null)
+        {
+            vkDestroyDebugReportCallbackEXT(this, callback, allocator);
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkDestroyDebugReportCallbackEXT(Instance instance, DebugReportCallback callback, AllocationCallbacks* allocator);
+
+        internal unsafe void DebugReportMessage(uint flags, DebugReportObjectType objectType, ulong @object, PointerSize location, int messageCode, ref byte layerPrefix, byte* message)
+        {
+            fixed (byte* __layerPrefix__ = &layerPrefix)
+            {
+                vkDebugReportMessageEXT(this, flags, objectType, @object, location, messageCode, __layerPrefix__, message);
+            }
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkDebugReportMessageEXT(Instance instance, uint flags, DebugReportObjectType objectType, ulong @object, PointerSize location, int messageCode, byte* layerPrefix, byte* message);
     }
 
     public partial struct PhysicalDevice

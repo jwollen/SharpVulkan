@@ -55,6 +55,8 @@ namespace SharpVulkan
         ErrorIncompatibleDisplay = -1000003001,
 
         ErrorValidationFailed = -1000011001,
+
+        ErrorInvalidShaderNv = -1000012000,
     }
 
     public enum StructureType : int
@@ -179,7 +181,7 @@ namespace SharpVulkan
 
         Win32SurfaceCreateInfo = 1000009000,
 
-        DebugReportCreateInfo = 1000011000,
+        DebugReportCallbackCreateInfo = 1000011000,
     }
 
     public enum SystemAllocationScope : int
@@ -1710,5 +1712,89 @@ namespace SharpVulkan
     public enum Win32SurfaceCreateFlags : int
     {
         None = 0,
+    }
+
+    public enum DebugReportObjectType : int
+    {
+        Unknown = 0,
+
+        Instance = 1,
+
+        PhysicalDevice = 2,
+
+        Device = 3,
+
+        Queue = 4,
+
+        Semaphore = 5,
+
+        CommandBuffer = 6,
+
+        Fence = 7,
+
+        DeviceMemory = 8,
+
+        Buffer = 9,
+
+        Image = 10,
+
+        Event = 11,
+
+        QueryPool = 12,
+
+        BufferView = 13,
+
+        ImageView = 14,
+
+        ShaderModule = 15,
+
+        PipelineCache = 16,
+
+        PipelineLayout = 17,
+
+        RenderPass = 18,
+
+        Pipeline = 19,
+
+        DescriptorSetLayout = 20,
+
+        Sampler = 21,
+
+        DescriptorPool = 22,
+
+        DescriptorSet = 23,
+
+        Framebuffer = 24,
+
+        CommandPool = 25,
+
+        SurfaceKhr = 26,
+
+        SwapchainKhr = 27,
+
+        DebugReport = 28,
+    }
+
+    public enum DebugReportError : int
+    {
+        None = 0,
+
+        CallbackRef = 1,
+    }
+
+    [Flags]
+    public enum DebugReportFlags : int
+    {
+        None = 0,
+
+        Information = 1,
+
+        Warning = 2,
+
+        PerformanceWarning = 4,
+
+        Error = 8,
+
+        Debug = 16,
     }
 }

@@ -29,6 +29,12 @@ namespace SharpVulkan
             value = major << 22 | minor << 12 | patch;
         }
 
+        public uint Major => value >> 22;
+
+        public uint Minor => (value >> 12) & 0x3ff;
+
+        public uint Patch => (value >> 22) & 0xfff;
+
         public static implicit operator uint(Version version)
         {
             return version.value;

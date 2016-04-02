@@ -24,7 +24,7 @@ namespace SharpVulkan
 {
     public static partial class Vulkan
     {
-        public static readonly Version ApiVersion = new Version(1, 0, 2);
+        public static readonly Version ApiVersion = new Version(1, 0, 5);
 
         public static unsafe LayerProperties[] InstanceLayerProperties
         {

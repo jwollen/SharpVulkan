@@ -4840,6 +4840,23 @@ namespace SharpVulkan
         public IntPtr WindowHandle;
     }
 
+    public partial struct DebugReportCallback
+    {
+        public readonly static DebugReportCallback Null = new DebugReportCallback();
+
+        internal ulong NativeHandle;
+
+        public static bool operator ==(DebugReportCallback left, DebugReportCallback right)
+        {
+            return left.NativeHandle == right.NativeHandle;
+        }
+
+        public static bool operator !=(DebugReportCallback left, DebugReportCallback right)
+        {
+            return left.NativeHandle != right.NativeHandle;
+        }
+    }
+
     public partial struct DebugReportCallbackCreateInfo
     {
         public StructureType StructureType;
