@@ -793,26 +793,20 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe Result vkMergePipelineCaches(Device device, PipelineCache destinationCache, uint sourceCacheCount, PipelineCache* srcCaches);
 
-        public unsafe Pipeline CreateGraphicsPipelines(PipelineCache pipelineCache, uint createInfoCount, ref GraphicsPipelineCreateInfo createInfos, AllocationCallbacks* allocator = null)
+        public unsafe Pipeline CreateGraphicsPipelines(PipelineCache pipelineCache, uint createInfoCount, GraphicsPipelineCreateInfo* createInfos, AllocationCallbacks* allocator = null)
         {
             Pipeline pipelines;
-            fixed (GraphicsPipelineCreateInfo* __createInfos__ = &createInfos)
-            {
-                vkCreateGraphicsPipelines(this, pipelineCache, createInfoCount, __createInfos__, allocator, &pipelines).CheckError();
-            }
+            vkCreateGraphicsPipelines(this, pipelineCache, createInfoCount, createInfos, allocator, &pipelines).CheckError();
             return pipelines;
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe Result vkCreateGraphicsPipelines(Device device, PipelineCache pipelineCache, uint createInfoCount, GraphicsPipelineCreateInfo* createInfos, AllocationCallbacks* allocator, Pipeline* pipelines);
 
-        public unsafe Pipeline CreateComputePipelines(PipelineCache pipelineCache, uint createInfoCount, ref ComputePipelineCreateInfo createInfos, AllocationCallbacks* allocator = null)
+        public unsafe Pipeline CreateComputePipelines(PipelineCache pipelineCache, uint createInfoCount, ComputePipelineCreateInfo* createInfos, AllocationCallbacks* allocator = null)
         {
             Pipeline pipelines;
-            fixed (ComputePipelineCreateInfo* __createInfos__ = &createInfos)
-            {
-                vkCreateComputePipelines(this, pipelineCache, createInfoCount, __createInfos__, allocator, &pipelines).CheckError();
-            }
+            vkCreateComputePipelines(this, pipelineCache, createInfoCount, createInfos, allocator, &pipelines).CheckError();
             return pipelines;
         }
 
@@ -932,9 +926,9 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe Result vkAllocateDescriptorSets(Device device, DescriptorSetAllocateInfo* allocateInfo, DescriptorSet* descriptorSets);
 
-        public unsafe void FreeDescriptorSets(DescriptorPool descriptorPool, uint descriptorSetCount, DescriptorSet descriptorSets)
+        public unsafe void FreeDescriptorSets(DescriptorPool descriptorPool, uint descriptorSetCount, DescriptorSet* descriptorSets)
         {
-            vkFreeDescriptorSets(this, descriptorPool, descriptorSetCount, &descriptorSets).CheckError();
+            vkFreeDescriptorSets(this, descriptorPool, descriptorSetCount, descriptorSets).CheckError();
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
@@ -1241,9 +1235,9 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe void vkCmdSetStencilReference(CommandBuffer commandBuffer, StencilFaceFlags faceMask, uint reference);
 
-        public unsafe void BindDescriptorSets(PipelineBindPoint pipelineBindPoint, PipelineLayout layout, uint firstSet, uint descriptorSetCount, DescriptorSet descriptorSets, uint dynamicOffsetCount, uint* dynamicOffsets)
+        public unsafe void BindDescriptorSets(PipelineBindPoint pipelineBindPoint, PipelineLayout layout, uint firstSet, uint descriptorSetCount, DescriptorSet* descriptorSets, uint dynamicOffsetCount, uint* dynamicOffsets)
         {
-            vkCmdBindDescriptorSets(this, pipelineBindPoint, layout, firstSet, descriptorSetCount, &descriptorSets, dynamicOffsetCount, dynamicOffsets);
+            vkCmdBindDescriptorSets(this, pipelineBindPoint, layout, firstSet, descriptorSetCount, descriptorSets, dynamicOffsetCount, dynamicOffsets);
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
@@ -1257,12 +1251,9 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe void vkCmdBindIndexBuffer(CommandBuffer commandBuffer, Buffer buffer, ulong offset, IndexType indexType);
 
-        public unsafe void BindVertexBuffers(uint firstBinding, uint bindingCount, ref Buffer buffers, ulong* offsets)
+        public unsafe void BindVertexBuffers(uint firstBinding, uint bindingCount, Buffer* buffers, ulong* offsets)
         {
-            fixed (Buffer* __buffers__ = &buffers)
-            {
-                vkCmdBindVertexBuffers(this, firstBinding, bindingCount, __buffers__, offsets);
-            }
+            vkCmdBindVertexBuffers(this, firstBinding, bindingCount, buffers, offsets);
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
