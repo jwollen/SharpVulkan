@@ -719,8 +719,8 @@ namespace MiniTri
             commandBuffer.PipelineBarrier(PipelineStageFlags.TopOfPipe, PipelineStageFlags.TopOfPipe, DependencyFlags.None, 0, null, 0, null, 1, &memoryBarrier);
 
             // Clear render target
-            var clearRange = new ImageSubresourceRange(ImageAspectFlags.Color, 0, 0, 0, 1);
-            commandBuffer.ClearColorImage(backBuffers[currentBackBufferIndex], ImageLayout.TransferDestinationOptimal, new RawColor4(1, 0, 1, 1), 1, &clearRange);
+            var clearRange = new ImageSubresourceRange(ImageAspectFlags.Color, 0, 1, 0, 1);
+            commandBuffer.ClearColorImage(backBuffers[currentBackBufferIndex], ImageLayout.TransferDestinationOptimal, new RawColor4(0, 0, 0, 1), 1, &clearRange);
 
             // Begin render pass
             var renderPassBeginInfo = new RenderPassBeginInfo
