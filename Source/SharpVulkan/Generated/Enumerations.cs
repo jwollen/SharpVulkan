@@ -56,7 +56,7 @@ namespace SharpVulkan
 
         ErrorValidationFailed = -1000011001,
 
-        ErrorInvalidShaderNv = -1000012000,
+        ErrorInvalidShader = -1000012000,
     }
 
     public enum StructureType : int
@@ -878,6 +878,8 @@ namespace SharpVulkan
         Nearest = 0,
 
         Linear = 1,
+
+        Cubic = 1000015000,
     }
 
     public enum SamplerMipmapMode : int
@@ -1020,6 +1022,8 @@ namespace SharpVulkan
         BlitDestination = 2048,
 
         SampledImageFilterLinear = 4096,
+
+        SampledImageFilterCubic = 8192,
     }
 
     [Flags]
@@ -1283,11 +1287,11 @@ namespace SharpVulkan
     {
         None = 0,
 
-        Binding = 1,
+        SparseBinding = 1,
 
-        Residency = 2,
+        SparseResidency = 2,
 
-        Aliased = 4,
+        SparseAliased = 4,
     }
 
     [Flags]
