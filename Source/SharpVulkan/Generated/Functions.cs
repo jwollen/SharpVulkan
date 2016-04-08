@@ -945,14 +945,12 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe Result vkResetDescriptorPool(Device device, DescriptorPool descriptorPool, DescriptorPoolResetFlags flags);
 
-        public unsafe DescriptorSet AllocateDescriptorSets(ref DescriptorSetAllocateInfo allocateInfo)
+        public unsafe void AllocateDescriptorSets(ref DescriptorSetAllocateInfo allocateInfo, DescriptorSet* descriptorSets)
         {
-            DescriptorSet descriptorSets;
             fixed (DescriptorSetAllocateInfo* __allocateInfo__ = &allocateInfo)
             {
-                vkAllocateDescriptorSets(this, __allocateInfo__, &descriptorSets).CheckError();
+                vkAllocateDescriptorSets(this, __allocateInfo__, descriptorSets).CheckError();
             }
-            return descriptorSets;
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
