@@ -558,9 +558,12 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe Result vkResetFences(Device device, uint fenceCount, Fence* fences);
 
-        public unsafe void GetFenceStatus(Fence fence)
+        public unsafe Result GetFenceStatus(Fence fence)
         {
-            vkGetFenceStatus(this, fence).CheckError();
+            Result __result__;
+            __result__ = vkGetFenceStatus(this, fence);
+            __result__.CheckError();
+            return __result__;
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
