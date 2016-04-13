@@ -550,9 +550,9 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe void vkDestroyFence(Device device, Fence fence, AllocationCallbacks* allocator);
 
-        public unsafe void ResetFences(uint fenceCount, Fence fences)
+        public unsafe void ResetFences(uint fenceCount, Fence* fences)
         {
-            vkResetFences(this, fenceCount, &fences).CheckError();
+            vkResetFences(this, fenceCount, fences).CheckError();
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
@@ -566,9 +566,9 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe Result vkGetFenceStatus(Device device, Fence fence);
 
-        public unsafe void WaitForFences(uint fenceCount, Fence fences, RawBool waitAll, ulong timeout)
+        public unsafe void WaitForFences(uint fenceCount, Fence* fences, RawBool waitAll, ulong timeout)
         {
-            vkWaitForFences(this, fenceCount, &fences, waitAll, timeout).CheckError();
+            vkWaitForFences(this, fenceCount, fences, waitAll, timeout).CheckError();
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
