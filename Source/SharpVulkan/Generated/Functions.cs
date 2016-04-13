@@ -619,9 +619,12 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe void vkDestroyEvent(Device device, Event @event, AllocationCallbacks* allocator);
 
-        public unsafe void GetEventStatus(Event @event)
+        public unsafe Result GetEventStatus(Event @event)
         {
-            vkGetEventStatus(this, @event).CheckError();
+            Result __result__;
+            __result__ = vkGetEventStatus(this, @event);
+            __result__.CheckError();
+            return __result__;
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
