@@ -204,13 +204,19 @@ namespace MiniTri
                 fixed (void* enabledLayerNamesPointer = &enabledLayerNames[0])
                 fixed (void* enabledExtensionNamesPointer = &enabledExtensionNames[0])
                 {
+                    var enabledFeatures = new PhysicalDeviceFeatures
+                    {
+                        ShaderClipDistance = true,
+                    };
+
                     var deviceCreateInfo = new DeviceCreateInfo
                     {
                         StructureType = StructureType.DeviceCreateInfo,
                         QueueCreateInfoCount = 1,
                         QueueCreateInfos = new IntPtr(&queueCreateInfo),
                         EnabledExtensionCount = (uint)enabledExtensionNames.Length,
-                        EnabledExtensionNames = new IntPtr(enabledExtensionNamesPointer)
+                        EnabledExtensionNames = new IntPtr(enabledExtensionNamesPointer),
+                        EnabledFeatures = new IntPtr(&enabledFeatures)
                     };
 
                     if (validate)
