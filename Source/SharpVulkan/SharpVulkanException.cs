@@ -34,7 +34,7 @@ namespace SharpVulkan
         /// </summary>
         /// <param name="result">The result code that caused this exception.</param>
         public SharpVulkanException(Result result)
-            : base("A Vulkan error occurred.")
+            : base($"A Vulkan error of type [{result}] occurred.")
         {
             Result = result;
         }
