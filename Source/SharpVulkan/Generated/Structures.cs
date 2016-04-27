@@ -4840,19 +4840,6 @@ namespace SharpVulkan
         public uint Window;
     }
 
-    public partial struct XcbSurfaceCreateInfo
-    {
-        public StructureType StructureType;
-
-        public IntPtr Next;
-
-        public XcbSurfaceCreateFlags Flags;
-
-        public IntPtr Connection;
-
-        public int Window;
-    }
-
     public partial struct AndroidSurfaceCreateInfo
     {
         public StructureType StructureType;
