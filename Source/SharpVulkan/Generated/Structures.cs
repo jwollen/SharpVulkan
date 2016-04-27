@@ -4827,6 +4827,43 @@ namespace SharpVulkan
         public RawBool Persistent;
     }
 
+    public partial struct XlibSurfaceCreateInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public XlibSurfaceCreateFlags Flags;
+
+        public IntPtr Dpy;
+
+        public uint Window;
+    }
+
+    public partial struct XcbSurfaceCreateInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public XcbSurfaceCreateFlags Flags;
+
+        public IntPtr Connection;
+
+        public int Window;
+    }
+
+    public partial struct AndroidSurfaceCreateInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public AndroidSurfaceCreateFlags Flags;
+
+        public IntPtr Window;
+    }
+
     public partial struct Win32SurfaceCreateInfo
     {
         public StructureType StructureType;

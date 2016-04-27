@@ -95,6 +95,42 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe Result vkCreateDisplayPlaneSurfaceKHR(Instance instance, DisplaySurfaceCreateInfo* createInfo, AllocationCallbacks* allocator, Surface* surface);
 
+        public unsafe Surface CreateXlibSurface(ref XlibSurfaceCreateInfo createInfo, AllocationCallbacks* allocator = null)
+        {
+            Surface surface;
+            fixed (XlibSurfaceCreateInfo* __createInfo__ = &createInfo)
+            {
+                vkCreateXlibSurfaceKHR(this, __createInfo__, allocator, &surface).CheckError();
+            }
+            return surface;
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkCreateXlibSurfaceKHR(Instance instance, XlibSurfaceCreateInfo* createInfo, AllocationCallbacks* allocator, Surface* surface);
+
+        public unsafe Surface CreateXcbSurface(XcbSurfaceCreateInfo createInfo, AllocationCallbacks* allocator = null)
+        {
+            Surface surface;
+            vkCreateXcbSurfaceKHR(this, &createInfo, allocator, &surface).CheckError();
+            return surface;
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkCreateXcbSurfaceKHR(Instance instance, XcbSurfaceCreateInfo* createInfo, AllocationCallbacks* allocator, Surface* surface);
+
+        public unsafe Surface CreateAndroidSurface(ref AndroidSurfaceCreateInfo createInfo, AllocationCallbacks* allocator = null)
+        {
+            Surface surface;
+            fixed (AndroidSurfaceCreateInfo* __createInfo__ = &createInfo)
+            {
+                vkCreateAndroidSurfaceKHR(this, __createInfo__, allocator, &surface).CheckError();
+            }
+            return surface;
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkCreateAndroidSurfaceKHR(Instance instance, AndroidSurfaceCreateInfo* createInfo, AllocationCallbacks* allocator, Surface* surface);
+
         public unsafe Surface CreateWin32Surface(Win32SurfaceCreateInfo createInfo, AllocationCallbacks* allocator = null)
         {
             Surface surface;
@@ -359,6 +395,26 @@ namespace SharpVulkan
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe Result vkGetDisplayPlaneCapabilitiesKHR(PhysicalDevice physicalDevice, DisplayMode mode, uint planeIndex, DisplayPlaneCapabilities* capabilities);
+
+        public unsafe RawBool GetXlibPresentationSupport(uint queueFamilyIndex, IntPtr dpy, uint visualId)
+        {
+            RawBool __result__;
+            __result__ = vkGetPhysicalDeviceXlibPresentationSupportKHR(this, queueFamilyIndex, dpy, visualId);
+            return __result__;
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe RawBool vkGetPhysicalDeviceXlibPresentationSupportKHR(PhysicalDevice physicalDevice, uint queueFamilyIndex, IntPtr dpy, uint visualId);
+
+        public unsafe RawBool GetXcbPresentationSupport(uint queueFamilyIndex, XcbConnectionT connection, int visualid)
+        {
+            RawBool __result__;
+            __result__ = vkGetPhysicalDeviceXcbPresentationSupportKHR(this, queueFamilyIndex, &connection, visualid);
+            return __result__;
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe RawBool vkGetPhysicalDeviceXcbPresentationSupportKHR(PhysicalDevice physicalDevice, uint queueFamilyIndex, XcbConnectionT* connection, int visualid);
 
         public unsafe RawBool GetWin32PresentationSupport(uint queueFamilyIndex)
         {

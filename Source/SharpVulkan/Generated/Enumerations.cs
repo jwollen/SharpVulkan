@@ -1713,6 +1713,24 @@ namespace SharpVulkan
     }
 
     [Flags]
+    public enum XlibSurfaceCreateFlags : int
+    {
+        None = 0,
+    }
+
+    [Flags]
+    public enum XcbSurfaceCreateFlags : int
+    {
+        None = 0,
+    }
+
+    [Flags]
+    public enum AndroidSurfaceCreateFlags : int
+    {
+        None = 0,
+    }
+
+    [Flags]
     public enum Win32SurfaceCreateFlags : int
     {
         None = 0,
