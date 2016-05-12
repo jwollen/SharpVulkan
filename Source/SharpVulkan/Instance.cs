@@ -30,8 +30,11 @@ namespace SharpVulkan
                 EnumeratePhysicalDevices(ref count, null);
 
                 var result = new PhysicalDevice[count];
-                fixed (PhysicalDevice* resultPointer = &result[0])
-                    EnumeratePhysicalDevices(ref count, resultPointer);
+                if (count > 0)
+                {
+                    fixed (PhysicalDevice* resultPointer = &result[0])
+                        EnumeratePhysicalDevices(ref count, resultPointer);
+                }
 
                 return result;
             }

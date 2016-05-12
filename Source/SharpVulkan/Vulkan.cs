@@ -34,8 +34,11 @@ namespace SharpVulkan
                 EnumerateInstanceLayerProperties(ref count, null);
 
                 var result = new LayerProperties[count];
-                fixed (LayerProperties* resultPointer = &result[0])
-                    EnumerateInstanceLayerProperties(ref count, resultPointer);
+                if (count > 0)
+                {
+                    fixed (LayerProperties* resultPointer = &result[0])
+                        EnumerateInstanceLayerProperties(ref count, resultPointer);
+                }
 
                 return result;
             }
@@ -50,8 +53,11 @@ namespace SharpVulkan
                 EnumerateInstanceExtensionProperties((byte*)nativeString, ref count, null);
 
                 var result = new ExtensionProperties[count];
-                fixed (ExtensionProperties* resultPointer = &result[0])
-                    EnumerateInstanceExtensionProperties((byte*)nativeString, ref count, resultPointer);
+                if (count > 0)
+                {
+                    fixed (ExtensionProperties* resultPointer = &result[0])
+                        EnumerateInstanceExtensionProperties((byte*)nativeString, ref count, resultPointer);
+                }
 
                 return result;
             }

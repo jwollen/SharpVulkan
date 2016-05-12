@@ -30,8 +30,11 @@ namespace SharpVulkan
             GetImageSparseMemoryRequirements(image, ref count, null);
 
             var result = new SparseImageMemoryRequirements[count];
-            fixed (SparseImageMemoryRequirements* resultPointer = &result[0])
-                GetImageSparseMemoryRequirements(image, ref count, resultPointer);
+            if (count > 0)
+            {
+                fixed (SparseImageMemoryRequirements* resultPointer = &result[0])
+                    GetImageSparseMemoryRequirements(image, ref count, resultPointer);
+            }
 
             return result;
         }
@@ -42,8 +45,11 @@ namespace SharpVulkan
             GetPipelineCacheData(pipelineCache, ref count, IntPtr.Zero);
 
             var result = new byte[count];
-            fixed (byte* resultPtr = &result[0])
-                GetPipelineCacheData(pipelineCache, ref count, new IntPtr(resultPtr));
+            if (count > 0)
+            {
+                fixed (byte* resultPtr = &result[0])
+                    GetPipelineCacheData(pipelineCache, ref count, new IntPtr(resultPtr));
+            }
 
             return result;
         }
@@ -54,8 +60,11 @@ namespace SharpVulkan
             GetSwapchainImages(swapchain, ref count, null);
 
             var result = new Image[count];
-            fixed (Image* resultPtr = &result[0])
-                GetSwapchainImages(swapchain, ref count, resultPtr);
+            if (count > 0)
+            {
+                fixed (Image* resultPtr = &result[0])
+                    GetSwapchainImages(swapchain, ref count, resultPtr);
+            }
 
             return result;
         }

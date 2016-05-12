@@ -48,8 +48,11 @@ namespace SharpVulkan
                 EnumerateDeviceExtensionProperties((byte*)nativeString, ref count, null);
 
                 var result = new ExtensionProperties[count];
-                fixed (ExtensionProperties* resultPointer = &result[0])
-                    EnumerateDeviceExtensionProperties((byte*)nativeString, ref count, resultPointer);
+                if (count > 0)
+                {
+                    fixed (ExtensionProperties* resultPointer = &result[0])
+                        EnumerateDeviceExtensionProperties((byte*)nativeString, ref count, resultPointer);
+                }
 
                 return result;
             }
@@ -67,8 +70,11 @@ namespace SharpVulkan
                 GetQueueFamilyProperties(ref count, null);
 
                 var result = new QueueFamilyProperties[count];
-                fixed (QueueFamilyProperties* resultPointer = &result[0])
-                    GetQueueFamilyProperties(ref count, resultPointer);
+                if (count > 0)
+                {
+                    fixed (QueueFamilyProperties* resultPointer = &result[0])
+                        GetQueueFamilyProperties(ref count, resultPointer);
+                }
 
                 return result;
             }
@@ -82,8 +88,11 @@ namespace SharpVulkan
                 GetDisplayPlaneProperties(ref count, null);
 
                 var result = new DisplayPlaneProperties[count];
-                fixed (DisplayPlaneProperties* resultPointer = &result[0])
-                    GetDisplayPlaneProperties(ref count, resultPointer);
+                if (count > 0)
+                {
+                    fixed (DisplayPlaneProperties* resultPointer = &result[0])
+                        GetDisplayPlaneProperties(ref count, resultPointer);
+                }
 
                 return result;
             }
@@ -97,8 +106,11 @@ namespace SharpVulkan
                 GetDisplayProperties(ref count, null);
 
                 var result = new DisplayProperties[count];
-                fixed (DisplayProperties* resultPointer = &result[0])
-                    GetDisplayProperties(ref count, resultPointer);
+                if (count > 0)
+                {
+                    fixed (DisplayProperties* resultPointer = &result[0])
+                        GetDisplayProperties(ref count, resultPointer);
+                }
 
                 return result;
             }
@@ -110,8 +122,11 @@ namespace SharpVulkan
             GetSparseImageFormatProperties(format, type, samples, usage, tiling, ref count, null);
 
             var result = new SparseImageFormatProperties[count];
-            fixed (SparseImageFormatProperties* resultPointer = &result[0])
-                GetSparseImageFormatProperties(format, type, samples, usage, tiling, ref count, resultPointer);
+            if (count > 0)
+            {
+                fixed (SparseImageFormatProperties* resultPointer = &result[0])
+                    GetSparseImageFormatProperties(format, type, samples, usage, tiling, ref count, resultPointer);
+            }
 
             return result;
         }
@@ -122,8 +137,11 @@ namespace SharpVulkan
             GetDisplayModeProperties(display, ref count, null);
 
             var result = new DisplayModeProperties[count];
-            fixed (DisplayModeProperties* resultPointer = &result[0])
-                GetDisplayModeProperties(display, ref count, resultPointer);
+            if (count > 0)
+            {
+                fixed (DisplayModeProperties* resultPointer = &result[0])
+                    GetDisplayModeProperties(display, ref count, resultPointer);
+            }
 
             return result;
         }
@@ -134,8 +152,11 @@ namespace SharpVulkan
             GetDisplayPlaneSupportedDisplays(planeIndex, ref count, null);
 
             var result = new Display[count];
-            fixed (Display* resultPointer = &result[0])
-                GetDisplayPlaneSupportedDisplays(planeIndex, ref count, resultPointer);
+            if (count > 0)
+            {
+                fixed (Display* resultPointer = &result[0])
+                    GetDisplayPlaneSupportedDisplays(planeIndex, ref count, resultPointer);
+            }
 
             return result;
         }
@@ -146,9 +167,12 @@ namespace SharpVulkan
             GetSurfaceFormats(surface, ref count, null);
 
             var result = new SurfaceFormat[count];
-            fixed (SurfaceFormat* resultPointer = &result[0])
-                GetSurfaceFormats(surface, ref count, resultPointer);
-            
+            if (count > 0)
+            {
+                fixed (SurfaceFormat* resultPointer = &result[0])
+                    GetSurfaceFormats(surface, ref count, resultPointer);
+            }
+
             return result;
         }
 
@@ -158,9 +182,12 @@ namespace SharpVulkan
             GetSurfacePresentModes(surface, ref count, null);
 
             var result = new PresentMode[count];
-            fixed (PresentMode* resultPointer = &result[0])
-                GetSurfacePresentModes(surface, ref count, resultPointer);
-            
+            if (count > 0)
+            {
+                fixed (PresentMode* resultPointer = &result[0])
+                    GetSurfacePresentModes(surface, ref count, resultPointer);
+            }
+
             return result;
         }
     }
