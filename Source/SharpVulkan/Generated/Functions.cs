@@ -177,9 +177,12 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe void vkGetPhysicalDeviceFeatures(PhysicalDevice physicalDevice, PhysicalDeviceFeatures* features);
 
-        public unsafe void GetFormatProperties(Format format, FormatProperties formatProperties)
+        public unsafe void GetFormatProperties(Format format, out FormatProperties formatProperties)
         {
-            vkGetPhysicalDeviceFormatProperties(this, format, &formatProperties);
+            fixed (FormatProperties* __formatProperties__ = &formatProperties)
+            {
+                vkGetPhysicalDeviceFormatProperties(this, format, __formatProperties__);
+            }
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
