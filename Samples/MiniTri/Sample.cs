@@ -542,6 +542,7 @@ namespace MiniTri
                     PolygonMode = PolygonMode.Fill,
                     CullMode = CullModeFlags.None,
                     FrontFace = FrontFace.Clockwise,
+                    LineWidth = 1.0f
                 };
 
                 var colorBlendAttachment = new PipelineColorBlendAttachmentState { ColorWriteMask = ColorComponentFlags.R | ColorComponentFlags.G | ColorComponentFlags.B | ColorComponentFlags.A };
