@@ -32,8 +32,11 @@ namespace SharpVulkan
                 EnumerateDeviceLayerProperties(ref count, null);
 
                 var result = new LayerProperties[count];
-                fixed (LayerProperties* resultPointer = &result[0])
-                    EnumerateDeviceLayerProperties(ref count, resultPointer);
+                if (count > 0)
+                {
+                    fixed (LayerProperties* resultPointer = &result[0])
+                        EnumerateDeviceLayerProperties(ref count, resultPointer);
+                }
 
                 return result;
             }
