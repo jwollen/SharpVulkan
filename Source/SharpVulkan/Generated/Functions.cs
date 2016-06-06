@@ -108,6 +108,19 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe Result vkCreateXlibSurfaceKHR(Instance instance, XlibSurfaceCreateInfo* createInfo, AllocationCallbacks* allocator, Surface* surface);
 
+        public unsafe Surface CreateXcbSurface(ref XcbSurfaceCreateInfo createInfo, AllocationCallbacks* allocator = null)
+        {
+            Surface surface;
+            fixed (XcbSurfaceCreateInfo* __createInfo__ = &createInfo)
+            {
+                vkCreateXcbSurfaceKHR(this, __createInfo__, allocator, &surface).CheckError();
+            }
+            return surface;
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkCreateXcbSurfaceKHR(Instance instance, XcbSurfaceCreateInfo* createInfo, AllocationCallbacks* allocator, Surface* surface);
+
         public unsafe Surface CreateAndroidSurface(ref AndroidSurfaceCreateInfo createInfo, AllocationCallbacks* allocator = null)
         {
             Surface surface;
@@ -398,6 +411,16 @@ namespace SharpVulkan
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe RawBool vkGetPhysicalDeviceXlibPresentationSupportKHR(PhysicalDevice physicalDevice, uint queueFamilyIndex, IntPtr dpy, uint visualId);
+
+        public unsafe RawBool GetXcbPresentationSupport(uint queueFamilyIndex, IntPtr connection, uint visualid)
+        {
+            RawBool __result__;
+            __result__ = vkGetPhysicalDeviceXcbPresentationSupportKHR(this, queueFamilyIndex, connection, visualid);
+            return __result__;
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe RawBool vkGetPhysicalDeviceXcbPresentationSupportKHR(PhysicalDevice physicalDevice, uint queueFamilyIndex, IntPtr connection, uint visualid);
 
         public unsafe RawBool GetWin32PresentationSupport(uint queueFamilyIndex)
         {
