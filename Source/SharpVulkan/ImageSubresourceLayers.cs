@@ -20,20 +20,14 @@
 
 namespace SharpVulkan
 {
-    public partial struct ImageSubresourceRange
+    public partial struct ImageSubresourceLayers
     {
-        public ImageSubresourceRange(ImageAspectFlags aspectMask)
-            : this(aspectMask, 0, Vulkan.RemainingArrayLayers, 0, Vulkan.RemainingMipLevels)
-        {
-        }
-
-        public ImageSubresourceRange(ImageAspectFlags aspectMask, uint baseArrayLayer, uint layerCount, uint baseMipLevel, uint levelCount)
+        public ImageSubresourceLayers(ImageAspectFlags aspectMask, uint baseArrayLayer, uint layerCount, uint mipLevel)
         {
             AspectMask = aspectMask;
             BaseArrayLayer = baseArrayLayer;
-            BaseMipLevel = baseMipLevel;
             LayerCount = layerCount;
-            LevelCount = levelCount;
+            MipLevel = mipLevel;
         }
     }
 }

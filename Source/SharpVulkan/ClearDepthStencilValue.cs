@@ -20,20 +20,12 @@
 
 namespace SharpVulkan
 {
-    public partial struct ImageSubresourceRange
+    public partial struct ClearDepthStencilValue
     {
-        public ImageSubresourceRange(ImageAspectFlags aspectMask)
-            : this(aspectMask, 0, Vulkan.RemainingArrayLayers, 0, Vulkan.RemainingMipLevels)
+        public ClearDepthStencilValue(float depth, uint stencil)
         {
-        }
-
-        public ImageSubresourceRange(ImageAspectFlags aspectMask, uint baseArrayLayer, uint layerCount, uint baseMipLevel, uint levelCount)
-        {
-            AspectMask = aspectMask;
-            BaseArrayLayer = baseArrayLayer;
-            BaseMipLevel = baseMipLevel;
-            LayerCount = layerCount;
-            LevelCount = levelCount;
+            Depth = depth;
+            Stencil = stencil;
         }
     }
 }

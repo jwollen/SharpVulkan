@@ -45,6 +45,8 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="BufferMemoryBarrier.cs" />
+    <Compile Include="ClearDepthStencilValue.cs" />
     <Compile Include="ComponentMapping.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="Extent2D.cs" />
@@ -52,6 +54,9 @@
     <Compile Include="Generated\Enumerations.cs" />
     <Compile Include="Generated\Functions.cs" />
     <Compile Include="Generated\Structures.cs" />
+    <Compile Include="ImageMemoryBarrier.cs" />
+    <Compile Include="ImageSubresource.cs" />
+    <Compile Include="ImageSubresourceLayers.cs" />
     <Compile Include="ImageSubresourceRange.cs" />
     <Compile Include="Instance.cs" />
     <Compile Include="Offset2D.cs" />

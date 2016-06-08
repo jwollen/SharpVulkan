@@ -18,22 +18,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
+
 namespace SharpVulkan
 {
-    public partial struct ImageSubresourceRange
+    public partial struct ImageMemoryBarrier
     {
-        public ImageSubresourceRange(ImageAspectFlags aspectMask)
-            : this(aspectMask, 0, Vulkan.RemainingArrayLayers, 0, Vulkan.RemainingMipLevels)
+        public ImageMemoryBarrier(Image image, ImageLayout oldLayout, ImageLayout newLayout, AccessFlags sourceAccesMask, AccessFlags destinationAccessMask, ImageSubresourceRange subresourceRange)
+            : this(image, oldLayout, newLayout, sourceAccesMask, destinationAccessMask, Vulkan.QueueFamilyIgnored, Vulkan.QueueFamilyIgnored, subresourceRange)
         {
         }
 
-        public ImageSubresourceRange(ImageAspectFlags aspectMask, uint baseArrayLayer, uint layerCount, uint baseMipLevel, uint levelCount)
+        public ImageMemoryBarrier(Image image, ImageLayout oldLayout, ImageLayout newLayout, AccessFlags sourceAccesMask, AccessFlags destinationAccessMask, uint sourceQueueFamilyIndex, uint destinationQueueFamilyIndex, ImageSubresourceRange subresourceRange)
         {
-            AspectMask = aspectMask;
-            BaseArrayLayer = baseArrayLayer;
-            BaseMipLevel = baseMipLevel;
-            LayerCount = layerCount;
-            LevelCount = levelCount;
+            StructureType = StructureType.ImageMemoryBarrier;
+            Next = IntPtr.Zero;
+            Image = image;
+            SubresourceRange = subresourceRange;
+            OldLayout = oldLayout;
+            NewLayout = newLayout;
+            SourceAccessMask = sourceAccesMask;
+            DestinationAccessMask = destinationAccessMask;
+            SourceQueueFamilyIndex = sourceQueueFamilyIndex;
+            DestinationQueueFamilyIndex = destinationQueueFamilyIndex;
         }
     }
 }

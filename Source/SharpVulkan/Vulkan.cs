@@ -26,6 +26,16 @@ namespace SharpVulkan
     {
         public static readonly Version ApiVersion = new Version(1, 0, 5);
 
+        public const uint RemainingMipLevels = ~0U;
+
+        public const uint RemainingArrayLayers = ~0U;
+
+        public const ulong WholeSize = ~0UL;
+
+        public const uint AttachmentUnused = ~0U;
+
+        public const uint QueueFamilyIgnored = ~0U;
+
         public static unsafe LayerProperties[] InstanceLayerProperties
         {
             get
