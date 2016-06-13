@@ -79,7 +79,7 @@ namespace MiniTri
 
         public void Run()
         {
-            Debugger.Launch();
+            //Debugger.Launch();
             Initialize();
             RenderLoop.Run(form, Draw);
         }

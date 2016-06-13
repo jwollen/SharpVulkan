@@ -30,9 +30,11 @@ layout (location = 0) in vec3 Position;
 layout (location = 1) in vec3 ColorIn;
 
 layout (location = 0) out vec3 ColorOut;
+layout (location = 1) out vec4 Test;
 
 void main()
 {
     ColorOut = ColorIn;
+	Test = Transform[gl_VertexIndex];
     gl_Position = Transform * vec4(Position, 1);
 }
