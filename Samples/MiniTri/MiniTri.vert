@@ -22,6 +22,10 @@
 #extension GL_ARB_separate_shader_objects : enable
 #extension GL_ARB_shading_language_420pack : enable
 
+layout(std140, set = 0, binding = 0) uniform Globals {
+    mat4 Transform;
+};
+
 layout (location = 0) in vec3 Position;
 layout (location = 1) in vec3 ColorIn;
 
@@ -30,5 +34,5 @@ layout (location = 0) out vec3 ColorOut;
 void main()
 {
     ColorOut = ColorIn;
-    gl_Position = vec4(Position, 1);
+    gl_Position = Transform * vec4(Position, 1);
 }

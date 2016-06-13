@@ -63,6 +63,10 @@ namespace MiniTri
         private RenderPass renderPass;
         private Framebuffer[] framebuffers;
 
+        private DescriptorPool descriptorPool;
+        private DescriptorSetLayout descriptorSetLayout;
+        private Buffer uniformBuffer;
+
         private Buffer vertexBuffer;
         private DeviceMemory vertexBufferMemory;
         private VertexInputAttributeDescription[] vertexAttributes;
@@ -483,17 +487,97 @@ namespace MiniTri
             }
         }
 
-        private void CreatePipelineLayout()
+        private unsafe void CreatePipelineLayout()
         {
-            // We don't need any descriptors, since we don't use any resources/uniforms
-            var descriptorSetLayoutCreateInfo = new DescriptorSetLayoutCreateInfo { StructureType = StructureType.DescriptorSetLayoutCreateInfo };
-            var descriptorSetLayout = device.CreateDescriptorSetLayout(ref descriptorSetLayoutCreateInfo);
+            var binding = new DescriptorSetLayoutBinding
+            {
+                Binding = 0,
+                DescriptorCount = 1,
+                DescriptorType = DescriptorType.UniformBuffer,
+                StageFlags = ShaderStageFlags.Vertex
+            };
 
-            var createInfo = new PipelineLayoutCreateInfo { StructureType = StructureType.PipelineLayoutCreateInfo };
+            var descriptorSetLayoutCreateInfo = new DescriptorSetLayoutCreateInfo
+            {
+                StructureType = StructureType.DescriptorSetLayoutCreateInfo,
+                BindingCount = 1,
+                Bindings = new IntPtr(&binding)
+            };
+            descriptorSetLayout = device.CreateDescriptorSetLayout(ref descriptorSetLayoutCreateInfo);
+
+            var localDescriptorSetLayout = descriptorSetLayout;
+            var createInfo = new PipelineLayoutCreateInfo
+            {
+                StructureType = StructureType.PipelineLayoutCreateInfo,
+                SetLayoutCount = 1,
+                SetLayouts = new IntPtr(&localDescriptorSetLayout)
+            };
             pipelineLayout = device.CreatePipelineLayout(ref createInfo);
 
-            // Destroy temporary layout
-            device.DestroyDescriptorSetLayout(descriptorSetLayout);
+            var poolSize = new DescriptorPoolSize { DescriptorCount = 2, Type = DescriptorType.UniformBuffer };
+            var descriptorPoolCreateinfo = new DescriptorPoolCreateInfo
+            {
+                StructureType = StructureType.DescriptorPoolCreateInfo,
+                PoolSizeCount = 1,
+                PoolSizes = new IntPtr(&poolSize),
+                MaxSets = 2
+            };
+            descriptorPool = device.CreateDescriptorPool(ref descriptorPoolCreateinfo);
+
+            var bufferCreateInfo = new BufferCreateInfo
+            {
+                StructureType = StructureType.BufferCreateInfo,
+                Usage = BufferUsageFlags.UniformBuffer,
+                Size = 64,
+            };
+            uniformBuffer = device.CreateBuffer(ref bufferCreateInfo);
+
+            MemoryRequirements memoryRequirements;
+            device.GetBufferMemoryRequirements(uniformBuffer, out memoryRequirements);
+            var memory = AllocateMemory(MemoryPropertyFlags.HostVisible | MemoryPropertyFlags.HostCoherent, memoryRequirements);
+
+            device.BindBufferMemory(uniformBuffer, memory, 0);
+
+            var mappedMemory = device.MapMemory(memory, 0, 64, MemoryMapFlags.None);
+            var data = new[]
+            {
+                1.0f, 0.0f, 0.0f, 0.0f,
+                0.0f, 1.0f, 0.0f, 0.0f,
+                0.0f, 0.0f, 1.0f, 0.0f,
+                0.0f, 0.0f, 0.0f, 1.0f,
+            };
+            Utilities.Write(mappedMemory, data, 0, data.Length);
+            device.UnmapMemory(memory);
+        }
+
+        protected unsafe DeviceMemory AllocateMemory(MemoryPropertyFlags memoryProperties, MemoryRequirements memoryRequirements)
+        {
+            var allocateInfo = new MemoryAllocateInfo
+            {
+                StructureType = StructureType.MemoryAllocateInfo,
+                AllocationSize = memoryRequirements.Size,
+            };
+
+            PhysicalDeviceMemoryProperties physicalDeviceMemoryProperties;
+            physicalDevice.GetMemoryProperties(out physicalDeviceMemoryProperties);
+
+            var typeBits = memoryRequirements.MemoryTypeBits;
+            for (uint i = 0; i < physicalDeviceMemoryProperties.MemoryTypeCount; i++)
+            {
+                if ((typeBits & 1) == 1)
+                {
+                    // Type is available, does it match user properties?
+                    var memoryType = *((MemoryType*)&physicalDeviceMemoryProperties.MemoryTypes + i);
+                    if ((memoryType.PropertyFlags & memoryProperties) == memoryProperties)
+                    {
+                        allocateInfo.MemoryTypeIndex = i;
+                        break;
+                    }
+                }
+                typeBits >>= 1;
+            }
+
+            return device.AllocateMemory(ref allocateInfo);
         }
 
         private void CreatePipeline()
@@ -542,7 +626,7 @@ namespace MiniTri
                     PolygonMode = PolygonMode.Fill,
                     CullMode = CullModeFlags.None,
                     FrontFace = FrontFace.Clockwise,
-                    LineWidth = 1.0f
+                    LineWidth = 1.0f,
                 };
 
                 var colorBlendAttachment = new PipelineColorBlendAttachmentState { ColorWriteMask = ColorComponentFlags.R | ColorComponentFlags.G | ColorComponentFlags.B | ColorComponentFlags.A };
@@ -561,6 +645,12 @@ namespace MiniTri
                     DepthCompareOperation = CompareOperation.LessOrEqual,
                     Back = new StencilOperationState { CompareOperation = CompareOperation.Always },
                     Front = new StencilOperationState { CompareOperation = CompareOperation.Always }
+                };
+
+                var multisampleState = new PipelineMultisampleStateCreateInfo
+                {
+                    StructureType = StructureType.PipelineMultisampleStateCreateInfo,
+                    RasterizationSamples = SampleCountFlags.Sample1,
                 };
 
                 var shaderStages = new[]
@@ -594,6 +684,7 @@ namespace MiniTri
                         RasterizationState = new IntPtr(&rasterizerState),
                         ColorBlendState = new IntPtr(&blendState),
                         DepthStencilState = new IntPtr(&depthStencilState),
+                        MultisampleState = new IntPtr(&multisampleState),
                         StageCount = (uint)shaderStages.Length,
                         Stages = new IntPtr(shaderStagesPointer),
                         RenderPass = renderPass
@@ -655,7 +746,7 @@ namespace MiniTri
             throw new InvalidOperationException();
         }
 
-        protected virtual void Draw()
+        protected virtual unsafe void Draw()
         {
             var semaphoreCreateInfo = new SemaphoreCreateInfo { StructureType = StructureType.SemaphoreCreateInfo };
             var presentCompleteSemaphore = device.CreateSemaphore(ref semaphoreCreateInfo);
@@ -706,12 +797,57 @@ namespace MiniTri
             // Wait
             queue.WaitIdle();
 
+            device.ResetDescriptorPool(descriptorPool, DescriptorPoolResetFlags.None);
+
             // Cleanup
             device.DestroySemaphore(presentCompleteSemaphore);
         }
 
         private void DrawInternal()
         {
+            // Update descriptors
+            var descriptorSets = stackalloc DescriptorSet[2];
+            var setLayouts = stackalloc DescriptorSetLayout[2];
+            setLayouts[0] = setLayouts[1] = descriptorSetLayout;
+
+            var allocateInfo = new DescriptorSetAllocateInfo
+            {
+                StructureType = StructureType.DescriptorSetAllocateInfo,
+                DescriptorPool = descriptorPool,
+                DescriptorSetCount = 2,
+                SetLayouts = new IntPtr(setLayouts),
+            };
+            device.AllocateDescriptorSets(ref allocateInfo, descriptorSets);
+
+            var bufferInfo = new DescriptorBufferInfo
+            {
+                Buffer = uniformBuffer,
+                Range = Vulkan.WholeSize
+            };
+
+            var write = new WriteDescriptorSet
+            {
+                StructureType = StructureType.WriteDescriptorSet,
+                DescriptorCount = 1,
+                DestinationSet = descriptorSets[0],
+                DestinationBinding = 0,
+                DescriptorType = DescriptorType.UniformBuffer,
+                BufferInfo = new IntPtr(&bufferInfo)
+            };
+
+            var copy = new CopyDescriptorSet
+            {
+                StructureType = StructureType.CopyDescriptorSet,
+                DescriptorCount = 1,
+                SourceBinding = 0,
+                DestinationBinding = 0,
+                SourceSet = descriptorSets[0],
+                DestinationSet = descriptorSets[1]
+            };
+
+            device.UpdateDescriptorSets(1, &write, 0, null);
+            device.UpdateDescriptorSets(0, null, 1, &copy);
+
             // Post-present transition
             var memoryBarrier = new ImageMemoryBarrier
             {
@@ -741,6 +877,9 @@ namespace MiniTri
 
             // Bind pipeline
             commandBuffer.BindPipeline(PipelineBindPoint.Graphics, pipeline);
+
+            // Bind descriptor sets
+            commandBuffer.BindDescriptorSets(PipelineBindPoint.Graphics, pipelineLayout, 0, 1, descriptorSets + 1, 0, null);
 
             // Set viewport and scissor
             var viewport = new Viewport(0, 0, form.ClientSize.Width, form.ClientSize.Height);
