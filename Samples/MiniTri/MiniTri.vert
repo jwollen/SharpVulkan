@@ -24,7 +24,7 @@
 
 layout(std140, set = 0, binding = 0) uniform Globals {
     mat4 Transform;
-};
+} globals;
 
 layout (location = 0) in vec3 Position;
 layout (location = 1) in vec3 ColorIn;
@@ -37,9 +37,11 @@ void main()
 {
     ColorOut = ColorIn;
 	Index = gl_VertexIndex;
-	Test = Transform[gl_VertexIndex];
-	gl_Position = vec4(Transform[gl_VertexIndex].xyz, 1);
-	//gl_Position = Transform * vec4(Position, 1);
+	Test = globals.Transform[gl_VertexIndex];
+	
+	gl_Position = vec4(globals.Transform[gl_VertexIndex].xyz, 1);
+	
+	//gl_Position = globals.Transform * vec4(Position, 1);
 	//gl_Position.yz = Position.yz;
 	//gl_Position.w = 1;
 }

@@ -107,7 +107,7 @@ namespace MiniTri
             {
                 StructureType = StructureType.ApplicationInfo,
                 EngineVersion = 0,
-                ApiVersion = Vulkan.ApiVersion
+                ApiVersion = new Version(1, 0, 0)
             };
 
             var enabledLayerNames = new []
@@ -362,18 +362,6 @@ namespace MiniTri
                 Flags = CommandPoolCreateFlags.ResetCommandBuffer
             };
             commandPool = device.CreateCommandPool(ref commandPoolCreateInfo);
-
-            // Command buffer
-            var commandBufferAllocationInfo = new CommandBufferAllocateInfo
-            {
-                StructureType = StructureType.CommandBufferAllocateInfo,
-                Level = CommandBufferLevel.Primary,
-                CommandPool = commandPool,
-                CommandBufferCount = 1
-            };
-            CommandBuffer commandBuffer;
-            device.AllocateCommandBuffers(ref commandBufferAllocationInfo, &commandBuffer);
-            this.commandBuffer = commandBuffer;
         }
 
         private void CreateVertexBuffer()
@@ -752,6 +740,9 @@ namespace MiniTri
             var semaphoreCreateInfo = new SemaphoreCreateInfo { StructureType = StructureType.SemaphoreCreateInfo };
             var presentCompleteSemaphore = device.CreateSemaphore(ref semaphoreCreateInfo);
 
+            //var fenceCreateInfo = new FenceCreateInfo { StructureType = StructureType.FenceCreateInfo };
+            //var presentCompleteFence = device.CreateFence(ref fenceCreateInfo);
+
             try
             {
                 // Get the index of the next available swapchain image
@@ -762,6 +753,18 @@ namespace MiniTri
                 // TODO: Handle resize and retry draw
                 throw new NotImplementedException();
             }
+
+            // Command buffer
+            var commandBufferAllocationInfo = new CommandBufferAllocateInfo
+            {
+                StructureType = StructureType.CommandBufferAllocateInfo,
+                Level = CommandBufferLevel.Primary,
+                CommandPool = commandPool,
+                CommandBufferCount = 1
+            };
+            CommandBuffer commandBuffer;
+            device.AllocateCommandBuffers(ref commandBufferAllocationInfo, &commandBuffer);
+            this.commandBuffer = commandBuffer;
 
             // Record drawing command buffer
             var beginInfo = new CommandBufferBeginInfo { StructureType = StructureType.CommandBufferBeginInfo };
@@ -783,6 +786,8 @@ namespace MiniTri
             };
             queue.Submit(1, &submitInfo, Fence.Null);
 
+            //device.WaitForFences(1, &presentCompleteFence, true, 0);
+
             // Present
             var swapchain = this.swapchain;
             var currentBackBufferIndexCopy = currentBackBufferIndex;
@@ -797,28 +802,29 @@ namespace MiniTri
 
             // Wait
             queue.WaitIdle();
+            device.ResetCommandPool(commandPool, CommandPoolResetFlags.None);
 
             device.ResetDescriptorPool(descriptorPool, DescriptorPoolResetFlags.None);
 
             // Cleanup
             device.DestroySemaphore(presentCompleteSemaphore);
+            //device.DestroyFence(presentCompleteFence);
         }
 
         private void DrawInternal()
         {
             // Update descriptors
-            var descriptorSets = stackalloc DescriptorSet[2];
-            var setLayouts = stackalloc DescriptorSetLayout[2];
-            setLayouts[0] = setLayouts[1] = descriptorSetLayout;
+            var layoutCopy = descriptorSetLayout;
 
             var allocateInfo = new DescriptorSetAllocateInfo
             {
                 StructureType = StructureType.DescriptorSetAllocateInfo,
                 DescriptorPool = descriptorPool,
-                DescriptorSetCount = 2,
-                SetLayouts = new IntPtr(setLayouts),
+                DescriptorSetCount = 1,
+                SetLayouts = new IntPtr(&layoutCopy),
             };
-            device.AllocateDescriptorSets(ref allocateInfo, descriptorSets);
+            DescriptorSet descriptorSet;
+            device.AllocateDescriptorSets(ref allocateInfo, &descriptorSet);
 
             var bufferInfo = new DescriptorBufferInfo
             {
@@ -830,24 +836,24 @@ namespace MiniTri
             {
                 StructureType = StructureType.WriteDescriptorSet,
                 DescriptorCount = 1,
-                DestinationSet = descriptorSets[0],
+                DestinationSet = descriptorSet,
                 DestinationBinding = 0,
                 DescriptorType = DescriptorType.UniformBuffer,
                 BufferInfo = new IntPtr(&bufferInfo)
             };
 
-            var copy = new CopyDescriptorSet
-            {
-                StructureType = StructureType.CopyDescriptorSet,
-                DescriptorCount = 1,
-                SourceBinding = 0,
-                DestinationBinding = 0,
-                SourceSet = descriptorSets[0],
-                DestinationSet = descriptorSets[1]
-            };
+            //var copy = new CopyDescriptorSet
+            //{
+            //    StructureType = StructureType.CopyDescriptorSet,
+            //    DescriptorCount = 1,
+            //    SourceBinding = 0,
+            //    DestinationBinding = 0,
+            //    SourceSet = descriptorSet[0],
+            //    DestinationSet = descriptorSet[1]
+            //};
 
             device.UpdateDescriptorSets(1, &write, 0, null);
-            device.UpdateDescriptorSets(0, null, 1, &copy);
+            //device.UpdateDescriptorSets(0, null, 1, &copy);
 
             // Post-present transition
             var memoryBarrier = new ImageMemoryBarrier
@@ -858,7 +864,9 @@ namespace MiniTri
                 OldLayout = ImageLayout.PresentSource,
                 NewLayout = ImageLayout.ColorAttachmentOptimal,
                 SourceAccessMask = AccessFlags.MemoryRead,
-                DestinationAccessMask = AccessFlags.ColorAttachmentWrite
+                DestinationAccessMask = AccessFlags.ColorAttachmentWrite,
+                SourceQueueFamilyIndex = Vulkan.QueueFamilyIgnored,
+                DestinationQueueFamilyIndex = Vulkan.QueueFamilyIgnored,
             };
             commandBuffer.PipelineBarrier(PipelineStageFlags.TopOfPipe, PipelineStageFlags.TopOfPipe, DependencyFlags.None, 0, null, 0, null, 1, &memoryBarrier);
 
@@ -880,7 +888,7 @@ namespace MiniTri
             commandBuffer.BindPipeline(PipelineBindPoint.Graphics, pipeline);
 
             // Bind descriptor sets
-            commandBuffer.BindDescriptorSets(PipelineBindPoint.Graphics, pipelineLayout, 0, 1, descriptorSets + 1, 0, null);
+            commandBuffer.BindDescriptorSets(PipelineBindPoint.Graphics, pipelineLayout, 0, 1, &descriptorSet, 0, null);
 
             // Set viewport and scissor
             var viewport = new Viewport(0, 0, form.ClientSize.Width, form.ClientSize.Height);
@@ -909,7 +917,9 @@ namespace MiniTri
                 OldLayout = ImageLayout.ColorAttachmentOptimal,
                 NewLayout = ImageLayout.PresentSource,
                 SourceAccessMask = AccessFlags.ColorAttachmentWrite,
-                DestinationAccessMask = AccessFlags.MemoryRead
+                DestinationAccessMask = AccessFlags.MemoryRead,
+                SourceQueueFamilyIndex = Vulkan.QueueFamilyIgnored,
+                DestinationQueueFamilyIndex = Vulkan.QueueFamilyIgnored,
             };
             commandBuffer.PipelineBarrier(PipelineStageFlags.AllCommands, PipelineStageFlags.BottomOfPipe, DependencyFlags.None, 0, null, 0, null, 1, &memoryBarrier);
         }
