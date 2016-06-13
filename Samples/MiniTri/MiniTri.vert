@@ -38,7 +38,8 @@ void main()
     ColorOut = ColorIn;
 	Index = gl_VertexIndex;
 	Test = Transform[gl_VertexIndex];
-	gl_Position = Transform * vec4(Position, 1);
-	gl_Position.yz = Position.yz;
-	gl_Position.w = 1;
+	gl_Position = vec4(Transform[gl_VertexIndex].xyz, 1);
+	//gl_Position = Transform * vec4(Position, 1);
+	//gl_Position.yz = Position.yz;
+	//gl_Position.w = 1;
 }
