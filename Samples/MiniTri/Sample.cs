@@ -155,7 +155,7 @@ namespace MiniTri
                         var createInfo = new DebugReportCallbackCreateInfo
                         {
                             StructureType = StructureType.DebugReportCallbackCreateInfo,
-                            Flags = (uint)(DebugReportFlags.Error | DebugReportFlags.Warning | DebugReportFlags.PerformanceWarning),
+                            Flags = (uint)(DebugReportFlags.Error | DebugReportFlags.Warning/* | DebugReportFlags.PerformanceWarning*/),
                             Callback = Marshal.GetFunctionPointerForDelegate(debugReport)
                         };
                         createDebugReportCallback(instance, ref createInfo, null, out debugReportCallback);
@@ -382,6 +382,7 @@ namespace MiniTri
             {
                 {  0.0f, -0.5f,  0.5f, 1.0f, 0.0f, 0.0f },
                 {  0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f },
+                { -0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f },
                 { -0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f },
             };
 
@@ -894,7 +895,7 @@ namespace MiniTri
             commandBuffer.BindVertexBuffers(0, 1, &vertexBufferCopy, &offset);
 
             // Draw vertices
-            commandBuffer.Draw(3, 1, 0, 0);
+            commandBuffer.Draw(4, 1, 0, 0);
 
             // End render pass
             commandBuffer.EndRenderPass();
