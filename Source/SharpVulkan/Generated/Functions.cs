@@ -1184,6 +1184,28 @@ namespace SharpVulkan
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe Result vkCreateSharedSwapchainsKHR(Device device, uint swapchainCount, SwapchainCreateInfo* createInfos, AllocationCallbacks* allocator, Swapchain* swapchains);
+
+        public unsafe void DebugMarkerSetObjectTag(out DebugMarkerObjectTagInfo tagInfo)
+        {
+            fixed (DebugMarkerObjectTagInfo* __tagInfo__ = &tagInfo)
+            {
+                vkDebugMarkerSetObjectTagEXT(this, __tagInfo__).CheckError();
+            }
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkDebugMarkerSetObjectTagEXT(Device device, DebugMarkerObjectTagInfo* tagInfo);
+
+        public unsafe void DebugMarkerSetObjectName(out DebugMarkerObjectNameInfo nameInfo)
+        {
+            fixed (DebugMarkerObjectNameInfo* __nameInfo__ = &nameInfo)
+            {
+                vkDebugMarkerSetObjectNameEXT(this, __nameInfo__).CheckError();
+            }
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkDebugMarkerSetObjectNameEXT(Device device, DebugMarkerObjectNameInfo* nameInfo);
     }
 
     public partial struct Queue
@@ -1610,5 +1632,35 @@ namespace SharpVulkan
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe void vkCmdExecuteCommands(CommandBuffer commandBuffer, uint commandBufferCount, CommandBuffer* commandBuffers);
+
+        public unsafe void DebugMarkerBegin(out DebugMarkerMarkerInfo markerInfo)
+        {
+            fixed (DebugMarkerMarkerInfo* __markerInfo__ = &markerInfo)
+            {
+                vkCmdDebugMarkerBeginEXT(this, __markerInfo__);
+            }
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkCmdDebugMarkerBeginEXT(CommandBuffer commandBuffer, DebugMarkerMarkerInfo* markerInfo);
+
+        public unsafe void DebugMarkerEnd()
+        {
+            vkCmdDebugMarkerEndEXT(this);
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkCmdDebugMarkerEndEXT(CommandBuffer commandBuffer);
+
+        public unsafe void DebugMarkerInsert(out DebugMarkerMarkerInfo markerInfo)
+        {
+            fixed (DebugMarkerMarkerInfo* __markerInfo__ = &markerInfo)
+            {
+                vkCmdDebugMarkerInsertEXT(this, __markerInfo__);
+            }
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkCmdDebugMarkerInsertEXT(CommandBuffer commandBuffer, DebugMarkerMarkerInfo* markerInfo);
     }
 }

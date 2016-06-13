@@ -182,6 +182,14 @@ namespace SharpVulkan
         Win32SurfaceCreateInfo = 1000009000,
 
         DebugReportCallbackCreateInfo = 1000011000,
+
+        PipelineRasterizationStateRasterizationOrder = 1000018000,
+
+        DebugMarkerObjectNameInfo = 1000022000,
+
+        DebugMarkerObjectTagInfo = 1000022001,
+
+        DebugMarkerMarkerInfo = 1000022002,
     }
 
     public enum SystemAllocationScope : int
@@ -1818,5 +1826,12 @@ namespace SharpVulkan
         Error = 8,
 
         Debug = 16,
+    }
+
+    public enum RasterizationOrder : int
+    {
+        Strict = 0,
+
+        Relaxed = 1,
     }
 }

@@ -4906,4 +4906,65 @@ namespace SharpVulkan
 
         public IntPtr UserData;
     }
+
+    public partial struct PipelineRasterizationStateRasterizationOrder
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public RasterizationOrder RasterizationOrder;
+    }
+
+    public partial struct DebugMarkerObjectNameInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public DebugReportObjectType ObjectType;
+
+        public ulong Object;
+
+        public IntPtr ObjectName;
+    }
+
+    public partial struct DebugMarkerObjectTagInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public DebugReportObjectType ObjectType;
+
+        public ulong Object;
+
+        public ulong TagName;
+
+        public PointerSize TagSize;
+
+        public IntPtr Tag;
+    }
+
+    public partial struct DebugMarkerMarkerInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public IntPtr MarkerName;
+
+        public struct ColorArray
+        {
+            public float Value0;
+
+            public float Value1;
+
+            public float Value2;
+
+            public float Value3;
+        }
+
+        public ColorArray Color;
+    }
 }
