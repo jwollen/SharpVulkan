@@ -103,31 +103,36 @@ namespace MiniTri
         protected virtual void Initialize()
         {
             CreateInstance();
+            CreateSurface();
+            CreateDevice();
+            CreateCommandPool();
 
-            InitSwapchain();
+            CreateSwapchain();
+            CreateBackBufferViews();
+            CreateDepthBuffer();
 
+            CreateTexture();
+            CreateUniformBuffer();
+            CreateVertexBuffer();
+
+            CreateDescriptorLayout();
+            CreateRenderPass();
+            CreatePipeline();
+
+            CreateDescriptorPool();
+            CreateFramebuffer();
+
+            FlushInitCommand();
+        }
+
+        private void CreateCommandPool()
+        {
             var createInfo = new CommandPoolCreateInfo
             {
                 StructureType = StructureType.CommandPoolCreateInfo,
                 QueueFamilyIndex = graphicsQueueFamilyIndex,
             };
             commandPool = device.CreateCommandPool(ref createInfo);
-
-            PrepareBuffers();
-            PrepareDepth();
-            PrepareTextures();
-            PrepareCubeDataBuffer();
-
-            CreateVertexBuffer();
-
-            PrepareDescriptorLayout();
-            PrepareRenderPass();
-            PreparePipeline();
-
-            PrepareDescriptorPool();
-            PrepareFramebuffer();
-
-            FlushInitCommand();
         }
 
         private void CreateVertexBuffer()
@@ -228,18 +233,8 @@ namespace MiniTri
                 foreach (var enabledLayerName in enabledLayerNames)
                     Marshal.FreeHGlobal(enabledLayerName);
             }
-        }
 
-        private void InitSwapchain()
-        {
-            var surfaceCreateInfo = new Win32SurfaceCreateInfo
-            {
-                StructureType = StructureType.Win32SurfaceCreateInfo,
-                InstanceHandle = Process.GetCurrentProcess().Handle,
-                WindowHandle = form.Handle,
-            };
-            surface = instance.CreateWin32Surface(surfaceCreateInfo);
-
+            // Select queue family
             var supportsPresent = queueFamilyeProperties.Select((x, i) => physicalDevice.GetSurfaceSupport((uint)i, surface)).ToArray();
 
             graphicsQueueFamilyIndex = uint.MaxValue;
@@ -263,8 +258,6 @@ namespace MiniTri
             }
             if (presentQueueNodeIndex == uint.MaxValue)
             {
-                // If didn't find a queue that supports both graphics and present, then
-                // find a separate present queue.
                 for (uint i = 0; i < queueFamilyeProperties.Length; ++i)
                 {
                     if (supportsPresent[i])
@@ -285,23 +278,19 @@ namespace MiniTri
                 throw new NotImplementedException();
             }
 
-            CreateDevice();
-
+            // Get queue
             queue = device.GetQueue(graphicsQueueFamilyIndex, 0);
+        }
 
-            var surfaceFormats = physicalDevice.GetSurfaceFormats(surface);
-
-            if (surfaceFormats.Length == 1 && surfaceFormats[0].Format == Format.Undefined)
+        private void CreateSurface()
+        {
+            var surfaceCreateInfo = new Win32SurfaceCreateInfo
             {
-                backBufferFormat = Format.R8G8B8A8UNorm;
-            }
-            else
-            {
-                backBufferFormat = surfaceFormats[0].Format;
-            }
-            colorSpace = surfaceFormats[0].ColorSpace;
-
-            physicalDevice.GetMemoryProperties(out physicalDeviceMemoryProperties);
+                StructureType = StructureType.Win32SurfaceCreateInfo,
+                InstanceHandle = Process.GetCurrentProcess().Handle,
+                WindowHandle = form.Handle,
+            };
+            surface = instance.CreateWin32Surface(surfaceCreateInfo);
         }
 
         private void FlushInitCommand()
@@ -327,7 +316,7 @@ namespace MiniTri
             setupCommandBuffer = CommandBuffer.Null;
         }
 
-        private void PrepareFramebuffer()
+        private void CreateFramebuffer()
         {
             var attachments = stackalloc ImageView[2];
             attachments[1] = depthbufferView;
@@ -351,7 +340,7 @@ namespace MiniTri
             }
         }
 
-        private void PrepareDescriptorPool()
+        private void CreateDescriptorPool()
         {
             var typeCounts = stackalloc DescriptorPoolSize[2];
             typeCounts[0] = new DescriptorPoolSize { Type = DescriptorType.UniformBuffer, DescriptorCount = 1 };
@@ -368,7 +357,7 @@ namespace MiniTri
             descriptorPool = device.CreateDescriptorPool(ref createInfo);
         }
 
-        private void PreparePipeline()
+        private void CreatePipeline()
         {
             var dynamicStates = stackalloc DynamicState[2];
             dynamicStates[0] = DynamicState.Viewport;
@@ -522,7 +511,7 @@ namespace MiniTri
             }
         }
 
-        private void PrepareRenderPass()
+        private void CreateRenderPass()
         {
             var attachments = stackalloc AttachmentDescription[2];
             attachments[0] = new AttachmentDescription
@@ -572,7 +561,7 @@ namespace MiniTri
             renderPass = device.CreateRenderPass(ref renderPassCreateInfo);
         }
 
-        private void PrepareDescriptorLayout()
+        private void CreateDescriptorLayout()
         {
             var layoutBindings = stackalloc DescriptorSetLayoutBinding[2];
             layoutBindings[0] = new DescriptorSetLayoutBinding { Binding = 0, DescriptorType = DescriptorType.UniformBuffer, DescriptorCount = 1, StageFlags = ShaderStageFlags.Vertex };
@@ -597,7 +586,7 @@ namespace MiniTri
             pipelineLayout = device.CreatePipelineLayout(ref pipelineLayoutCreateInfo);
         }
 
-        private void PrepareCubeDataBuffer()
+        private void CreateUniformBuffer()
         {
             var bufferCreateInfo = new BufferCreateInfo
             {
@@ -631,7 +620,7 @@ namespace MiniTri
             device.BindBufferMemory(uniformBuffer, memory, 0);
         }
 
-        private void PrepareTextures()
+        private void CreateTexture()
         {
             var textureFormat = Format.R8G8B8A8UNorm;
 
@@ -709,7 +698,7 @@ namespace MiniTri
             textureSampler = device.CreateSampler(ref samplerCreateInfo);
         }
 
-        private void PrepareDepth()
+        private void CreateDepthBuffer()
         {
             depthFormat = Format.D16UNorm;
 
@@ -829,8 +818,20 @@ namespace MiniTri
             throw new NotSupportedException();
         }
 
-        private void PrepareBuffers()
+        private void CreateSwapchain()
         {
+            var surfaceFormats = physicalDevice.GetSurfaceFormats(surface);
+
+            if (surfaceFormats.Length == 1 && surfaceFormats[0].Format == Format.Undefined)
+            {
+                backBufferFormat = Format.R8G8B8A8UNorm;
+            }
+            else
+            {
+                backBufferFormat = surfaceFormats[0].Format;
+            }
+            colorSpace = surfaceFormats[0].ColorSpace;
+
             var oldSwapchain = swapchain;
 
             SurfaceCapabilities surfaceCapabilities;
@@ -905,7 +906,10 @@ namespace MiniTri
 
             swapchainImages = device.GetSwapchainImages(swapchain);
             swapchainImageViews = new ImageView[swapchainImages.Length];
+        }
 
+        private void CreateBackBufferViews()
+        {
             for (int i = 0; i < swapchainImages.Length; i++)
             {
                 var viewCreateInfo = new ImageViewCreateInfo
@@ -1003,6 +1007,8 @@ namespace MiniTri
             }
 
             physicalDevice.GetFeatures(out physicalDeviceFeatures);
+
+            physicalDevice.GetMemoryProperties(out physicalDeviceMemoryProperties);
         }
 
         private static RawBool DebugReport(DebugReportFlags flags, DebugReportObjectType objectType, ulong @object, PointerSize location, int messageCode, string layerPrefix, string message, IntPtr userData)
@@ -1033,7 +1039,7 @@ namespace MiniTri
 
             PrepareDescriptorSet();
 
-            BuildDrawCommand();
+            RecordDrawCommand();
 
             var commandBuffer = drawCommandBuffer;
             var waitStageFlags = PipelineStageFlags.BottomOfPipe;
@@ -1076,7 +1082,7 @@ namespace MiniTri
             device.ResetDescriptorPool(descriptorPool, DescriptorPoolResetFlags.None);
         }
 
-        private void BuildDrawCommand()
+        private void RecordDrawCommand()
         {
             var allocateInfo = new CommandBufferAllocateInfo
             {
