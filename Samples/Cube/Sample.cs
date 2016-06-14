@@ -24,6 +24,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using SharpDX;
 using SharpDX.Text;
 using SharpDX.Windows;
@@ -178,6 +179,9 @@ namespace MiniTri
 
         public void Run()
         {
+            width = (uint)form.ClientSize.Width;
+            height = (uint)form.ClientSize.Height;
+
             Initialize();
 
             RenderLoop.Run(form, Draw);
@@ -641,7 +645,9 @@ namespace MiniTri
 
             int offset = 4 * 4;
 
-            uniformData[0] = uniformData[5] = uniformData[10] = uniformData[15] = 1.0f;
+            uniformData[0] = uniformData[5] = uniformData[10] = 0.5f;
+            uniformData[15] = 1.0f;
+            uniformData[14] = 0.25f;
 
             for (var i = 0; i < 12 * 3; i++)
             {
@@ -1164,7 +1170,7 @@ namespace MiniTri
                 RenderPass = renderPass,
                 RenderArea = new Rect2D(0, 0, width, height),
                 ClearValueCount = 2,
-                ClearValues = new IntPtr(&clearValues),
+                ClearValues = new IntPtr(clearValues),
                 Framebuffer = framebuffers[currentBufferIndex]
             };
             commandBuffer.BeginRenderPass(ref renderPassBeginInfo, SubpassContents.Inline);
