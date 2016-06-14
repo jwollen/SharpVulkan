@@ -34,97 +34,7 @@ namespace MiniTri
     using SharpVulkan;
 
     public unsafe class Sample : IDisposable
-    {
-        private float[] vertices =
-        {
-            -1.0f,-1.0f,-1.0f,  // -X side
-            -1.0f,-1.0f, 1.0f,
-            -1.0f, 1.0f, 1.0f,
-            -1.0f, 1.0f, 1.0f,
-            -1.0f, 1.0f,-1.0f,
-            -1.0f,-1.0f,-1.0f,
-
-            -1.0f,-1.0f,-1.0f,  // -Z side
-             1.0f, 1.0f,-1.0f,
-             1.0f,-1.0f,-1.0f,
-            -1.0f,-1.0f,-1.0f,
-            -1.0f, 1.0f,-1.0f,
-             1.0f, 1.0f,-1.0f,
-
-            -1.0f,-1.0f,-1.0f,  // -Y side
-             1.0f,-1.0f,-1.0f,
-             1.0f,-1.0f, 1.0f,
-            -1.0f,-1.0f,-1.0f,
-             1.0f,-1.0f, 1.0f,
-            -1.0f,-1.0f, 1.0f,
-
-            -1.0f, 1.0f,-1.0f,  // +Y side
-            -1.0f, 1.0f, 1.0f,
-             1.0f, 1.0f, 1.0f,
-            -1.0f, 1.0f,-1.0f,
-             1.0f, 1.0f, 1.0f,
-             1.0f, 1.0f,-1.0f,
-
-             1.0f, 1.0f,-1.0f,  // +X side
-             1.0f, 1.0f, 1.0f,
-             1.0f,-1.0f, 1.0f,
-             1.0f,-1.0f, 1.0f,
-             1.0f,-1.0f,-1.0f,
-             1.0f, 1.0f,-1.0f,
-
-            -1.0f, 1.0f, 1.0f,  // +Z side
-            -1.0f,-1.0f, 1.0f,
-             1.0f, 1.0f, 1.0f,
-            -1.0f,-1.0f, 1.0f,
-             1.0f,-1.0f, 1.0f,
-             1.0f, 1.0f, 1.0f,
-        };
-
-        private float[] textureCoordinates =
-        {
-            0.0f, 0.0f,  // -X side
-            1.0f, 0.0f,
-            1.0f, 1.0f,
-            1.0f, 1.0f,
-            0.0f, 1.0f,
-            0.0f, 0.0f,
-
-            1.0f, 0.0f,  // -Z side
-            0.0f, 1.0f,
-            0.0f, 0.0f,
-            1.0f, 0.0f,
-            1.0f, 1.0f,
-            0.0f, 1.0f,
-
-            1.0f, 1.0f,  // -Y side
-            1.0f, 0.0f,
-            0.0f, 0.0f,
-            1.0f, 1.0f,
-            0.0f, 0.0f,
-            0.0f, 1.0f,
-
-            1.0f, 1.0f,  // +Y side
-            0.0f, 1.0f,
-            0.0f, 0.0f,
-            1.0f, 1.0f,
-            0.0f, 0.0f,
-            1.0f, 0.0f,
-
-            1.0f, 1.0f,  // +X side
-            0.0f, 1.0f,
-            0.0f, 0.0f,
-            0.0f, 0.0f,
-            1.0f, 0.0f,
-            1.0f, 1.0f,
-
-            0.0f, 1.0f,  // +Z side
-            0.0f, 0.0f,
-            1.0f, 1.0f,
-            0.0f, 0.0f,
-            1.0f, 0.0f,
-            1.0f, 1.0f,
-        };
-
+    { 
         private readonly bool validate = true;
 
         private readonly Form form;
@@ -157,7 +67,7 @@ namespace MiniTri
         private CommandBuffer setupCommandBuffer;
         private Buffer uniformBuffer;
 
-        private float[] uniformData = new float[4 * 4 + 12 * 3 * 4 + 12 * 3 * 4];
+        private float[] uniformData = new float[4 * 4];
         private DescriptorSetLayout descriptorSetLayout;
         private PipelineLayout pipelineLayout;
         private RenderPass renderPass;
@@ -171,6 +81,9 @@ namespace MiniTri
         private Sampler textureSampler;
         private ImageView textureView;
         private Image texture;
+        private Buffer vertexBuffer;
+        private DeviceMemory vertexBufferMemory;
+        private float[,] vertices;
 
         public Sample()
         {
@@ -205,6 +118,8 @@ namespace MiniTri
             PrepareTextures();
             PrepareCubeDataBuffer();
 
+            CreateVertexBuffer();
+
             PrepareDescriptorLayout();
             PrepareRenderPass();
             PreparePipeline();
@@ -213,6 +128,45 @@ namespace MiniTri
             PrepareFramebuffer();
 
             FlushInitCommand();
+        }
+
+        private void CreateVertexBuffer()
+        {
+            vertices = new[,]
+            {
+                {  -1.0f, -1.0f,  -1.0f, 1.0f, 0.0f, 0.0f },
+                {   1.0f, -1.0f,  -1.0f, 1.0f, 1.0f, 0.0f },
+                {   1.0f,  1.0f,  -1.0f, 1.0f, 1.0f, 1.0f },
+
+                {   1.0f,  1.0f,  -1.0f, 1.0f, 1.0f, 1.0f },
+                {  -1.0f,  1.0f,  -1.0f, 1.0f, 0.0f, 0.0f },
+                {  -1.0f, -1.0f,  -1.0f, 1.0f, 0.0f, 0.0f },
+            };
+
+            var createInfo = new BufferCreateInfo
+            {
+                StructureType = StructureType.BufferCreateInfo,
+                Usage = BufferUsageFlags.VertexBuffer,
+                Size = (ulong)(sizeof(float) * vertices.Length)
+            };
+            vertexBuffer = device.CreateBuffer(ref createInfo);
+
+            MemoryRequirements memoryRequirements;
+            device.GetBufferMemoryRequirements(vertexBuffer, out memoryRequirements);
+
+            var allocateInfo = new MemoryAllocateInfo
+            {
+                StructureType = StructureType.MemoryAllocateInfo,
+                AllocationSize = memoryRequirements.Size,
+                MemoryTypeIndex = GetMemoryTypeFromProperties(memoryRequirements.MemoryTypeBits, MemoryPropertyFlags.HostVisible | MemoryPropertyFlags.HostCoherent)
+            };
+            vertexBufferMemory = device.AllocateMemory(ref allocateInfo);
+
+            var mapped = device.MapMemory(vertexBufferMemory, 0, (ulong)createInfo.Size, MemoryMapFlags.None);
+            fixed (float* source = &vertices[0, 0]) Utilities.CopyMemory(mapped, new IntPtr(source), (int)createInfo.Size);
+            device.UnmapMemory(vertexBufferMemory);
+
+            device.BindBufferMemory(vertexBuffer, vertexBufferMemory, 0);
         }
 
         private void CreateDevice()
@@ -427,9 +381,18 @@ namespace MiniTri
                 DynamicStates = new IntPtr(dynamicStates)
             };
 
+            var vertexBinding = new VertexInputBindingDescription { Binding = 0, InputRate = VertexInputRate.Vertex, Stride = (uint)(sizeof(float) * vertices.GetLength(1)) };
+            var vertexAttributes = stackalloc VertexInputAttributeDescription[2];
+            vertexAttributes[0] = new VertexInputAttributeDescription { Binding = 0, Location = 0, Format = Format.R32G32B32SFloat, Offset = 0 };
+            vertexAttributes[1] = new VertexInputAttributeDescription { Binding = 0, Location = 1, Format = Format.R32G32B32SFloat, Offset = sizeof(float) * 3 };
+
             var vertexInputStateCreateInfo = new PipelineVertexInputStateCreateInfo
             {
                 StructureType = StructureType.PipelineVertexInputStateCreateInfo,
+                VertexAttributeDescriptionCount = 2,
+                VertexAttributeDescriptions = new IntPtr(vertexAttributes),
+                VertexBindingDescriptionCount = 1,
+                VertexBindingDescriptions = new IntPtr(&vertexBinding)
             };
 
             var inputAssemblyStateCreateInfo = new PipelineInputAssemblyStateCreateInfo
@@ -643,29 +606,9 @@ namespace MiniTri
                 Size = (ulong)(sizeof(float) * uniformData.Length)
             };
 
-            int offset = 4 * 4;
-
             uniformData[0] = uniformData[5] = uniformData[10] = 0.5f;
             uniformData[15] = 1.0f;
             uniformData[14] = 0.25f;
-
-            for (var i = 0; i < 12 * 3; i++)
-            {
-                uniformData[offset] = vertices[i * 3];
-                uniformData[offset + 1] = vertices[i * 3 + 1];
-                uniformData[offset + 2] = vertices[i * 3 + 2];
-                uniformData[offset + 3] = 1.0f;
-                offset += 4;
-            }
-
-            for (var i = 0; i < 12 * 3; i++)
-            {
-                uniformData[offset] = textureCoordinates[i * 2];
-                uniformData[offset + 1] = textureCoordinates[i * 2 + 1];
-                uniformData[offset + 2] = 0;
-                uniformData[offset + 3] = 0;
-                offset += 4;
-            }
 
             uniformBuffer = device.CreateBuffer(ref bufferCreateInfo);
 
@@ -1180,13 +1123,18 @@ namespace MiniTri
             var descriptorSetCopy = descriptorSet;
             commandBuffer.BindDescriptorSets(PipelineBindPoint.Graphics, pipelineLayout, 0, 1, &descriptorSetCopy, 0, null);
 
+            var vertexBufferCopy = vertexBuffer;
+            ulong offset = 0;
+            commandBuffer.BindVertexBuffers(0, 1, &vertexBufferCopy, &offset);
+
             var viewport = new Viewport(0, 0, width, height);
             commandBuffer.SetViewport(0, 1, &viewport);
 
             var scissor = new Rect2D(0, 0, width, height);
             commandBuffer.SetScissor(0, 1, &scissor);
 
-            commandBuffer.Draw(12 * 3, 1, 0, 0);
+            //commandBuffer.Draw(12 * 3, 1, 0, 0);
+            commandBuffer.Draw(6, 1, 0, 0);
 
             commandBuffer.EndRenderPass();
 

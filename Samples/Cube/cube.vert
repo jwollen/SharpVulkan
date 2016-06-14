@@ -27,6 +27,8 @@ layout(std140, binding = 0) uniform buf {
         vec4 attr[12*3];
 } ubuf;
 
+layout (location = 0) in vec4 Position;
+layout (location = 1) in vec2 Color;
 layout (location = 0) out vec4 texcoord;
 
 out gl_PerVertex {
@@ -35,8 +37,10 @@ out gl_PerVertex {
 
 void main() 
 {
-   texcoord = ubuf.attr[gl_VertexIndex];
-   gl_Position = ubuf.MVP * ubuf.position[gl_VertexIndex];
+   //texcoord = ubuf.attr[gl_VertexIndex];
+   //gl_Position = ubuf.MVP * ubuf.position[gl_VertexIndex];
+   gl_Position = ubuf.MVP * Position;
+   texcoord = vec4(Color, 0, 0);
 
    // GL->VK conventions
    gl_Position.y = -gl_Position.y;
