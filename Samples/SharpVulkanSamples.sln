@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTri", "MiniTri\MiniTri.csproj", "{96426D44-3995-44F5-85C0-901027203313}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniTri.Android", "MiniTri.Android\MiniTri.Android.csproj", "{F8C46D5D-0435-47B5-AF52-10EA53B2A62E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cube", "Cube\Cube.csproj", "{E4A40C6B-5143-4F4F-A23C-C732F4412800}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,16 @@ Global
 		{96426D44-3995-44F5-85C0-901027203313}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96426D44-3995-44F5-85C0-901027203313}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96426D44-3995-44F5-85C0-901027203313}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8C46D5D-0435-47B5-AF52-10EA53B2A62E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8C46D5D-0435-47B5-AF52-10EA53B2A62E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8C46D5D-0435-47B5-AF52-10EA53B2A62E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F8C46D5D-0435-47B5-AF52-10EA53B2A62E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8C46D5D-0435-47B5-AF52-10EA53B2A62E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8C46D5D-0435-47B5-AF52-10EA53B2A62E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{E4A40C6B-5143-4F4F-A23C-C732F4412800}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4A40C6B-5143-4F4F-A23C-C732F4412800}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4A40C6B-5143-4F4F-A23C-C732F4412800}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4A40C6B-5143-4F4F-A23C-C732F4412800}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
