@@ -79,7 +79,6 @@ namespace MiniTri
         private DescriptorSetLayout descriptorSetLayout;
         private DescriptorSet descriptorSet;
         private Buffer uniformBuffer;
-        private float[] uniformData;
 
         // Vertices
         private Buffer vertexBuffer;
@@ -173,7 +172,7 @@ namespace MiniTri
 
         private void CreateUniformBuffer()
         {
-            uniformData = new[]
+            var data = new[]
             {
                 1.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 1.0f, 0.0f, 0.0f,
@@ -185,29 +184,16 @@ namespace MiniTri
             {
                 StructureType = StructureType.BufferCreateInfo,
                 Usage = BufferUsageFlags.UniformBuffer,
-                Size = (ulong)(sizeof(float) * uniformData.Length)
+                Size = (uint)(sizeof(float) * data.Length),
             };
-
-            uniformData[0] = uniformData[5] = uniformData[10] = 0.5f;
-            uniformData[15] = 1.0f;
-            uniformData[14] = 0.25f;
-
             uniformBuffer = device.CreateBuffer(ref bufferCreateInfo);
 
             MemoryRequirements memoryRequirements;
             device.GetBufferMemoryRequirements(uniformBuffer, out memoryRequirements);
+            var memory = AllocateMemory(MemoryPropertyFlags.HostVisible | MemoryPropertyFlags.HostCoherent, memoryRequirements);
 
-            var allocateInfo = new MemoryAllocateInfo
-            {
-                StructureType = StructureType.MemoryAllocateInfo,
-                AllocationSize = memoryRequirements.Size,
-                MemoryTypeIndex = GetMemoryTypeFromProperties(memoryRequirements.MemoryTypeBits, MemoryPropertyFlags.HostVisible | MemoryPropertyFlags.HostCoherent)
-            };
-
-            var memory = device.AllocateMemory(ref allocateInfo);
-
-            var mapped = device.MapMemory(memory, 0, allocateInfo.AllocationSize, MemoryMapFlags.None);
-            Utilities.Write(mapped, uniformData, 0, uniformData.Length);
+            var mappedMemory = device.MapMemory(memory, 0, bufferCreateInfo.Size, MemoryMapFlags.None);
+            Utilities.Write(mappedMemory, data, 0, data.Length);
             device.UnmapMemory(memory);
 
             device.BindBufferMemory(uniformBuffer, memory, 0);
@@ -967,7 +953,7 @@ namespace MiniTri
             var bufferInfo = new DescriptorBufferInfo
             {
                 Buffer = uniformBuffer,
-                Range = (uint)(sizeof(float) * uniformData.Length)
+                Range = Vulkan.WholeSize
             };
 
             //var imageInfo = new DescriptorImageInfo
