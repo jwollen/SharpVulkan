@@ -36,17 +36,24 @@ namespace MiniTri
     {
         private readonly bool validate = true;
 
+        // Windowing
         private readonly Form form;
         private uint width;
         private uint height;
 
+        // Device
         private Instance instance;
-        private PhysicalDevice physicalDevice;
-        private Queue queue;
-        private Device device;
         private DebugReportCallback debugReportCallback;
         private DebugReportCallbackDelegate debugReport;
+        private PhysicalDevice physicalDevice;
+        private PhysicalDeviceProperties physicalDeviceProperties;
+        private PhysicalDeviceFeatures physicalDeviceFeatures;
+        private PhysicalDeviceMemoryProperties physicalDeviceMemoryProperties;
+        private QueueFamilyProperties[] queueFamilyeProperties;
+        private Queue queue;
+        private Device device;
 
+        // Swapchain
         private Surface surface;
         private Swapchain swapchain;
         private Format backBufferFormat;
@@ -54,27 +61,35 @@ namespace MiniTri
         private Image[] swapchainImages;
         private ImageView[] backBufferViews;
         private uint currentBackBufferIndex;
-        //private Image depthStencilBuffer;
-        //private ImageView depthStencilView;
 
+        // Depth stencil
+        private Format depthFormat;
+        private Image depthStencilBuffer;
+        private ImageView depthStencilView;
+        private DeviceMemory depthStencilMemory;
+
+        // Commands
         private CommandPool commandPool;
-        private CommandBuffer commandBuffer;
-        private CommandBuffer setupCommanBuffer;
+        private CommandBuffer drawCommandBuffer;
+        private CommandBuffer setupCommandBuffer;
 
-        private PipelineLayout pipelineLayout;
-        private Pipeline pipeline;
-        private RenderPass renderPass;
-        private Framebuffer[] framebuffers;
-
+        // Resources
         private DescriptorPool descriptorPool;
         private DescriptorSetLayout descriptorSetLayout;
+        private DescriptorSet descriptorSet;
         private Buffer uniformBuffer;
 
+        // Vertices
         private Buffer vertexBuffer;
         private DeviceMemory vertexBufferMemory;
         private VertexInputAttributeDescription[] vertexAttributes;
         private VertexInputBindingDescription[] vertexBindings;
-        private DescriptorSet descriptorSet;
+
+        // Pipeline
+        private PipelineLayout pipelineLayout;
+        private Pipeline pipeline;
+        private RenderPass renderPass;
+        private Framebuffer[] framebuffers;
 
         public Sample()
         {
@@ -100,6 +115,7 @@ namespace MiniTri
 
             CreateSwapchain();
             CreateBackBufferViews();
+            CreateDepthBuffer();
 
             CreateUniformBuffer();
             CreateVertexBuffer();
@@ -111,6 +127,43 @@ namespace MiniTri
             CreateDescriptorPool();
 
             CreateFramebuffers();
+        }
+
+        private void CreateDepthBuffer()
+        {
+            depthFormat = Format.D16UNorm;
+
+            var imageCreateInfo = new ImageCreateInfo
+            {
+                StructureType = StructureType.ImageCreateInfo,
+                ImageType = ImageType.Image2D,
+                Format = depthFormat,
+                Extent = new Extent3D(width, height, 1),
+                MipLevels = 1,
+                ArrayLayers = 1,
+                Samples = SampleCountFlags.Sample1,
+                Tiling = ImageTiling.Optimal,
+                Usage = ImageUsageFlags.DepthStencilAttachment
+            };
+            depthStencilBuffer = device.CreateImage(ref imageCreateInfo);
+
+            MemoryRequirements memoryRequirements;
+            device.GetImageMemoryRequirements(depthStencilBuffer, out memoryRequirements);
+            depthStencilMemory = AllocateMemory(MemoryPropertyFlags.None, memoryRequirements);
+
+            device.BindImageMemory(depthStencilBuffer, depthStencilMemory, 0);
+
+            SetImageLayout(depthStencilBuffer, ImageAspectFlags.Depth, ImageLayout.Undefined, ImageLayout.DepthStencilAttachmentOptimal, 0);
+
+            var viewCreateInfo = new ImageViewCreateInfo
+            {
+                StructureType = StructureType.ImageViewCreateInfo,
+                Image = depthStencilBuffer,
+                Format = depthFormat,
+                SubresourceRange = new ImageSubresourceRange(ImageAspectFlags.Depth, 0, 1, 0, 1),
+                ViewType = ImageViewType.Image2D
+            };
+            depthStencilView = device.CreateImageView(ref viewCreateInfo);
         }
 
         private void CreateUniformBuffer()
@@ -506,62 +559,74 @@ namespace MiniTri
 
         private void CreateRenderPass()
         {
-            var colorAttachmentReference = new AttachmentReference { Attachment = 0, Layout = ImageLayout.ColorAttachmentOptimal };
-            var depthStencilAttachmentReference = new AttachmentReference { Attachment = 1, Layout = ImageLayout.DepthStencilAttachmentOptimal };
+            var attachments = stackalloc AttachmentDescription[2];
+            attachments[0] = new AttachmentDescription
+            {
+                Format = backBufferFormat,
+                Samples = SampleCountFlags.Sample1,
+                LoadOperation = AttachmentLoadOperation.Clear,
+                StoreOperation = AttachmentStoreOperation.Store,
+                StencilLoadOperation = AttachmentLoadOperation.DontCare,
+                StencilStoreOperation = AttachmentStoreOperation.DontCare,
+                InitialLayout = ImageLayout.ColorAttachmentOptimal,
+                FinalLayout = ImageLayout.ColorAttachmentOptimal
+            };
+
+            attachments[1] = new AttachmentDescription
+            {
+                Format = depthFormat,
+                Samples = SampleCountFlags.Sample1,
+                LoadOperation = AttachmentLoadOperation.Clear,
+                StoreOperation = AttachmentStoreOperation.DontCare,
+                StencilLoadOperation = AttachmentLoadOperation.DontCare,
+                StencilStoreOperation = AttachmentStoreOperation.DontCare,
+                InitialLayout = ImageLayout.DepthStencilAttachmentOptimal,
+                FinalLayout = ImageLayout.DepthStencilAttachmentOptimal
+            };
+
+            var colorReference = new AttachmentReference { Attachment = 0, Layout = ImageLayout.ColorAttachmentOptimal };
+            var depthReference = new AttachmentReference { Attachment = 1, Layout = ImageLayout.DepthStencilAttachmentOptimal };
 
             var subpass = new SubpassDescription
             {
                 PipelineBindPoint = PipelineBindPoint.Graphics,
                 ColorAttachmentCount = 1,
-                ColorAttachments = new IntPtr(&colorAttachmentReference),
+                ColorAttachments = new IntPtr(&colorReference),
+                DepthStencilAttachment = new IntPtr(&depthReference),
             };
 
-            var attachments = new[]
+            var renderPassCreateInfo = new RenderPassCreateInfo
             {
-                new AttachmentDescription
-                {
-                    Format = backBufferFormat,
-                    Samples = SampleCountFlags.Sample1,
-                    LoadOperation = AttachmentLoadOperation.Clear,
-                    StoreOperation = AttachmentStoreOperation.Store,
-                    StencilLoadOperation = AttachmentLoadOperation.DontCare,
-                    StencilStoreOperation = AttachmentStoreOperation.DontCare,
-                    InitialLayout = ImageLayout.ColorAttachmentOptimal,
-                    FinalLayout = ImageLayout.ColorAttachmentOptimal
-                },
+                StructureType = StructureType.RenderPassCreateInfo,
+                AttachmentCount = 2,
+                Attachments = new IntPtr(attachments),
+                SubpassCount = 1,
+                Subpasses = new IntPtr(&subpass)
             };
 
-            fixed (AttachmentDescription* attachmentsPointer = &attachments[0])
-            {
-                var createInfo = new RenderPassCreateInfo
-                {
-                    StructureType = StructureType.RenderPassCreateInfo,
-                    AttachmentCount = (uint)attachments.Length,
-                    Attachments = new IntPtr(attachmentsPointer),
-                    SubpassCount = 1,
-                    Subpasses = new IntPtr(&subpass)
-                };
-
-                renderPass = device.CreateRenderPass(ref createInfo);
-            }
+            renderPass = device.CreateRenderPass(ref renderPassCreateInfo);
         }
 
         private void CreateFramebuffers()
         {
+            var attachments = stackalloc ImageView[2];
+            attachments[1] = depthStencilView;
+
+            var createInfo = new FramebufferCreateInfo
+            {
+                StructureType = StructureType.FramebufferCreateInfo,
+                RenderPass = renderPass,
+                AttachmentCount = 2,
+                Attachments = new IntPtr(attachments),
+                Width = width,
+                Height = height,
+                Layers = 1
+            };
+
             framebuffers = new Framebuffer[swapchainImages.Length];
             for (int i = 0; i < swapchainImages.Length; i++)
             {
-                var attachment = backBufferViews[i];
-                var createInfo = new FramebufferCreateInfo
-                {
-                    StructureType = StructureType.FramebufferCreateInfo,
-                    RenderPass = renderPass,
-                    AttachmentCount = 1,
-                    Attachments = new IntPtr(&attachment),
-                    Width = width,
-                    Height = height,
-                    Layers = 1
-                };
+                attachments[0] = backBufferViews[i];
                 framebuffers[i] = device.CreateFramebuffer(ref createInfo);
             }
         }
@@ -670,8 +735,8 @@ namespace MiniTri
                 var depthStencilState = new PipelineDepthStencilStateCreateInfo
                 {
                     StructureType = StructureType.PipelineDepthStencilStateCreateInfo,
-                    DepthTestEnable = false,
-                    DepthWriteEnable = false,
+                    DepthTestEnable = true,
+                    DepthWriteEnable = true,
                     DepthCompareOperation = CompareOperation.LessOrEqual,
                     Back = new StencilOperationState { CompareOperation = CompareOperation.Always },
                     Front = new StencilOperationState { CompareOperation = CompareOperation.Always }
@@ -800,7 +865,7 @@ namespace MiniTri
             BuildDrawCommand();
 
             // Submit
-            var drawCommandBuffer = commandBuffer;
+            var drawCommandBuffer = this.drawCommandBuffer;
             var pipelineStageFlags = PipelineStageFlags.BottomOfPipe;
             var submitInfo = new SubmitInfo
             {
@@ -895,7 +960,7 @@ namespace MiniTri
             };
             CommandBuffer commandBuffer;
             device.AllocateCommandBuffers(ref commandBufferAllocationInfo, &commandBuffer);
-            this.commandBuffer = commandBuffer;
+            drawCommandBuffer = commandBuffer;
 
             // Begin command buffer
             var inheritanceInfo = new CommandBufferInheritanceInfo { StructureType = StructureType.CommandBufferInheritanceInfo };
@@ -912,15 +977,18 @@ namespace MiniTri
             //commandBuffer.ClearColorImage(swapchainImages[currentBackBufferIndex], ImageLayout.TransferDestinationOptimal, new RawColor4(0, 0, 0, 1), 1, &clearRange);
 
             // Begin render pass
-            var clearValue = new ClearValue();
+            var clearValues = stackalloc ClearValue[2];
+            clearValues[0] = new ClearValue();
+            clearValues[1] = new ClearValue { DepthStencil = new ClearDepthStencilValue(1.0f, 0) };
+
             var renderPassBeginInfo = new RenderPassBeginInfo
             {
                 StructureType = StructureType.RenderPassBeginInfo,
                 RenderPass = renderPass,
                 Framebuffer = framebuffers[currentBackBufferIndex],
                 RenderArea = new Rect2D(0, 0, width, height),
-                ClearValueCount = 1,
-                ClearValues = new IntPtr(&clearValue)
+                ClearValueCount = 2,
+                ClearValues = new IntPtr(clearValues)
             };
             commandBuffer.BeginRenderPass(ref renderPassBeginInfo, SubpassContents.Inline);
 
@@ -956,86 +1024,80 @@ namespace MiniTri
             commandBuffer.End();
         }
 
-        private void SetImageLayout(Image image, ImageAspectFlags imageAspect, ImageLayout oldLayout, ImageLayout newLayout)
+        private void SetImageLayout(Image image, ImageAspectFlags imageAspect, ImageLayout oldLayout, ImageLayout newLayout, AccessFlags sourceAccessMask)
         {
-            if (setupCommanBuffer == CommandBuffer.Null)
+            if (setupCommandBuffer == CommandBuffer.Null)
             {
-                // Create command buffer
-                CommandBuffer setupCommandBuffer;
                 var allocateInfo = new CommandBufferAllocateInfo
                 {
                     StructureType = StructureType.CommandBufferAllocateInfo,
                     CommandPool = commandPool,
-                    Level = CommandBufferLevel.Primary,
                     CommandBufferCount = 1,
+                    Level = CommandBufferLevel.Primary
                 };
-                device.AllocateCommandBuffers(ref allocateInfo, &setupCommandBuffer);
-                setupCommanBuffer = setupCommandBuffer;
 
-                // Begin command buffer
-                var inheritanceInfo = new CommandBufferInheritanceInfo { StructureType = StructureType.CommandBufferInheritanceInfo };
+                CommandBuffer commandBuffer;
+                device.AllocateCommandBuffers(ref allocateInfo, &commandBuffer);
+                setupCommandBuffer = commandBuffer;
+
+                var inheritanceInfo = new CommandBufferInheritanceInfo
+                {
+                    StructureType = StructureType.CommandBufferInheritanceInfo,
+                };
+
                 var beginInfo = new CommandBufferBeginInfo
                 {
                     StructureType = StructureType.CommandBufferBeginInfo,
                     InheritanceInfo = new IntPtr(&inheritanceInfo)
                 };
-                setupCommanBuffer.Begin(ref beginInfo);
+                commandBuffer.Begin(ref beginInfo);
             }
 
-            var imageMemoryBarrier = new ImageMemoryBarrier
-            {
-                StructureType = StructureType.ImageMemoryBarrier,
-                OldLayout = oldLayout,
-                NewLayout = newLayout,
-                Image = image,
-                SubresourceRange = new ImageSubresourceRange(imageAspect, 0, 1, 0, 1)
-            };
-
+            var destinationAccessMask = AccessFlags.None;
             switch (newLayout)
             {
                 case ImageLayout.TransferDestinationOptimal:
-                    imageMemoryBarrier.DestinationAccessMask = AccessFlags.TransferRead;
+                    destinationAccessMask = AccessFlags.TransferWrite;
                     break;
                 case ImageLayout.ColorAttachmentOptimal:
-                    imageMemoryBarrier.DestinationAccessMask = AccessFlags.ColorAttachmentWrite;
+                    destinationAccessMask = AccessFlags.ColorAttachmentWrite;
                     break;
                 case ImageLayout.DepthStencilAttachmentOptimal:
-                    imageMemoryBarrier.DestinationAccessMask = AccessFlags.DepthStencilAttachmentWrite;
+                    destinationAccessMask = AccessFlags.DepthStencilAttachmentWrite;
                     break;
                 case ImageLayout.ShaderReadOnlyOptimal:
-                    imageMemoryBarrier.DestinationAccessMask = AccessFlags.ShaderRead | AccessFlags.InputAttachmentRead;
+                    destinationAccessMask = AccessFlags.ShaderRead | AccessFlags.InputAttachmentRead;
                     break;
             }
 
             var sourceStages = PipelineStageFlags.TopOfPipe;
             var destinationStages = PipelineStageFlags.TopOfPipe;
 
-            setupCommanBuffer.PipelineBarrier(sourceStages, destinationStages, DependencyFlags.None, 0, null, 0, null, 1, &imageMemoryBarrier);
+            var imageMemoryBarrier = new ImageMemoryBarrier(image, oldLayout, newLayout, sourceAccessMask, destinationAccessMask, new ImageSubresourceRange(imageAspect));
+            setupCommandBuffer.PipelineBarrier(sourceStages, destinationStages, DependencyFlags.None, 0, null, 0, null, 1, &imageMemoryBarrier);
         }
 
         public void Flush()
         {
-            if (this.setupCommanBuffer == CommandBuffer.Null)
+            if (setupCommandBuffer == CommandBuffer.Null)
                 return;
 
-            var setupCommanBuffer = this.setupCommanBuffer;
+            setupCommandBuffer.End();
 
-            this.setupCommanBuffer.End();
-
+            var commandBuffer = setupCommandBuffer;
             var submitInfo = new SubmitInfo
             {
                 StructureType = StructureType.SubmitInfo,
                 CommandBufferCount = 1,
-                CommandBuffers = new IntPtr(&setupCommanBuffer)
+                CommandBuffers = new IntPtr(&commandBuffer)
             };
 
             queue.Submit(1, &submitInfo, Fence.Null);
 
             queue.WaitIdle();
 
-            device.FreeCommandBuffers(commandPool, 1, &setupCommanBuffer);
-
-            this.setupCommanBuffer = CommandBuffer.Null;  
+            device.FreeCommandBuffers(commandPool, 1, &commandBuffer);
+            setupCommandBuffer = CommandBuffer.Null;
         }
 
         public void Dispose()
@@ -1052,7 +1114,7 @@ namespace MiniTri
             device.DestroyPipeline(pipeline);
             device.DestroyPipelineLayout(pipelineLayout);
 
-            var commandBufferCopy = commandBuffer;
+            var commandBufferCopy = drawCommandBuffer;
             device.FreeCommandBuffers(commandPool, 1, &commandBufferCopy);
             device.DestroyCommandPool(commandPool);
 
