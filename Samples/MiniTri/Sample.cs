@@ -509,12 +509,23 @@ namespace MiniTri
 
         private void CreateVertexBuffer()
         {
+            //var vertices = new[,]
+            //{
+            //    {  0.0f, -0.5f,  0.5f, 1.0f, 0.0f, 0.0f },
+            //    {  0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f },
+            //    { -0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f },
+            //    { -0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f },
+            //};
+
             var vertices = new[,]
             {
-                {  0.0f, -0.5f,  0.5f, 1.0f, 0.0f, 0.0f },
-                {  0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f },
-                { -0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f },
-                { -0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f },
+                {  -1.0f, -1.0f,  -1.0f, 1.0f, 0.0f, 0.0f },
+                {   1.0f, -1.0f,  -1.0f, 1.0f, 1.0f, 0.0f },
+                {   1.0f,  1.0f,  -1.0f, 1.0f, 1.0f, 1.0f },
+
+                {   1.0f,  1.0f,  -1.0f, 1.0f, 1.0f, 1.0f },
+                {  -1.0f,  1.0f,  -1.0f, 1.0f, 0.0f, 0.0f },
+                {  -1.0f, -1.0f,  -1.0f, 1.0f, 0.0f, 0.0f },
             };
 
             var createInfo = new BufferCreateInfo
@@ -528,14 +539,11 @@ namespace MiniTri
             MemoryRequirements memoryRequirements;
             device.GetBufferMemoryRequirements(vertexBuffer, out memoryRequirements);
 
-            if (memoryRequirements.Size == 0)
-                return;
-
             var allocateInfo = new MemoryAllocateInfo
             {
                 StructureType = StructureType.MemoryAllocateInfo,
                 AllocationSize = memoryRequirements.Size,
-                MemoryTypeIndex = MemoryTypeFromProperties(memoryRequirements.MemoryTypeBits, MemoryPropertyFlags.HostVisible)
+                MemoryTypeIndex = GetMemoryTypeFromProperties(memoryRequirements.MemoryTypeBits, MemoryPropertyFlags.HostVisible | MemoryPropertyFlags.HostCoherent)
             };
             vertexBufferMemory = device.AllocateMemory(ref allocateInfo);
 
@@ -545,16 +553,16 @@ namespace MiniTri
 
             device.BindBufferMemory(vertexBuffer, vertexBufferMemory, 0);
 
-            vertexAttributes = new []
-            {
-                new VertexInputAttributeDescription { Binding = 0, Location = 0, Format = Format.R32G32B32SFloat, Offset = 0 },
-                new VertexInputAttributeDescription { Binding = 0, Location = 1, Format = Format.R32G32B32SFloat, Offset = sizeof(float) * 3 },
-            };
+            //vertexAttributes = new []
+            //{
+            //    new VertexInputAttributeDescription { Binding = 0, Location = 0, Format = Format.R32G32B32SFloat, Offset = 0 },
+            //    new VertexInputAttributeDescription { Binding = 0, Location = 1, Format = Format.R32G32B32SFloat, Offset = sizeof(float) * 3 },
+            //};
 
-            vertexBindings = new []
-            {
-                new VertexInputBindingDescription { Binding = 0, InputRate = VertexInputRate.Vertex, Stride = (uint)(sizeof(float) * vertices.GetLength(1)) }
-            };
+            //vertexBindings = new []
+            //{
+            //    new VertexInputBindingDescription { Binding = 0, InputRate = VertexInputRate.Vertex, Stride = (uint)(sizeof(float) * vertices.GetLength(1)) }
+            //};
         }
 
         private void CreateRenderPass()
@@ -683,8 +691,8 @@ namespace MiniTri
 
             fixed (byte* entryPointNamePointer = &entryPointName[0])
             fixed (DynamicState* dynamicStatesPointer = &dynamicStates[0])
-            fixed (VertexInputAttributeDescription* vertexAttibutesPointer = &vertexAttributes[0])
-            fixed (VertexInputBindingDescription* vertexBindingsPointer = &vertexBindings[0])
+            //fixed (VertexInputAttributeDescription* vertexAttibutesPointer = &vertexAttributes[0])
+            //fixed (VertexInputBindingDescription* vertexBindingsPointer = &vertexBindings[0])
             {
                 var dynamicState = new PipelineDynamicStateCreateInfo
                 {
@@ -700,13 +708,18 @@ namespace MiniTri
                     ViewportCount = 1,
                 };
 
+                var vertexBinding = new VertexInputBindingDescription { Binding = 0, InputRate = VertexInputRate.Vertex, Stride = (uint)(sizeof(float) * 6) };
+                var vertexAttributes = stackalloc VertexInputAttributeDescription[2];
+                vertexAttributes[0] = new VertexInputAttributeDescription { Binding = 0, Location = 0, Format = Format.R32G32B32A32SFloat, Offset = 0 };
+                vertexAttributes[1] = new VertexInputAttributeDescription { Binding = 0, Location = 1, Format = Format.R32G32SFloat, Offset = sizeof(float) * 4 };
+
                 var vertexInputState = new PipelineVertexInputStateCreateInfo
                 {
                     StructureType = StructureType.PipelineVertexInputStateCreateInfo,
-                    VertexAttributeDescriptionCount = (uint)vertexAttributes.Length,
-                    VertexAttributeDescriptions = new IntPtr(vertexAttibutesPointer),
-                    VertexBindingDescriptionCount = (uint)vertexBindings.Length,
-                    VertexBindingDescriptions = new IntPtr(vertexBindingsPointer),
+                    VertexAttributeDescriptionCount = 2,
+                    VertexAttributeDescriptions = new IntPtr(vertexAttributes),
+                    VertexBindingDescriptionCount = 1,
+                    VertexBindingDescriptions = new IntPtr(&vertexBinding)
                 };
 
                 var inputAssemblyState = new PipelineInputAssemblyStateCreateInfo
@@ -818,27 +831,6 @@ namespace MiniTri
                 };
                 return device.CreateShaderModule(ref createInfo);
             }
-        }
-
-        private uint MemoryTypeFromProperties(uint typeBits, MemoryPropertyFlags memoryProperties)
-        {
-            PhysicalDeviceMemoryProperties physicalDeviceMemoryProperties;
-            physicalDevice.GetMemoryProperties(out physicalDeviceMemoryProperties);
-            for (uint i = 0; i < physicalDeviceMemoryProperties.MemoryTypeCount; i++)
-            {
-                if ((typeBits & 1) == 1)
-                {
-                    // Type is available, does it match user properties?
-                    var memoryType = *((MemoryType*)&physicalDeviceMemoryProperties.MemoryTypes + i);
-                    if ((memoryType.PropertyFlags & memoryProperties) == memoryProperties)
-                    {
-                        return i;
-                    }
-                }
-                typeBits >>= 1;
-            }
-
-            throw new InvalidOperationException();
         }
 
         protected virtual void Draw()
