@@ -24,7 +24,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using SharpDX;
 using SharpDX.Text;
 using SharpDX.Windows;
@@ -343,13 +342,13 @@ namespace MiniTri
         private void CreateDescriptorPool()
         {
             var typeCounts = stackalloc DescriptorPoolSize[2];
-            typeCounts[0] = new DescriptorPoolSize { Type = DescriptorType.UniformBuffer, DescriptorCount = 1 };
-            typeCounts[1] = new DescriptorPoolSize { Type = DescriptorType.CombinedImageSampler, DescriptorCount = 1 };
+            typeCounts[0] = new DescriptorPoolSize { Type = DescriptorType.UniformBuffer, DescriptorCount = 2 };
+            typeCounts[1] = new DescriptorPoolSize { Type = DescriptorType.CombinedImageSampler, DescriptorCount = 2 };
 
             var createInfo = new DescriptorPoolCreateInfo
             {
                 StructureType = StructureType.DescriptorPoolCreateInfo,
-                MaxSets = 1,
+                MaxSets = 2,
                 PoolSizeCount = 2,
                 PoolSizes = new IntPtr(typeCounts)
             };
@@ -1161,9 +1160,9 @@ namespace MiniTri
                 SetLayouts = new IntPtr(&layout)
             };
 
-            DescriptorSet descriptorSet;
-            device.AllocateDescriptorSets(ref allocateInfo, &descriptorSet);
-            this.descriptorSet = descriptorSet;
+            DescriptorSet descriptorSetCopy;
+            device.AllocateDescriptorSets(ref allocateInfo, &descriptorSetCopy);
+            descriptorSet = descriptorSetCopy;
 
             var bufferInfo = new DescriptorBufferInfo
             {
@@ -1197,7 +1196,31 @@ namespace MiniTri
                 ImageInfo = new IntPtr(&imageInfo)
             };
 
-            device.UpdateDescriptorSets(2, writes, 0, null);;
+            device.UpdateDescriptorSets(2, writes, 0, null);
+
+            DescriptorSet descriptorSetCopy2;
+            device.AllocateDescriptorSets(ref allocateInfo, &descriptorSetCopy2);
+            descriptorSet = descriptorSetCopy2;
+
+            var copies = stackalloc CopyDescriptorSet[2];
+            copies[0] = new CopyDescriptorSet
+            {
+                StructureType = StructureType.CopyDescriptorSet,
+                DescriptorCount = 1,
+                SourceSet = descriptorSetCopy,
+                DestinationSet = descriptorSetCopy2
+            };
+            copies[1] = new CopyDescriptorSet
+            {
+                StructureType = StructureType.CopyDescriptorSet,
+                SourceBinding = 1,
+                DestinationBinding = 1,
+                DescriptorCount = 1,
+                SourceSet = descriptorSetCopy,
+                DestinationSet = descriptorSetCopy2
+            };
+
+            device.UpdateDescriptorSets(0, null, 2, copies);
         }
 
         public void Dispose()
