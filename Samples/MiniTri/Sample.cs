@@ -52,6 +52,7 @@ namespace MiniTri
         private QueueFamilyProperties[] queueFamilyeProperties;
         private Queue queue;
         private Device device;
+        private uint graphicsQueueFamilyIndex;
 
         // Swapchain
         private Surface surface;
@@ -59,7 +60,7 @@ namespace MiniTri
         private Format backBufferFormat;
         private ColorSpace colorSpace;
         private Image[] swapchainImages;
-        private ImageView[] backBufferViews;
+        private ImageView[] swapchainImageViews;
         private uint currentBackBufferIndex;
 
         // Depth stencil
@@ -78,12 +79,14 @@ namespace MiniTri
         private DescriptorSetLayout descriptorSetLayout;
         private DescriptorSet descriptorSet;
         private Buffer uniformBuffer;
+        private float[] uniformData;
 
         // Vertices
         private Buffer vertexBuffer;
         private DeviceMemory vertexBufferMemory;
         private VertexInputAttributeDescription[] vertexAttributes;
         private VertexInputBindingDescription[] vertexBindings;
+        private float[,] vertices;
 
         // Pipeline
         private PipelineLayout pipelineLayout;
@@ -121,12 +124,14 @@ namespace MiniTri
             CreateVertexBuffer();
 
             CreateDescriptorLayout();
-            CreatePipelineLayout();
+            //CreatePipelineLayout();
             CreateRenderPass();
             CreatePipeline();
             CreateDescriptorPool();
 
             CreateFramebuffers();
+
+            Flush();
         }
 
         private void CreateDepthBuffer()
@@ -168,7 +173,7 @@ namespace MiniTri
 
         private void CreateUniformBuffer()
         {
-            var data = new[]
+            uniformData = new[]
             {
                 1.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 1.0f, 0.0f, 0.0f,
@@ -180,16 +185,29 @@ namespace MiniTri
             {
                 StructureType = StructureType.BufferCreateInfo,
                 Usage = BufferUsageFlags.UniformBuffer,
-                Size = (uint)(sizeof(float) * data.Length),
+                Size = (ulong)(sizeof(float) * uniformData.Length)
             };
+
+            uniformData[0] = uniformData[5] = uniformData[10] = 0.5f;
+            uniformData[15] = 1.0f;
+            uniformData[14] = 0.25f;
+
             uniformBuffer = device.CreateBuffer(ref bufferCreateInfo);
 
             MemoryRequirements memoryRequirements;
             device.GetBufferMemoryRequirements(uniformBuffer, out memoryRequirements);
-            var memory = AllocateMemory(MemoryPropertyFlags.HostVisible | MemoryPropertyFlags.HostCoherent, memoryRequirements);
 
-            var mappedMemory = device.MapMemory(memory, 0, bufferCreateInfo.Size, MemoryMapFlags.None);
-            Utilities.Write(mappedMemory, data, 0, data.Length);
+            var allocateInfo = new MemoryAllocateInfo
+            {
+                StructureType = StructureType.MemoryAllocateInfo,
+                AllocationSize = memoryRequirements.Size,
+                MemoryTypeIndex = GetMemoryTypeFromProperties(memoryRequirements.MemoryTypeBits, MemoryPropertyFlags.HostVisible | MemoryPropertyFlags.HostCoherent)
+            };
+
+            var memory = device.AllocateMemory(ref allocateInfo);
+
+            var mapped = device.MapMemory(memory, 0, allocateInfo.AllocationSize, MemoryMapFlags.None);
+            Utilities.Write(mapped, uniformData, 0, uniformData.Length);
             device.UnmapMemory(memory);
 
             device.BindBufferMemory(uniformBuffer, memory, 0);
@@ -197,34 +215,44 @@ namespace MiniTri
 
         private void CreateDescriptorLayout()
         {
-            var binding = new DescriptorSetLayoutBinding
-            {
-                Binding = 0,
-                DescriptorCount = 1,
-                DescriptorType = DescriptorType.UniformBuffer,
-                StageFlags = ShaderStageFlags.Vertex
-            };
+            var layoutBindings = stackalloc DescriptorSetLayoutBinding[2];
+            layoutBindings[0] = new DescriptorSetLayoutBinding { Binding = 0, DescriptorType = DescriptorType.UniformBuffer, DescriptorCount = 1, StageFlags = ShaderStageFlags.Vertex };
+            //layoutBindings[1] = new DescriptorSetLayoutBinding { Binding = 1, DescriptorType = DescriptorType.CombinedImageSampler, DescriptorCount = 1, StageFlags = ShaderStageFlags.Fragment };
 
-            var descriptorSetLayoutCreateInfo = new DescriptorSetLayoutCreateInfo
+            var setLayoutCreateInfo = new DescriptorSetLayoutCreateInfo
             {
                 StructureType = StructureType.DescriptorSetLayoutCreateInfo,
                 BindingCount = 1,
-                Bindings = new IntPtr(&binding)
+                Bindings = new IntPtr(layoutBindings)
             };
-            descriptorSetLayout = device.CreateDescriptorSetLayout(ref descriptorSetLayoutCreateInfo);
+
+            var descriptorSetLayoutCopy = descriptorSetLayout = device.CreateDescriptorSetLayout(ref setLayoutCreateInfo);
+
+            var pipelineLayoutCreateInfo = new PipelineLayoutCreateInfo
+            {
+                StructureType = StructureType.PipelineLayoutCreateInfo,
+                SetLayoutCount = 1,
+                SetLayouts = new IntPtr(&descriptorSetLayoutCopy)
+            };
+
+            pipelineLayout = device.CreatePipelineLayout(ref pipelineLayoutCreateInfo);
         }
 
         private void CreateDescriptorPool()
         {
-            var poolSize = new DescriptorPoolSize { DescriptorCount = 2, Type = DescriptorType.UniformBuffer };
-            var descriptorPoolCreateinfo = new DescriptorPoolCreateInfo
+            var typeCounts = stackalloc DescriptorPoolSize[2];
+            typeCounts[0] = new DescriptorPoolSize { Type = DescriptorType.UniformBuffer, DescriptorCount = 2 };
+            typeCounts[1] = new DescriptorPoolSize { Type = DescriptorType.CombinedImageSampler, DescriptorCount = 2 };
+
+            var createInfo = new DescriptorPoolCreateInfo
             {
                 StructureType = StructureType.DescriptorPoolCreateInfo,
-                PoolSizeCount = 1,
-                PoolSizes = new IntPtr(&poolSize),
-                MaxSets = 2
+                MaxSets = 2,
+                PoolSizeCount = 2,
+                PoolSizes = new IntPtr(typeCounts)
             };
-            descriptorPool = device.CreateDescriptorPool(ref descriptorPoolCreateinfo);
+
+            descriptorPool = device.CreateDescriptorPool(ref createInfo);
         }
 
         protected virtual void CreateInstance()
@@ -236,12 +264,12 @@ namespace MiniTri
                 ApiVersion = new Version(1, 0, 0)
             };
 
-            var enabledLayerNames = new []
+            var enabledLayerNames = new[]
             {
                 Marshal.StringToHGlobalAnsi("VK_LAYER_LUNARG_standard_validation"),
             };
 
-            var enabledExtensionNames = new []
+            var enabledExtensionNames = new[]
             {
                 Marshal.StringToHGlobalAnsi("VK_KHR_surface"),
                 Marshal.StringToHGlobalAnsi("VK_KHR_win32_surface"),
@@ -281,7 +309,7 @@ namespace MiniTri
                         var createInfo = new DebugReportCallbackCreateInfo
                         {
                             StructureType = StructureType.DebugReportCallbackCreateInfo,
-                            Flags = (uint)(DebugReportFlags.Error | DebugReportFlags.Warning/* | DebugReportFlags.PerformanceWarning*/),
+                            Flags = (uint)(DebugReportFlags.Error | DebugReportFlags.Warning /* | DebugReportFlags.PerformanceWarning*/),
                             Callback = Marshal.GetFunctionPointerForDelegate(debugReport)
                         };
                         createDebugReportCallback(instance, ref createInfo, null, out debugReportCallback);
@@ -299,7 +327,17 @@ namespace MiniTri
 
             physicalDevice = instance.PhysicalDevices[0];
 
-            var props = physicalDevice.QueueFamilyProperties;
+            physicalDevice.GetProperties(out physicalDeviceProperties);
+
+            queueFamilyeProperties = physicalDevice.QueueFamilyProperties;
+            if (!queueFamilyeProperties.Any(x => (x.QueueFlags & QueueFlags.Graphics) != 0))
+            {
+                throw new NotSupportedException();
+            }
+
+            physicalDevice.GetFeatures(out physicalDeviceFeatures);
+
+            physicalDevice.GetMemoryProperties(out physicalDeviceMemoryProperties);
         }
 
         private static RawBool DebugReport(DebugReportFlags flags, DebugReportObjectType objectType, ulong @object, PointerSize location, int messageCode, string layerPrefix, string message, IntPtr userData)
@@ -308,19 +346,20 @@ namespace MiniTri
             return true;
         }
 
-        protected virtual void CreateDevice()
+        private void CreateDevice()
         {
-            uint queuePriorities = 0;
+            float priority = 0.0f;
+
             var queueCreateInfo = new DeviceQueueCreateInfo
             {
                 StructureType = StructureType.DeviceQueueCreateInfo,
-                QueueFamilyIndex = 0,
+                QueueFamilyIndex = graphicsQueueFamilyIndex,
                 QueueCount = 1,
-                QueuePriorities = new IntPtr(&queuePriorities)
+                QueuePriorities = new IntPtr(&priority)
             };
 
             var enabledLayerNames = new[]
-            {
+                        {
                 Marshal.StringToHGlobalAnsi("VK_LAYER_LUNARG_standard_validation"),
             };
 
@@ -367,14 +406,55 @@ namespace MiniTri
                     Marshal.FreeHGlobal(enabledLayerName);
             }
 
-            var queueNodeIndex = physicalDevice.QueueFamilyProperties.
-                Where((properties, index) => (properties.QueueFlags & QueueFlags.Graphics) != 0 && physicalDevice.GetSurfaceSupport((uint)index, surface)).
-                Select((properties, index) => index).First();
+            // Select queue family
+            var supportsPresent = queueFamilyeProperties.Select((x, i) => physicalDevice.GetSurfaceSupport((uint)i, surface)).ToArray();
 
-            queue = device.GetQueue((uint)queueNodeIndex, 0);
+            graphicsQueueFamilyIndex = uint.MaxValue;
+            uint presentQueueNodeIndex = uint.MaxValue;
+            for (uint i = 0; i < queueFamilyeProperties.Length; i++)
+            {
+                if ((queueFamilyeProperties[i].QueueFlags & QueueFlags.Graphics) != 0)
+                {
+                    if (graphicsQueueFamilyIndex == uint.MaxValue)
+                    {
+                        graphicsQueueFamilyIndex = i;
+                    }
+
+                    if (supportsPresent[i])
+                    {
+                        graphicsQueueFamilyIndex = i;
+                        presentQueueNodeIndex = i;
+                        break;
+                    }
+                }
+            }
+            if (presentQueueNodeIndex == uint.MaxValue)
+            {
+                for (uint i = 0; i < queueFamilyeProperties.Length; ++i)
+                {
+                    if (supportsPresent[i])
+                    {
+                        presentQueueNodeIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            if (graphicsQueueFamilyIndex == uint.MaxValue || presentQueueNodeIndex == uint.MaxValue)
+            {
+                throw new NotImplementedException();
+            }
+
+            if (graphicsQueueFamilyIndex != presentQueueNodeIndex)
+            {
+                throw new NotImplementedException();
+            }
+
+            // Get queue
+            queue = device.GetQueue(graphicsQueueFamilyIndex, 0);
         }
 
-        protected virtual void CreateSurface()
+        private void CreateSurface()
         {
             var surfaceCreateInfo = new Win32SurfaceCreateInfo
             {
@@ -385,7 +465,7 @@ namespace MiniTri
             surface = instance.CreateWin32Surface(surfaceCreateInfo);
         }
 
-        protected virtual void CreateSwapchain()
+        private void CreateSwapchain()
         {
             var surfaceFormats = physicalDevice.GetSurfaceFormats(surface);
 
@@ -472,26 +552,24 @@ namespace MiniTri
             swapchain = device.CreateSwapchain(ref swapchainCreateInfo);
 
             swapchainImages = device.GetSwapchainImages(swapchain);
+            swapchainImageViews = new ImageView[swapchainImages.Length];
         }
 
-        protected virtual void CreateBackBufferViews()
+        private void CreateBackBufferViews()
         {
-            
-            backBufferViews = new ImageView[swapchainImages.Length];
-
-            for (var i = 0; i < swapchainImages.Length; i++)
+            for (int i = 0; i < swapchainImages.Length; i++)
             {
-                var createInfo = new ImageViewCreateInfo
+                var viewCreateInfo = new ImageViewCreateInfo
                 {
                     StructureType = StructureType.ImageViewCreateInfo,
-                    ViewType = ImageViewType.Image2D,
-                    Format = backBufferFormat,
                     Image = swapchainImages[i],
+                    Format = backBufferFormat,
                     Components = ComponentMapping.Identity,
-                    SubresourceRange = new ImageSubresourceRange(ImageAspectFlags.Color, 0, 1, 0, 1)
+                    SubresourceRange = new ImageSubresourceRange(ImageAspectFlags.Color, 0, 1, 0, 1),
+                    ViewType = ImageViewType.Image2D
                 };
 
-                backBufferViews[i] = device.CreateImageView(ref createInfo);
+                swapchainImageViews[i] = device.CreateImageView(ref viewCreateInfo);
             }
         }
 
@@ -509,15 +587,7 @@ namespace MiniTri
 
         private void CreateVertexBuffer()
         {
-            //var vertices = new[,]
-            //{
-            //    {  0.0f, -0.5f,  0.5f, 1.0f, 0.0f, 0.0f },
-            //    {  0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f },
-            //    { -0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f },
-            //    { -0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f },
-            //};
-
-            var vertices = new[,]
+            vertices = new[,]
             {
                 {  -1.0f, -1.0f,  -1.0f, 1.0f, 0.0f, 0.0f },
                 {   1.0f, -1.0f,  -1.0f, 1.0f, 1.0f, 0.0f },
@@ -552,17 +622,6 @@ namespace MiniTri
             device.UnmapMemory(vertexBufferMemory);
 
             device.BindBufferMemory(vertexBuffer, vertexBufferMemory, 0);
-
-            //vertexAttributes = new []
-            //{
-            //    new VertexInputAttributeDescription { Binding = 0, Location = 0, Format = Format.R32G32B32SFloat, Offset = 0 },
-            //    new VertexInputAttributeDescription { Binding = 0, Location = 1, Format = Format.R32G32B32SFloat, Offset = sizeof(float) * 3 },
-            //};
-
-            //vertexBindings = new []
-            //{
-            //    new VertexInputBindingDescription { Binding = 0, InputRate = VertexInputRate.Vertex, Stride = (uint)(sizeof(float) * vertices.GetLength(1)) }
-            //};
         }
 
         private void CreateRenderPass()
@@ -634,21 +693,9 @@ namespace MiniTri
             framebuffers = new Framebuffer[swapchainImages.Length];
             for (int i = 0; i < swapchainImages.Length; i++)
             {
-                attachments[0] = backBufferViews[i];
+                attachments[0] = swapchainImageViews[i];
                 framebuffers[i] = device.CreateFramebuffer(ref createInfo);
             }
-        }
-
-        private void CreatePipelineLayout()
-        {
-            var localDescriptorSetLayout = descriptorSetLayout;
-            var createInfo = new PipelineLayoutCreateInfo
-            {
-                StructureType = StructureType.PipelineLayoutCreateInfo,
-                SetLayoutCount = 1,
-                SetLayouts = new IntPtr(&localDescriptorSetLayout)
-            };
-            pipelineLayout = device.CreatePipelineLayout(ref createInfo);
         }
 
         protected unsafe DeviceMemory AllocateMemory(MemoryPropertyFlags memoryProperties, MemoryRequirements memoryRequirements)
@@ -685,125 +732,129 @@ namespace MiniTri
 
         private void CreatePipeline()
         {
-            var dynamicStates = new [] { DynamicState.Viewport, DynamicState.Scissor };
+            var dynamicStates = stackalloc DynamicState[2];
+            dynamicStates[0] = DynamicState.Viewport;
+            dynamicStates[1] = DynamicState.Scissor;
+
+            var dynamicStateCreateInfo = new PipelineDynamicStateCreateInfo
+            {
+                StructureType = StructureType.PipelineDynamicStateCreateInfo,
+                DynamicStateCount = 2,
+                DynamicStates = new IntPtr(dynamicStates)
+            };
+
+            var vertexBinding = new VertexInputBindingDescription { Binding = 0, InputRate = VertexInputRate.Vertex, Stride = (uint)(sizeof(float) * vertices.GetLength(1)) };
+            var vertexAttributes = stackalloc VertexInputAttributeDescription[2];
+            vertexAttributes[0] = new VertexInputAttributeDescription { Binding = 0, Location = 0, Format = Format.R32G32B32A32SFloat, Offset = 0 };
+            vertexAttributes[1] = new VertexInputAttributeDescription { Binding = 0, Location = 1, Format = Format.R32G32SFloat, Offset = sizeof(float) * 4 };
+
+            var vertexInputStateCreateInfo = new PipelineVertexInputStateCreateInfo
+            {
+                StructureType = StructureType.PipelineVertexInputStateCreateInfo,
+                VertexAttributeDescriptionCount = 2,
+                VertexAttributeDescriptions = new IntPtr(vertexAttributes),
+                VertexBindingDescriptionCount = 1,
+                VertexBindingDescriptions = new IntPtr(&vertexBinding)
+            };
+
+            var inputAssemblyStateCreateInfo = new PipelineInputAssemblyStateCreateInfo
+            {
+                StructureType = StructureType.PipelineInputAssemblyStateCreateInfo,
+                Topology = PrimitiveTopology.TriangleList
+            };
+
+            var rasterizerStateCreateInfo = new PipelineRasterizationStateCreateInfo
+            {
+                StructureType = StructureType.PipelineRasterizationStateCreateInfo,
+                PolygonMode = PolygonMode.Fill,
+                CullMode = CullModeFlags.Back,
+                FrontFace = FrontFace.CounterClockwise,
+                LineWidth = 1.0f
+            };
+
+            var colorBlendAttachment = new PipelineColorBlendAttachmentState
+            {
+                ColorWriteMask = (ColorComponentFlags)0xF
+            };
+            var colorBlendStateCreateInfo = new PipelineColorBlendStateCreateInfo
+            {
+                StructureType = StructureType.PipelineColorBlendStateCreateInfo,
+                AttachmentCount = 1,
+                Attachments = new IntPtr(&colorBlendAttachment)
+            };
+
+            var viewportStateCreateInfo = new PipelineViewportStateCreateInfo()
+            {
+                StructureType = StructureType.PipelineViewportStateCreateInfo,
+                ViewportCount = 1,
+                ScissorCount = 1
+            };
+
+            var depthStencilStateCreateInfo = new PipelineDepthStencilStateCreateInfo
+            {
+                StructureType = StructureType.PipelineDepthStencilStateCreateInfo,
+                DepthTestEnable = true,
+                DepthWriteEnable = true,
+                DepthCompareOperation = CompareOperation.LessOrEqual,
+                Back = new StencilOperationState
+                {
+                    FailOperation = StencilOperation.Keep,
+                    PassOperation = StencilOperation.Keep,
+                    CompareOperation = CompareOperation.Always
+                },
+                Front = new StencilOperationState
+                {
+                    FailOperation = StencilOperation.Keep,
+                    PassOperation = StencilOperation.Keep,
+                    CompareOperation = CompareOperation.Always
+                }
+            };
+
+            var multisampleStateCreateInfo = new PipelineMultisampleStateCreateInfo
+            {
+                StructureType = StructureType.PipelineMultisampleStateCreateInfo,
+                RasterizationSamples = SampleCountFlags.Sample1
+            };
 
             var entryPointName = System.Text.Encoding.UTF8.GetBytes("main\0");
-
             fixed (byte* entryPointNamePointer = &entryPointName[0])
-            fixed (DynamicState* dynamicStatesPointer = &dynamicStates[0])
-            //fixed (VertexInputAttributeDescription* vertexAttibutesPointer = &vertexAttributes[0])
-            //fixed (VertexInputBindingDescription* vertexBindingsPointer = &vertexBindings[0])
             {
-                var dynamicState = new PipelineDynamicStateCreateInfo
+                var shaderStages = stackalloc PipelineShaderStageCreateInfo[2];
+                shaderStages[0] = new PipelineShaderStageCreateInfo
                 {
-                    StructureType = StructureType.PipelineDynamicStateCreateInfo,
-                    DynamicStateCount = (uint)dynamicStates.Length,
-                    DynamicStates = new IntPtr(dynamicStatesPointer)
+                    StructureType = StructureType.PipelineShaderStageCreateInfo,
+                    Stage = ShaderStageFlags.Vertex,
+                    Name = new IntPtr(entryPointNamePointer),
+                    Module = CreateVertexShader()
                 };
 
-                var viewportState = new PipelineViewportStateCreateInfo
+                shaderStages[1] = new PipelineShaderStageCreateInfo
                 {
-                    StructureType = StructureType.PipelineViewportStateCreateInfo,
-                    ScissorCount = 1,
-                    ViewportCount = 1,
+                    StructureType = StructureType.PipelineShaderStageCreateInfo,
+                    Stage = ShaderStageFlags.Fragment,
+                    Name = new IntPtr(entryPointNamePointer),
+                    Module = CreateFragmentShader()
                 };
 
-                var vertexBinding = new VertexInputBindingDescription { Binding = 0, InputRate = VertexInputRate.Vertex, Stride = (uint)(sizeof(float) * 6) };
-                var vertexAttributes = stackalloc VertexInputAttributeDescription[2];
-                vertexAttributes[0] = new VertexInputAttributeDescription { Binding = 0, Location = 0, Format = Format.R32G32B32A32SFloat, Offset = 0 };
-                vertexAttributes[1] = new VertexInputAttributeDescription { Binding = 0, Location = 1, Format = Format.R32G32SFloat, Offset = sizeof(float) * 4 };
-
-                var vertexInputState = new PipelineVertexInputStateCreateInfo
+                var pipelineCreateInfo = new GraphicsPipelineCreateInfo
                 {
-                    StructureType = StructureType.PipelineVertexInputStateCreateInfo,
-                    VertexAttributeDescriptionCount = 2,
-                    VertexAttributeDescriptions = new IntPtr(vertexAttributes),
-                    VertexBindingDescriptionCount = 1,
-                    VertexBindingDescriptions = new IntPtr(&vertexBinding)
+                    StructureType = StructureType.GraphicsPipelineCreateInfo,
+                    Layout = pipelineLayout,
+
+                    VertexInputState = new IntPtr(&vertexInputStateCreateInfo),
+                    InputAssemblyState = new IntPtr(&inputAssemblyStateCreateInfo),
+                    RasterizationState = new IntPtr(&rasterizerStateCreateInfo),
+                    ColorBlendState = new IntPtr(&colorBlendStateCreateInfo),
+                    MultisampleState = new IntPtr(&multisampleStateCreateInfo),
+                    ViewportState = new IntPtr(&viewportStateCreateInfo),
+                    DepthStencilState = new IntPtr(&depthStencilStateCreateInfo),
+                    StageCount = 2,
+                    Stages = new IntPtr(shaderStages),
+                    DynamicState = new IntPtr(&dynamicStateCreateInfo),
+                    RenderPass = renderPass,
                 };
 
-                var inputAssemblyState = new PipelineInputAssemblyStateCreateInfo
-                {
-                    StructureType = StructureType.PipelineInputAssemblyStateCreateInfo,
-                    Topology = PrimitiveTopology.TriangleList
-                };
-
-                var rasterizerState = new PipelineRasterizationStateCreateInfo
-                {
-                    StructureType = StructureType.PipelineRasterizationStateCreateInfo,
-                    PolygonMode = PolygonMode.Fill,
-                    CullMode = CullModeFlags.None,
-                    FrontFace = FrontFace.Clockwise,
-                    LineWidth = 1.0f,
-                };
-
-                var colorBlendAttachment = new PipelineColorBlendAttachmentState { ColorWriteMask = (ColorComponentFlags)0xF };
-                var blendState = new PipelineColorBlendStateCreateInfo
-                {
-                    StructureType = StructureType.PipelineColorBlendStateCreateInfo,
-                    AttachmentCount = 1,
-                    Attachments = new IntPtr(&colorBlendAttachment)
-                };
-
-                var depthStencilState = new PipelineDepthStencilStateCreateInfo
-                {
-                    StructureType = StructureType.PipelineDepthStencilStateCreateInfo,
-                    DepthTestEnable = true,
-                    DepthWriteEnable = true,
-                    DepthCompareOperation = CompareOperation.LessOrEqual,
-                    Back = new StencilOperationState { CompareOperation = CompareOperation.Always },
-                    Front = new StencilOperationState { CompareOperation = CompareOperation.Always }
-                };
-
-                var multisampleState = new PipelineMultisampleStateCreateInfo
-                {
-                    StructureType = StructureType.PipelineMultisampleStateCreateInfo,
-                    RasterizationSamples = SampleCountFlags.Sample1,
-                };
-
-                var shaderStages = new[]
-                {
-                    new PipelineShaderStageCreateInfo
-                    {
-                        StructureType = StructureType.PipelineShaderStageCreateInfo,
-                        Name = new IntPtr(entryPointNamePointer),
-                        Stage = ShaderStageFlags.Vertex,
-                        Module = CreateVertexShader()
-                    },
-                    new PipelineShaderStageCreateInfo
-                    {
-                        StructureType = StructureType.PipelineShaderStageCreateInfo,
-                        Name = new IntPtr(entryPointNamePointer),
-                        Stage = ShaderStageFlags.Fragment,
-                        Module = CreateFragmentShader()
-                    }
-                };
-
-                fixed (PipelineShaderStageCreateInfo* shaderStagesPointer = &shaderStages[0])
-                {
-                    var createInfo = new GraphicsPipelineCreateInfo
-                    {
-                        StructureType = StructureType.GraphicsPipelineCreateInfo,
-                        Layout = pipelineLayout,
-                        DynamicState = new IntPtr(&dynamicState),
-                        ViewportState = new IntPtr(&viewportState),
-                        VertexInputState = new IntPtr(&vertexInputState),
-                        InputAssemblyState = new IntPtr(&inputAssemblyState),
-                        RasterizationState = new IntPtr(&rasterizerState),
-                        ColorBlendState = new IntPtr(&blendState),
-                        DepthStencilState = new IntPtr(&depthStencilState),
-                        MultisampleState = new IntPtr(&multisampleState),
-                        StageCount = (uint)shaderStages.Length,
-                        Stages = new IntPtr(shaderStagesPointer),
-                        RenderPass = renderPass
-                    };
-                    pipeline = device.CreateGraphicsPipelines(PipelineCache.Null, 1, &createInfo);
-                }
-
-                foreach (var shaderStage in shaderStages)
-                {
-                    device.DestroyShaderModule(shaderStage.Module);
-                }
+                pipeline = device.CreateGraphicsPipelines(PipelineCache.Null, 1, &pipelineCreateInfo);
             }
         }
 
@@ -833,19 +884,21 @@ namespace MiniTri
             }
         }
 
-        protected virtual void Draw()
+        private void Draw()
         {
-            var semaphoreCreateInfo = new SemaphoreCreateInfo { StructureType = StructureType.SemaphoreCreateInfo };
-            var presentCompleteSemaphore = device.CreateSemaphore(ref semaphoreCreateInfo);
+            var presentCompleteSemaphoreCreateInfo = new SemaphoreCreateInfo
+            {
+                StructureType = StructureType.SemaphoreCreateInfo
+            };
+
+            var presentCompleteSemaphore = device.CreateSemaphore(ref presentCompleteSemaphoreCreateInfo);
 
             try
             {
-                // Get the index of the next available swapchain image
-                currentBackBufferIndex = device.AcquireNextImage(this.swapchain, ulong.MaxValue, presentCompleteSemaphore, Fence.Null);
+                currentBackBufferIndex = device.AcquireNextImage(swapchain, ulong.MaxValue, presentCompleteSemaphore, Fence.Null);
             }
             catch (SharpVulkanException e) when (e.Result == Result.ErrorOutOfDate)
             {
-                // TODO: Handle resize and retry draw
                 throw new NotImplementedException();
             }
 
@@ -853,122 +906,150 @@ namespace MiniTri
 
             UpdateDescriptorSet();
 
-            // Record drawing command buffer
-            BuildDrawCommand();
+            RecordDrawCommand();
 
-            // Submit
-            var drawCommandBuffer = this.drawCommandBuffer;
-            var pipelineStageFlags = PipelineStageFlags.BottomOfPipe;
+            var commandBuffer = drawCommandBuffer;
+            var waitStageFlags = PipelineStageFlags.BottomOfPipe;
             var submitInfo = new SubmitInfo
             {
                 StructureType = StructureType.SubmitInfo,
                 WaitSemaphoreCount = 1,
                 WaitSemaphores = new IntPtr(&presentCompleteSemaphore),
-                WaitDstStageMask = new IntPtr(&pipelineStageFlags),
+                WaitDstStageMask = new IntPtr(&waitStageFlags),
                 CommandBufferCount = 1,
-                CommandBuffers = new IntPtr(&drawCommandBuffer),
+                CommandBuffers = new IntPtr(&commandBuffer)
             };
             queue.Submit(1, &submitInfo, Fence.Null);
 
-            // Present
-            var swapchainCopy = this.swapchain;
-            var currentBackBufferIndexCopy = currentBackBufferIndex;
+            var swapchainCopy = swapchain;
+            var currentBufferIndexCopy = currentBackBufferIndex;
             var presentInfo = new PresentInfo
             {
                 StructureType = StructureType.PresentInfo,
                 SwapchainCount = 1,
                 Swapchains = new IntPtr(&swapchainCopy),
-                ImageIndices = new IntPtr(&currentBackBufferIndexCopy)
+                ImageIndices = new IntPtr(&currentBufferIndexCopy)
             };
-            queue.Present(ref presentInfo);
 
-            // Wait
+            try
+            {
+                queue.Present(ref presentInfo);
+            }
+            catch (SharpVulkanException e) when (e.Result == Result.ErrorOutOfDate)
+            {
+                throw new NotImplementedException();
+            }
+
             queue.WaitIdle();
+
+            device.DestroySemaphore(presentCompleteSemaphore);
 
             device.ResetCommandPool(commandPool, CommandPoolResetFlags.None);
 
             device.ResetDescriptorPool(descriptorPool, DescriptorPoolResetFlags.None);
-
-            // Cleanup
-            device.DestroySemaphore(presentCompleteSemaphore);
         }
 
         private void UpdateDescriptorSet()
         {
-            // Allocate new set
-            var layoutCopy = descriptorSetLayout;
-
+            var layout = descriptorSetLayout;
             var allocateInfo = new DescriptorSetAllocateInfo
             {
                 StructureType = StructureType.DescriptorSetAllocateInfo,
                 DescriptorPool = descriptorPool,
                 DescriptorSetCount = 1,
-                SetLayouts = new IntPtr(&layoutCopy),
+                SetLayouts = new IntPtr(&layout)
             };
+
             DescriptorSet descriptorSetCopy;
             device.AllocateDescriptorSets(ref allocateInfo, &descriptorSetCopy);
             descriptorSet = descriptorSetCopy;
 
-            // Update set
             var bufferInfo = new DescriptorBufferInfo
             {
                 Buffer = uniformBuffer,
-                Range = Vulkan.WholeSize
+                Range = (uint)(sizeof(float) * uniformData.Length)
             };
 
-            var write = new WriteDescriptorSet
+            //var imageInfo = new DescriptorImageInfo
+            //{
+            //    ImageView = textureView,
+            //    ImageLayout = ImageLayout.General,
+            //    Sampler = textureSampler,
+            //};
+
+            var writes = stackalloc WriteDescriptorSet[2];
+            writes[0] = new WriteDescriptorSet
             {
                 StructureType = StructureType.WriteDescriptorSet,
+                DestinationSet = descriptorSet,
                 DescriptorCount = 1,
-                DestinationSet = descriptorSetCopy,
-                DestinationBinding = 0,
                 DescriptorType = DescriptorType.UniformBuffer,
                 BufferInfo = new IntPtr(&bufferInfo)
             };
+            //writes[1] = new WriteDescriptorSet
+            //{
+            //    StructureType = StructureType.WriteDescriptorSet,
+            //    DestinationSet = descriptorSet,
+            //    DestinationBinding = 1,
+            //    DescriptorCount = 1,
+            //    DescriptorType = DescriptorType.CombinedImageSampler,
+            //    ImageInfo = new IntPtr(&imageInfo)
+            //};
 
-            //var copy = new CopyDescriptorSet
+            device.UpdateDescriptorSets(1, writes, 0, null);
+
+            //DescriptorSet descriptorSetCopy2;
+            //device.AllocateDescriptorSets(ref allocateInfo, &descriptorSetCopy2);
+            //descriptorSet = descriptorSetCopy2;
+
+            //var copies = stackalloc CopyDescriptorSet[2];
+            //copies[0] = new CopyDescriptorSet
             //{
             //    StructureType = StructureType.CopyDescriptorSet,
             //    DescriptorCount = 1,
-            //    SourceBinding = 0,
-            //    DestinationBinding = 0,
-            //    SourceSet = descriptorSet[0],
-            //    DestinationSet = descriptorSet[1]
+            //    SourceSet = descriptorSetCopy,
+            //    DestinationSet = descriptorSetCopy2
+            //};
+            //copies[1] = new CopyDescriptorSet
+            //{
+            //    StructureType = StructureType.CopyDescriptorSet,
+            //    SourceBinding = 1,
+            //    DestinationBinding = 1,
+            //    DescriptorCount = 1,
+            //    SourceSet = descriptorSetCopy,
+            //    DestinationSet = descriptorSetCopy2
             //};
 
-            device.UpdateDescriptorSets(1, &write, 0, null);
-            //device.UpdateDescriptorSets(0, null, 1, &copy);
+            //device.UpdateDescriptorSets(0, null, 2, copies);
         }
 
-        private void BuildDrawCommand()
+        private void RecordDrawCommand()
         {
-            // Allocate command buffer
-            var commandBufferAllocationInfo = new CommandBufferAllocateInfo
+            var allocateInfo = new CommandBufferAllocateInfo
             {
                 StructureType = StructureType.CommandBufferAllocateInfo,
-                Level = CommandBufferLevel.Primary,
                 CommandPool = commandPool,
+                Level = CommandBufferLevel.Primary,
                 CommandBufferCount = 1
             };
+
             CommandBuffer commandBuffer;
-            device.AllocateCommandBuffers(ref commandBufferAllocationInfo, &commandBuffer);
+            device.AllocateCommandBuffers(ref allocateInfo, &commandBuffer);
             drawCommandBuffer = commandBuffer;
 
-            // Begin command buffer
             var inheritanceInfo = new CommandBufferInheritanceInfo { StructureType = StructureType.CommandBufferInheritanceInfo };
-            var beginInfo = new CommandBufferBeginInfo { StructureType = StructureType.CommandBufferBeginInfo, InheritanceInfo = new IntPtr(&inheritanceInfo) };
+
+            var beginInfo = new CommandBufferBeginInfo
+            {
+                StructureType = StructureType.CommandBufferBeginInfo,
+                InheritanceInfo = new IntPtr(&inheritanceInfo)
+            };
+
             commandBuffer.Begin(ref beginInfo);
 
-            // Post-present transition
-            //var imageMemoryBarrier = new ImageMemoryBarrier(swapchainImages[currentBackBufferIndex], ImageLayout.PresentSource, ImageLayout.ColorAttachmentOptimal, AccessFlags.MemoryRead, AccessFlags.ColorAttachmentWrite, new ImageSubresourceRange(ImageAspectFlags.Color));
             var imageMemoryBarrier = new ImageMemoryBarrier(swapchainImages[currentBackBufferIndex], ImageLayout.Undefined, ImageLayout.ColorAttachmentOptimal, AccessFlags.None, AccessFlags.ColorAttachmentWrite, new ImageSubresourceRange(ImageAspectFlags.Color));
-            commandBuffer.PipelineBarrier(PipelineStageFlags.AllCommands, PipelineStageFlags.BottomOfPipe, DependencyFlags.None, 0, null, 0, null, 1, &imageMemoryBarrier);
+            commandBuffer.PipelineBarrier(PipelineStageFlags.AllCommands, PipelineStageFlags.BottomOfPipe, 0, 0, null, 0, null, 1, &imageMemoryBarrier);
 
-            // Clear render target
-            //var clearRange = new ImageSubresourceRange(ImageAspectFlags.Color, 0, 1, 0, 1);
-            //commandBuffer.ClearColorImage(swapchainImages[currentBackBufferIndex], ImageLayout.TransferDestinationOptimal, new RawColor4(0, 0, 0, 1), 1, &clearRange);
-
-            // Begin render pass
             var clearValues = stackalloc ClearValue[2];
             clearValues[0] = new ClearValue();
             clearValues[1] = new ClearValue { DepthStencil = new ClearDepthStencilValue(1.0f, 0) };
@@ -977,39 +1058,33 @@ namespace MiniTri
             {
                 StructureType = StructureType.RenderPassBeginInfo,
                 RenderPass = renderPass,
-                Framebuffer = framebuffers[currentBackBufferIndex],
                 RenderArea = new Rect2D(0, 0, width, height),
                 ClearValueCount = 2,
-                ClearValues = new IntPtr(clearValues)
+                ClearValues = new IntPtr(clearValues),
+                Framebuffer = framebuffers[currentBackBufferIndex]
             };
             commandBuffer.BeginRenderPass(ref renderPassBeginInfo, SubpassContents.Inline);
 
-            // Bind pipeline
             commandBuffer.BindPipeline(PipelineBindPoint.Graphics, pipeline);
 
-            // Bind descriptor sets
             var descriptorSetCopy = descriptorSet;
             commandBuffer.BindDescriptorSets(PipelineBindPoint.Graphics, pipelineLayout, 0, 1, &descriptorSetCopy, 0, null);
 
-            // Bind vertex buffer
             var vertexBufferCopy = vertexBuffer;
             ulong offset = 0;
             commandBuffer.BindVertexBuffers(0, 1, &vertexBufferCopy, &offset);
 
-            // Set viewport and scissor
             var viewport = new Viewport(0, 0, width, height);
             commandBuffer.SetViewport(0, 1, &viewport);
 
             var scissor = new Rect2D(0, 0, width, height);
             commandBuffer.SetScissor(0, 1, &scissor);
 
-            // Draw vertices
-            commandBuffer.Draw(4, 1, 0, 0);
+            //commandBuffer.Draw(12 * 3, 1, 0, 0);
+            commandBuffer.Draw(6, 1, 0, 0);
 
-            // End render pass
             commandBuffer.EndRenderPass();
 
-            // Pre-present transition
             imageMemoryBarrier = new ImageMemoryBarrier(swapchainImages[currentBackBufferIndex], ImageLayout.ColorAttachmentOptimal, ImageLayout.PresentSource, AccessFlags.ColorAttachmentWrite, AccessFlags.MemoryRead, new ImageSubresourceRange(ImageAspectFlags.Color));
             commandBuffer.PipelineBarrier(PipelineStageFlags.AllCommands, PipelineStageFlags.BottomOfPipe, 0, 0, null, 0, null, 1, &imageMemoryBarrier);
 
@@ -1110,7 +1185,7 @@ namespace MiniTri
             device.FreeCommandBuffers(commandPool, 1, &commandBufferCopy);
             device.DestroyCommandPool(commandPool);
 
-            foreach (var backBufferView in backBufferViews)
+            foreach (var backBufferView in swapchainImageViews)
                 device.DestroyImageView(backBufferView);
 
             device.DestroySwapchain(swapchain);
