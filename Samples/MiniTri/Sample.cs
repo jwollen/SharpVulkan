@@ -71,6 +71,7 @@ namespace MiniTri
         private DeviceMemory vertexBufferMemory;
         private VertexInputAttributeDescription[] vertexAttributes;
         private VertexInputBindingDescription[] vertexBindings;
+        private DescriptorSet descriptorSet;
 
         public Sample()
         {
@@ -698,10 +699,10 @@ namespace MiniTri
                     pipeline = device.CreateGraphicsPipelines(PipelineCache.Null, 1, &createInfo);
                 }
 
-                foreach (var shaderStage in shaderStages)
-                {
-                    device.DestroyShaderModule(shaderStage.Module);
-                }
+                //foreach (var shaderStage in shaderStages)
+                //{
+                //    device.DestroyShaderModule(shaderStage.Module);
+                //}
             }
         }
 
@@ -757,9 +758,6 @@ namespace MiniTri
             var semaphoreCreateInfo = new SemaphoreCreateInfo { StructureType = StructureType.SemaphoreCreateInfo };
             var presentCompleteSemaphore = device.CreateSemaphore(ref semaphoreCreateInfo);
 
-            //var fenceCreateInfo = new FenceCreateInfo { StructureType = StructureType.FenceCreateInfo };
-            //var presentCompleteFence = device.CreateFence(ref fenceCreateInfo);
-
             try
             {
                 // Get the index of the next available swapchain image
@@ -773,23 +771,10 @@ namespace MiniTri
 
             Flush();
 
-            // Command buffer
-            var commandBufferAllocationInfo = new CommandBufferAllocateInfo
-            {
-                StructureType = StructureType.CommandBufferAllocateInfo,
-                Level = CommandBufferLevel.Primary,
-                CommandPool = commandPool,
-                CommandBufferCount = 1
-            };
-            CommandBuffer commandBuffer;
-            device.AllocateCommandBuffers(ref commandBufferAllocationInfo, &commandBuffer);
-            this.commandBuffer = commandBuffer;
+            UpdateDescriptorSet();
 
             // Record drawing command buffer
-            var beginInfo = new CommandBufferBeginInfo { StructureType = StructureType.CommandBufferBeginInfo };
-            commandBuffer.Begin(ref beginInfo);
-            DrawInternal();
-            commandBuffer.End();
+            BuildDrawCommand();
 
             // Submit
             var drawCommandBuffer = commandBuffer;
@@ -805,34 +790,32 @@ namespace MiniTri
             };
             queue.Submit(1, &submitInfo, Fence.Null);
 
-            //device.WaitForFences(1, &presentCompleteFence, true, 0);
-
             // Present
-            var swapchain = this.swapchain;
+            var swapchainCopy = this.swapchain;
             var currentBackBufferIndexCopy = currentBackBufferIndex;
             var presentInfo = new PresentInfo
             {
                 StructureType = StructureType.PresentInfo,
                 SwapchainCount = 1,
-                Swapchains = new IntPtr(&swapchain),
+                Swapchains = new IntPtr(&swapchainCopy),
                 ImageIndices = new IntPtr(&currentBackBufferIndexCopy)
             };
             queue.Present(ref presentInfo);
 
             // Wait
             queue.WaitIdle();
+
             device.ResetCommandPool(commandPool, CommandPoolResetFlags.None);
 
             device.ResetDescriptorPool(descriptorPool, DescriptorPoolResetFlags.None);
 
             // Cleanup
             device.DestroySemaphore(presentCompleteSemaphore);
-            //device.DestroyFence(presentCompleteFence);
         }
 
-        private void DrawInternal()
+        private void UpdateDescriptorSet()
         {
-            // Update descriptors
+            // Allocate new set
             var layoutCopy = descriptorSetLayout;
 
             var allocateInfo = new DescriptorSetAllocateInfo
@@ -842,9 +825,11 @@ namespace MiniTri
                 DescriptorSetCount = 1,
                 SetLayouts = new IntPtr(&layoutCopy),
             };
-            DescriptorSet descriptorSet;
-            device.AllocateDescriptorSets(ref allocateInfo, &descriptorSet);
+            DescriptorSet descriptorSetCopy;
+            device.AllocateDescriptorSets(ref allocateInfo, &descriptorSetCopy);
+            descriptorSet = descriptorSetCopy;
 
+            // Update set
             var bufferInfo = new DescriptorBufferInfo
             {
                 Buffer = uniformBuffer,
@@ -855,7 +840,7 @@ namespace MiniTri
             {
                 StructureType = StructureType.WriteDescriptorSet,
                 DescriptorCount = 1,
-                DestinationSet = descriptorSet,
+                DestinationSet = descriptorSetCopy,
                 DestinationBinding = 0,
                 DescriptorType = DescriptorType.UniformBuffer,
                 BufferInfo = new IntPtr(&bufferInfo)
@@ -873,21 +858,31 @@ namespace MiniTri
 
             device.UpdateDescriptorSets(1, &write, 0, null);
             //device.UpdateDescriptorSets(0, null, 1, &copy);
+        }
+
+        private void BuildDrawCommand()
+        {
+            // Allocate command buffer
+            var commandBufferAllocationInfo = new CommandBufferAllocateInfo
+            {
+                StructureType = StructureType.CommandBufferAllocateInfo,
+                Level = CommandBufferLevel.Primary,
+                CommandPool = commandPool,
+                CommandBufferCount = 1
+            };
+            CommandBuffer commandBuffer;
+            device.AllocateCommandBuffers(ref commandBufferAllocationInfo, &commandBuffer);
+            this.commandBuffer = commandBuffer;
+
+            // Begin command buffer
+            var inheritanceInfo = new CommandBufferInheritanceInfo { StructureType = StructureType.CommandBufferInheritanceInfo };
+            var beginInfo = new CommandBufferBeginInfo { StructureType = StructureType.CommandBufferBeginInfo, InheritanceInfo = new IntPtr(&inheritanceInfo) };
+            commandBuffer.Begin(ref beginInfo);
 
             // Post-present transition
-            var memoryBarrier = new ImageMemoryBarrier
-            {
-                StructureType = StructureType.ImageMemoryBarrier,
-                Image = backBuffers[currentBackBufferIndex],
-                SubresourceRange = new ImageSubresourceRange(ImageAspectFlags.Color, 0, 1, 0, 1),
-                OldLayout = ImageLayout.PresentSource,
-                NewLayout = ImageLayout.ColorAttachmentOptimal,
-                SourceAccessMask = AccessFlags.MemoryRead,
-                DestinationAccessMask = AccessFlags.ColorAttachmentWrite,
-                SourceQueueFamilyIndex = Vulkan.QueueFamilyIgnored,
-                DestinationQueueFamilyIndex = Vulkan.QueueFamilyIgnored,
-            };
-            commandBuffer.PipelineBarrier(PipelineStageFlags.TopOfPipe, PipelineStageFlags.TopOfPipe, DependencyFlags.None, 0, null, 0, null, 1, &memoryBarrier);
+            var imageMemoryBarrier = new ImageMemoryBarrier(backBuffers[currentBackBufferIndex], ImageLayout.PresentSource, ImageLayout.ColorAttachmentOptimal, AccessFlags.MemoryRead, AccessFlags.ColorAttachmentWrite, new ImageSubresourceRange(ImageAspectFlags.Color));
+            //var imageMemoryBarrier = new ImageMemoryBarrier(backBuffers[currentBackBufferIndex], ImageLayout.Undefined, ImageLayout.ColorAttachmentOptimal, AccessFlags.None, AccessFlags.ColorAttachmentWrite, new ImageSubresourceRange(ImageAspectFlags.Color));
+            commandBuffer.PipelineBarrier(PipelineStageFlags.AllCommands, PipelineStageFlags.BottomOfPipe, DependencyFlags.None, 0, null, 0, null, 1, &imageMemoryBarrier);
 
             // Clear render target
             var clearRange = new ImageSubresourceRange(ImageAspectFlags.Color, 0, 1, 0, 1);
@@ -907,7 +902,13 @@ namespace MiniTri
             commandBuffer.BindPipeline(PipelineBindPoint.Graphics, pipeline);
 
             // Bind descriptor sets
-            commandBuffer.BindDescriptorSets(PipelineBindPoint.Graphics, pipelineLayout, 0, 1, &descriptorSet, 0, null);
+            var descriptorSetCopy = descriptorSet;
+            commandBuffer.BindDescriptorSets(PipelineBindPoint.Graphics, pipelineLayout, 0, 1, &descriptorSetCopy, 0, null);
+
+            // Bind vertex buffer
+            var vertexBufferCopy = vertexBuffer;
+            ulong offset = 0;
+            commandBuffer.BindVertexBuffers(0, 1, &vertexBufferCopy, &offset);
 
             // Set viewport and scissor
             var viewport = new Viewport(0, 0, form.ClientSize.Width, form.ClientSize.Height);
@@ -916,11 +917,6 @@ namespace MiniTri
             var scissor = new Rect2D(0, 0, (uint)form.ClientSize.Width, (uint)form.ClientSize.Height);
             commandBuffer.SetScissor(0, 1, &scissor);
 
-            // Bind vertex buffer
-            var vertexBufferCopy = vertexBuffer;
-            ulong offset = 0;
-            commandBuffer.BindVertexBuffers(0, 1, &vertexBufferCopy, &offset);
-
             // Draw vertices
             commandBuffer.Draw(4, 1, 0, 0);
 
@@ -928,19 +924,10 @@ namespace MiniTri
             commandBuffer.EndRenderPass();
 
             // Pre-present transition
-            memoryBarrier = new ImageMemoryBarrier
-            {
-                StructureType = StructureType.ImageMemoryBarrier,
-                Image = backBuffers[currentBackBufferIndex],
-                SubresourceRange = new ImageSubresourceRange(ImageAspectFlags.Color, 0, 1, 0, 1),
-                OldLayout = ImageLayout.ColorAttachmentOptimal,
-                NewLayout = ImageLayout.PresentSource,
-                SourceAccessMask = AccessFlags.ColorAttachmentWrite,
-                DestinationAccessMask = AccessFlags.MemoryRead,
-                SourceQueueFamilyIndex = Vulkan.QueueFamilyIgnored,
-                DestinationQueueFamilyIndex = Vulkan.QueueFamilyIgnored,
-            };
-            commandBuffer.PipelineBarrier(PipelineStageFlags.AllCommands, PipelineStageFlags.BottomOfPipe, DependencyFlags.None, 0, null, 0, null, 1, &memoryBarrier);
+            imageMemoryBarrier = new ImageMemoryBarrier(backBuffers[currentBackBufferIndex], ImageLayout.ColorAttachmentOptimal, ImageLayout.PresentSource, AccessFlags.ColorAttachmentWrite, AccessFlags.MemoryRead, new ImageSubresourceRange(ImageAspectFlags.Color));
+            commandBuffer.PipelineBarrier(PipelineStageFlags.AllCommands, PipelineStageFlags.BottomOfPipe, 0, 0, null, 0, null, 1, &imageMemoryBarrier);
+
+            commandBuffer.End();
         }
 
         private void SetImageLayout(Image image, ImageAspectFlags imageAspect, ImageLayout oldLayout, ImageLayout newLayout)
