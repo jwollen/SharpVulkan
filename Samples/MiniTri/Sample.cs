@@ -37,6 +37,8 @@ namespace MiniTri
         private readonly bool validate = true;
 
         private readonly Form form;
+        private uint width;
+        private uint height;
 
         private Instance instance;
         private PhysicalDevice physicalDevice;
@@ -48,11 +50,12 @@ namespace MiniTri
         private Surface surface;
         private Swapchain swapchain;
         private Format backBufferFormat;
-        private Image[] backBuffers;
+        private ColorSpace colorSpace;
+        private Image[] swapchainImages;
         private ImageView[] backBufferViews;
         private uint currentBackBufferIndex;
-        private Image depthStencilBuffer;
-        private ImageView depthStencilView;
+        //private Image depthStencilBuffer;
+        //private ImageView depthStencilView;
 
         private CommandPool commandPool;
         private CommandBuffer commandBuffer;
@@ -80,8 +83,11 @@ namespace MiniTri
 
         public void Run()
         {
-            //Debugger.Launch();
+            width = (uint)form.ClientSize.Width;
+            height = (uint)form.ClientSize.Height;
+
             Initialize();
+
             RenderLoop.Run(form, Draw);
         }
 
@@ -328,28 +334,60 @@ namespace MiniTri
 
         protected virtual void CreateSwapchain()
         {
-            // surface format
             var surfaceFormats = physicalDevice.GetSurfaceFormats(surface);
+
             if (surfaceFormats.Length == 1 && surfaceFormats[0].Format == Format.Undefined)
             {
-                backBufferFormat = Format.B8G8R8A8UNorm;
+                backBufferFormat = Format.R8G8B8A8UNorm;
             }
             else
             {
                 backBufferFormat = surfaceFormats[0].Format;
             }
+            colorSpace = surfaceFormats[0].ColorSpace;
+
+            var oldSwapchain = swapchain;
 
             SurfaceCapabilities surfaceCapabilities;
             physicalDevice.GetSurfaceCapabilities(surface, out surfaceCapabilities);
 
-            // Buffer count
-            uint desiredImageCount = surfaceCapabilities.MinImageCount + 1;
-            if (surfaceCapabilities.MaxImageCount > 0 && desiredImageCount > surfaceCapabilities.MaxImageCount)
+            var presentModes = physicalDevice.GetSurfacePresentModes(surface);
+
+            Extent2D swapchainExtent;
+            if (surfaceCapabilities.CurrentExtent.Width == unchecked((uint)-1))
             {
-                desiredImageCount = surfaceCapabilities.MaxImageCount;
+                swapchainExtent.Width = width;
+                swapchainExtent.Height = height;
+            }
+            else
+            {
+                swapchainExtent = surfaceCapabilities.CurrentExtent;
+                width = swapchainExtent.Width;
+                height = swapchainExtent.Height;
             }
 
-            // Transform
+            var swapchainPresentMode = PresentMode.Fifo;
+            for (uint i = 0; i < presentModes.Length; i++)
+            {
+                if (presentModes[i] == PresentMode.Mailbox)
+                {
+                    swapchainPresentMode = PresentMode.Mailbox;
+                    break;
+                }
+                if ((swapchainPresentMode != PresentMode.Mailbox) &&
+                    (presentModes[i] == PresentMode.Immediate))
+                {
+                    swapchainPresentMode = PresentMode.Immediate;
+                }
+            }
+
+            var desiredBufferCount = surfaceCapabilities.MinImageCount + 1;
+            if ((surfaceCapabilities.MaxImageCount > 0) && (desiredBufferCount > surfaceCapabilities.MaxImageCount))
+            {
+                // Application must settle for fewer images than desired:
+                desiredBufferCount = surfaceCapabilities.MaxImageCount;
+            }
+
             SurfaceTransformFlags preTransform;
             if ((surfaceCapabilities.SupportedTransforms & SurfaceTransformFlags.Identity) != 0)
             {
@@ -360,57 +398,42 @@ namespace MiniTri
                 preTransform = surfaceCapabilities.CurrentTransform;
             }
 
-            // Present mode
-            var presentModes = physicalDevice.GetSurfacePresentModes(surface);
-
-            var swapChainPresentMode = PresentMode.Fifo;
-            if (presentModes.Contains(PresentMode.Mailbox))
-                swapChainPresentMode = PresentMode.Mailbox;
-            else if (presentModes.Contains(PresentMode.Immediate))
-                swapChainPresentMode = PresentMode.Immediate;
-
-            // Create swapchain
             var swapchainCreateInfo = new SwapchainCreateInfo
             {
                 StructureType = StructureType.SwapchainCreateInfo,
                 Surface = surface,
-                ImageSharingMode = SharingMode.Exclusive,
-                ImageExtent = new Extent2D((uint)form.ClientSize.Width, (uint)form.ClientSize.Height),
-                ImageArrayLayers = 1,
+                MinImageCount = desiredBufferCount,
                 ImageFormat = backBufferFormat,
-                ImageColorSpace = ColorSpace.SRgbNonlinear,
+                ImageColorSpace = colorSpace,
+                ImageExtent = swapchainExtent,
                 ImageUsage = ImageUsageFlags.ColorAttachment,
-                PresentMode = swapChainPresentMode,
-                CompositeAlpha = CompositeAlphaFlags.Opaque,
-                MinImageCount = desiredImageCount,
                 PreTransform = preTransform,
+                CompositeAlpha = CompositeAlphaFlags.Opaque,
+                ImageArrayLayers = 1,
+                ImageSharingMode = SharingMode.Exclusive,
+                PresentMode = swapchainPresentMode,
+                OldSwapchain = oldSwapchain,
                 Clipped = true
-                // OldSwapchain =
             };
+
             swapchain = device.CreateSwapchain(ref swapchainCreateInfo);
 
-            // Initialize swapchain image layout
-            backBuffers = device.GetSwapchainImages(swapchain);
-            foreach (var image in backBuffers)
-            {
-                SetImageLayout(image, ImageAspectFlags.Color, ImageLayout.Undefined, ImageLayout.PresentSource);
-            }
-            Flush();
+            swapchainImages = device.GetSwapchainImages(swapchain);
         }
 
         protected virtual void CreateBackBufferViews()
         {
             
-            backBufferViews = new ImageView[backBuffers.Length];
+            backBufferViews = new ImageView[swapchainImages.Length];
 
-            for (var i = 0; i < backBuffers.Length; i++)
+            for (var i = 0; i < swapchainImages.Length; i++)
             {
                 var createInfo = new ImageViewCreateInfo
                 {
                     StructureType = StructureType.ImageViewCreateInfo,
                     ViewType = ImageViewType.Image2D,
                     Format = backBufferFormat,
-                    Image = backBuffers[i],
+                    Image = swapchainImages[i],
                     Components = ComponentMapping.Identity,
                     SubresourceRange = new ImageSubresourceRange(ImageAspectFlags.Color, 0, 1, 0, 1)
                 };
@@ -499,7 +522,7 @@ namespace MiniTri
                 {
                     Format = backBufferFormat,
                     Samples = SampleCountFlags.Sample1,
-                    LoadOperation = AttachmentLoadOperation.Load,
+                    LoadOperation = AttachmentLoadOperation.Clear,
                     StoreOperation = AttachmentStoreOperation.Store,
                     StencilLoadOperation = AttachmentLoadOperation.DontCare,
                     StencilStoreOperation = AttachmentStoreOperation.DontCare,
@@ -525,8 +548,8 @@ namespace MiniTri
 
         private void CreateFramebuffers()
         {
-            framebuffers = new Framebuffer[backBuffers.Length];
-            for (int i = 0; i < backBuffers.Length; i++)
+            framebuffers = new Framebuffer[swapchainImages.Length];
+            for (int i = 0; i < swapchainImages.Length; i++)
             {
                 var attachment = backBufferViews[i];
                 var createInfo = new FramebufferCreateInfo
@@ -535,8 +558,8 @@ namespace MiniTri
                     RenderPass = renderPass,
                     AttachmentCount = 1,
                     Attachments = new IntPtr(&attachment),
-                    Width = (uint)form.ClientSize.Width,
-                    Height = (uint)form.ClientSize.Height,
+                    Width = width,
+                    Height = height,
                     Layers = 1
                 };
                 framebuffers[i] = device.CreateFramebuffer(ref createInfo);
@@ -636,7 +659,7 @@ namespace MiniTri
                     LineWidth = 1.0f,
                 };
 
-                var colorBlendAttachment = new PipelineColorBlendAttachmentState { ColorWriteMask = ColorComponentFlags.R | ColorComponentFlags.G | ColorComponentFlags.B | ColorComponentFlags.A };
+                var colorBlendAttachment = new PipelineColorBlendAttachmentState { ColorWriteMask = (ColorComponentFlags)0xF };
                 var blendState = new PipelineColorBlendStateCreateInfo
                 {
                     StructureType = StructureType.PipelineColorBlendStateCreateInfo,
@@ -699,10 +722,10 @@ namespace MiniTri
                     pipeline = device.CreateGraphicsPipelines(PipelineCache.Null, 1, &createInfo);
                 }
 
-                //foreach (var shaderStage in shaderStages)
-                //{
-                //    device.DestroyShaderModule(shaderStage.Module);
-                //}
+                foreach (var shaderStage in shaderStages)
+                {
+                    device.DestroyShaderModule(shaderStage.Module);
+                }
             }
         }
 
@@ -753,7 +776,7 @@ namespace MiniTri
             throw new InvalidOperationException();
         }
 
-        protected virtual unsafe void Draw()
+        protected virtual void Draw()
         {
             var semaphoreCreateInfo = new SemaphoreCreateInfo { StructureType = StructureType.SemaphoreCreateInfo };
             var presentCompleteSemaphore = device.CreateSemaphore(ref semaphoreCreateInfo);
@@ -880,21 +903,24 @@ namespace MiniTri
             commandBuffer.Begin(ref beginInfo);
 
             // Post-present transition
-            var imageMemoryBarrier = new ImageMemoryBarrier(backBuffers[currentBackBufferIndex], ImageLayout.PresentSource, ImageLayout.ColorAttachmentOptimal, AccessFlags.MemoryRead, AccessFlags.ColorAttachmentWrite, new ImageSubresourceRange(ImageAspectFlags.Color));
-            //var imageMemoryBarrier = new ImageMemoryBarrier(backBuffers[currentBackBufferIndex], ImageLayout.Undefined, ImageLayout.ColorAttachmentOptimal, AccessFlags.None, AccessFlags.ColorAttachmentWrite, new ImageSubresourceRange(ImageAspectFlags.Color));
+            //var imageMemoryBarrier = new ImageMemoryBarrier(swapchainImages[currentBackBufferIndex], ImageLayout.PresentSource, ImageLayout.ColorAttachmentOptimal, AccessFlags.MemoryRead, AccessFlags.ColorAttachmentWrite, new ImageSubresourceRange(ImageAspectFlags.Color));
+            var imageMemoryBarrier = new ImageMemoryBarrier(swapchainImages[currentBackBufferIndex], ImageLayout.Undefined, ImageLayout.ColorAttachmentOptimal, AccessFlags.None, AccessFlags.ColorAttachmentWrite, new ImageSubresourceRange(ImageAspectFlags.Color));
             commandBuffer.PipelineBarrier(PipelineStageFlags.AllCommands, PipelineStageFlags.BottomOfPipe, DependencyFlags.None, 0, null, 0, null, 1, &imageMemoryBarrier);
 
             // Clear render target
-            var clearRange = new ImageSubresourceRange(ImageAspectFlags.Color, 0, 1, 0, 1);
-            commandBuffer.ClearColorImage(backBuffers[currentBackBufferIndex], ImageLayout.TransferDestinationOptimal, new RawColor4(0, 0, 0, 1), 1, &clearRange);
+            //var clearRange = new ImageSubresourceRange(ImageAspectFlags.Color, 0, 1, 0, 1);
+            //commandBuffer.ClearColorImage(swapchainImages[currentBackBufferIndex], ImageLayout.TransferDestinationOptimal, new RawColor4(0, 0, 0, 1), 1, &clearRange);
 
             // Begin render pass
+            var clearValue = new ClearValue();
             var renderPassBeginInfo = new RenderPassBeginInfo
             {
                 StructureType = StructureType.RenderPassBeginInfo,
                 RenderPass = renderPass,
                 Framebuffer = framebuffers[currentBackBufferIndex],
-                RenderArea = new Rect2D(0, 0, (uint)form.ClientSize.Width, (uint)form.ClientSize.Height),
+                RenderArea = new Rect2D(0, 0, width, height),
+                ClearValueCount = 1,
+                ClearValues = new IntPtr(&clearValue)
             };
             commandBuffer.BeginRenderPass(ref renderPassBeginInfo, SubpassContents.Inline);
 
@@ -911,10 +937,10 @@ namespace MiniTri
             commandBuffer.BindVertexBuffers(0, 1, &vertexBufferCopy, &offset);
 
             // Set viewport and scissor
-            var viewport = new Viewport(0, 0, form.ClientSize.Width, form.ClientSize.Height);
+            var viewport = new Viewport(0, 0, width, height);
             commandBuffer.SetViewport(0, 1, &viewport);
 
-            var scissor = new Rect2D(0, 0, (uint)form.ClientSize.Width, (uint)form.ClientSize.Height);
+            var scissor = new Rect2D(0, 0, width, height);
             commandBuffer.SetScissor(0, 1, &scissor);
 
             // Draw vertices
@@ -924,7 +950,7 @@ namespace MiniTri
             commandBuffer.EndRenderPass();
 
             // Pre-present transition
-            imageMemoryBarrier = new ImageMemoryBarrier(backBuffers[currentBackBufferIndex], ImageLayout.ColorAttachmentOptimal, ImageLayout.PresentSource, AccessFlags.ColorAttachmentWrite, AccessFlags.MemoryRead, new ImageSubresourceRange(ImageAspectFlags.Color));
+            imageMemoryBarrier = new ImageMemoryBarrier(swapchainImages[currentBackBufferIndex], ImageLayout.ColorAttachmentOptimal, ImageLayout.PresentSource, AccessFlags.ColorAttachmentWrite, AccessFlags.MemoryRead, new ImageSubresourceRange(ImageAspectFlags.Color));
             commandBuffer.PipelineBarrier(PipelineStageFlags.AllCommands, PipelineStageFlags.BottomOfPipe, 0, 0, null, 0, null, 1, &imageMemoryBarrier);
 
             commandBuffer.End();
