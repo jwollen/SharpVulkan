@@ -510,23 +510,17 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe void vkUnmapMemory(Device device, DeviceMemory memory);
 
-        public unsafe void FlushMappedMemoryRanges(uint memoryRangeCount, ref MappedMemoryRange memoryRanges)
+        public unsafe void FlushMappedMemoryRanges(uint memoryRangeCount, MappedMemoryRange* memoryRanges)
         {
-            fixed (MappedMemoryRange* __memoryRanges__ = &memoryRanges)
-            {
-                vkFlushMappedMemoryRanges(this, memoryRangeCount, __memoryRanges__).CheckError();
-            }
+            vkFlushMappedMemoryRanges(this, memoryRangeCount, memoryRanges).CheckError();
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe Result vkFlushMappedMemoryRanges(Device device, uint memoryRangeCount, MappedMemoryRange* memoryRanges);
 
-        public unsafe void InvalidateMappedMemoryRanges(uint memoryRangeCount, ref MappedMemoryRange memoryRanges)
+        public unsafe void InvalidateMappedMemoryRanges(uint memoryRangeCount, MappedMemoryRange* memoryRanges)
         {
-            fixed (MappedMemoryRange* __memoryRanges__ = &memoryRanges)
-            {
-                vkInvalidateMappedMemoryRanges(this, memoryRangeCount, __memoryRanges__).CheckError();
-            }
+            vkInvalidateMappedMemoryRanges(this, memoryRangeCount, memoryRanges).CheckError();
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
