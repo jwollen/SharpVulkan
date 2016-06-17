@@ -1179,7 +1179,7 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe Result vkCreateSharedSwapchainsKHR(Device device, uint swapchainCount, SwapchainCreateInfo* createInfos, AllocationCallbacks* allocator, Swapchain* swapchains);
 
-        public unsafe void DebugMarkerSetObjectTag(out DebugMarkerObjectTagInfo tagInfo)
+        public unsafe void DebugMarkerSetObjectTag(ref DebugMarkerObjectTagInfo tagInfo)
         {
             fixed (DebugMarkerObjectTagInfo* __tagInfo__ = &tagInfo)
             {
@@ -1190,7 +1190,7 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe Result vkDebugMarkerSetObjectTagEXT(Device device, DebugMarkerObjectTagInfo* tagInfo);
 
-        public unsafe void DebugMarkerSetObjectName(out DebugMarkerObjectNameInfo nameInfo)
+        public unsafe void DebugMarkerSetObjectName(ref DebugMarkerObjectNameInfo nameInfo)
         {
             fixed (DebugMarkerObjectNameInfo* __nameInfo__ = &nameInfo)
             {
@@ -1627,7 +1627,7 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe void vkCmdExecuteCommands(CommandBuffer commandBuffer, uint commandBufferCount, CommandBuffer* commandBuffers);
 
-        public unsafe void DebugMarkerBegin(out DebugMarkerMarkerInfo markerInfo)
+        public unsafe void DebugMarkerBegin(ref DebugMarkerMarkerInfo markerInfo)
         {
             fixed (DebugMarkerMarkerInfo* __markerInfo__ = &markerInfo)
             {
@@ -1646,7 +1646,7 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe void vkCmdDebugMarkerEndEXT(CommandBuffer commandBuffer);
 
-        public unsafe void DebugMarkerInsert(out DebugMarkerMarkerInfo markerInfo)
+        public unsafe void DebugMarkerInsert(ref DebugMarkerMarkerInfo markerInfo)
         {
             fixed (DebugMarkerMarkerInfo* __markerInfo__ = &markerInfo)
             {
