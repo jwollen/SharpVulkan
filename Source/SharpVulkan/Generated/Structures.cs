@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace SharpVulkan
 {
-    public partial struct Instance
+    public partial struct Instance : IEquatable<Instance>
     {
         public readonly static Instance Null = new Instance();
 
@@ -11,16 +11,31 @@ namespace SharpVulkan
 
         public static bool operator ==(Instance left, Instance right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(Instance left, Instance right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(Instance other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct PhysicalDevice
+    public partial struct PhysicalDevice : IEquatable<PhysicalDevice>
     {
         public readonly static PhysicalDevice Null = new PhysicalDevice();
 
@@ -28,16 +43,31 @@ namespace SharpVulkan
 
         public static bool operator ==(PhysicalDevice left, PhysicalDevice right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(PhysicalDevice left, PhysicalDevice right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(PhysicalDevice other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct Device
+    public partial struct Device : IEquatable<Device>
     {
         public readonly static Device Null = new Device();
 
@@ -45,16 +75,31 @@ namespace SharpVulkan
 
         public static bool operator ==(Device left, Device right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(Device left, Device right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(Device other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct Queue
+    public partial struct Queue : IEquatable<Queue>
     {
         public readonly static Queue Null = new Queue();
 
@@ -62,16 +107,31 @@ namespace SharpVulkan
 
         public static bool operator ==(Queue left, Queue right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(Queue left, Queue right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(Queue other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct Semaphore
+    public partial struct Semaphore : IEquatable<Semaphore>
     {
         public readonly static Semaphore Null = new Semaphore();
 
@@ -79,16 +139,31 @@ namespace SharpVulkan
 
         public static bool operator ==(Semaphore left, Semaphore right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(Semaphore left, Semaphore right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(Semaphore other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct CommandBuffer
+    public partial struct CommandBuffer : IEquatable<CommandBuffer>
     {
         public readonly static CommandBuffer Null = new CommandBuffer();
 
@@ -96,16 +171,31 @@ namespace SharpVulkan
 
         public static bool operator ==(CommandBuffer left, CommandBuffer right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(CommandBuffer left, CommandBuffer right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(CommandBuffer other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct Fence
+    public partial struct Fence : IEquatable<Fence>
     {
         public readonly static Fence Null = new Fence();
 
@@ -113,16 +203,31 @@ namespace SharpVulkan
 
         public static bool operator ==(Fence left, Fence right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(Fence left, Fence right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(Fence other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct DeviceMemory
+    public partial struct DeviceMemory : IEquatable<DeviceMemory>
     {
         public readonly static DeviceMemory Null = new DeviceMemory();
 
@@ -130,16 +235,31 @@ namespace SharpVulkan
 
         public static bool operator ==(DeviceMemory left, DeviceMemory right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(DeviceMemory left, DeviceMemory right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(DeviceMemory other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct Buffer
+    public partial struct Buffer : IEquatable<Buffer>
     {
         public readonly static Buffer Null = new Buffer();
 
@@ -147,16 +267,31 @@ namespace SharpVulkan
 
         public static bool operator ==(Buffer left, Buffer right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(Buffer left, Buffer right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(Buffer other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct Image
+    public partial struct Image : IEquatable<Image>
     {
         public readonly static Image Null = new Image();
 
@@ -164,16 +299,31 @@ namespace SharpVulkan
 
         public static bool operator ==(Image left, Image right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(Image left, Image right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(Image other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct Event
+    public partial struct Event : IEquatable<Event>
     {
         public readonly static Event Null = new Event();
 
@@ -181,16 +331,31 @@ namespace SharpVulkan
 
         public static bool operator ==(Event left, Event right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(Event left, Event right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(Event other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct QueryPool
+    public partial struct QueryPool : IEquatable<QueryPool>
     {
         public readonly static QueryPool Null = new QueryPool();
 
@@ -198,16 +363,31 @@ namespace SharpVulkan
 
         public static bool operator ==(QueryPool left, QueryPool right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(QueryPool left, QueryPool right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(QueryPool other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct BufferView
+    public partial struct BufferView : IEquatable<BufferView>
     {
         public readonly static BufferView Null = new BufferView();
 
@@ -215,16 +395,31 @@ namespace SharpVulkan
 
         public static bool operator ==(BufferView left, BufferView right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(BufferView left, BufferView right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(BufferView other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct ImageView
+    public partial struct ImageView : IEquatable<ImageView>
     {
         public readonly static ImageView Null = new ImageView();
 
@@ -232,16 +427,31 @@ namespace SharpVulkan
 
         public static bool operator ==(ImageView left, ImageView right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(ImageView left, ImageView right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(ImageView other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct ShaderModule
+    public partial struct ShaderModule : IEquatable<ShaderModule>
     {
         public readonly static ShaderModule Null = new ShaderModule();
 
@@ -249,16 +459,31 @@ namespace SharpVulkan
 
         public static bool operator ==(ShaderModule left, ShaderModule right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(ShaderModule left, ShaderModule right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(ShaderModule other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct PipelineCache
+    public partial struct PipelineCache : IEquatable<PipelineCache>
     {
         public readonly static PipelineCache Null = new PipelineCache();
 
@@ -266,16 +491,31 @@ namespace SharpVulkan
 
         public static bool operator ==(PipelineCache left, PipelineCache right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(PipelineCache left, PipelineCache right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(PipelineCache other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct PipelineLayout
+    public partial struct PipelineLayout : IEquatable<PipelineLayout>
     {
         public readonly static PipelineLayout Null = new PipelineLayout();
 
@@ -283,16 +523,31 @@ namespace SharpVulkan
 
         public static bool operator ==(PipelineLayout left, PipelineLayout right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(PipelineLayout left, PipelineLayout right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(PipelineLayout other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct RenderPass
+    public partial struct RenderPass : IEquatable<RenderPass>
     {
         public readonly static RenderPass Null = new RenderPass();
 
@@ -300,16 +555,31 @@ namespace SharpVulkan
 
         public static bool operator ==(RenderPass left, RenderPass right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(RenderPass left, RenderPass right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(RenderPass other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct Pipeline
+    public partial struct Pipeline : IEquatable<Pipeline>
     {
         public readonly static Pipeline Null = new Pipeline();
 
@@ -317,16 +587,31 @@ namespace SharpVulkan
 
         public static bool operator ==(Pipeline left, Pipeline right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(Pipeline left, Pipeline right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(Pipeline other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct DescriptorSetLayout
+    public partial struct DescriptorSetLayout : IEquatable<DescriptorSetLayout>
     {
         public readonly static DescriptorSetLayout Null = new DescriptorSetLayout();
 
@@ -334,16 +619,31 @@ namespace SharpVulkan
 
         public static bool operator ==(DescriptorSetLayout left, DescriptorSetLayout right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(DescriptorSetLayout left, DescriptorSetLayout right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(DescriptorSetLayout other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct Sampler
+    public partial struct Sampler : IEquatable<Sampler>
     {
         public readonly static Sampler Null = new Sampler();
 
@@ -351,16 +651,31 @@ namespace SharpVulkan
 
         public static bool operator ==(Sampler left, Sampler right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(Sampler left, Sampler right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(Sampler other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct DescriptorPool
+    public partial struct DescriptorPool : IEquatable<DescriptorPool>
     {
         public readonly static DescriptorPool Null = new DescriptorPool();
 
@@ -368,16 +683,31 @@ namespace SharpVulkan
 
         public static bool operator ==(DescriptorPool left, DescriptorPool right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(DescriptorPool left, DescriptorPool right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(DescriptorPool other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct DescriptorSet
+    public partial struct DescriptorSet : IEquatable<DescriptorSet>
     {
         public readonly static DescriptorSet Null = new DescriptorSet();
 
@@ -385,16 +715,31 @@ namespace SharpVulkan
 
         public static bool operator ==(DescriptorSet left, DescriptorSet right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(DescriptorSet left, DescriptorSet right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(DescriptorSet other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct Framebuffer
+    public partial struct Framebuffer : IEquatable<Framebuffer>
     {
         public readonly static Framebuffer Null = new Framebuffer();
 
@@ -402,16 +747,31 @@ namespace SharpVulkan
 
         public static bool operator ==(Framebuffer left, Framebuffer right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(Framebuffer left, Framebuffer right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(Framebuffer other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct CommandPool
+    public partial struct CommandPool : IEquatable<CommandPool>
     {
         public readonly static CommandPool Null = new CommandPool();
 
@@ -419,12 +779,27 @@ namespace SharpVulkan
 
         public static bool operator ==(CommandPool left, CommandPool right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(CommandPool left, CommandPool right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(CommandPool other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
@@ -4565,7 +4940,7 @@ namespace SharpVulkan
         public uint FirstInstance;
     }
 
-    public partial struct Surface
+    public partial struct Surface : IEquatable<Surface>
     {
         public readonly static Surface Null = new Surface();
 
@@ -4573,12 +4948,27 @@ namespace SharpVulkan
 
         public static bool operator ==(Surface left, Surface right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(Surface left, Surface right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(Surface other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
@@ -4612,7 +5002,7 @@ namespace SharpVulkan
         public ColorSpace ColorSpace;
     }
 
-    public partial struct Swapchain
+    public partial struct Swapchain : IEquatable<Swapchain>
     {
         public readonly static Swapchain Null = new Swapchain();
 
@@ -4620,12 +5010,27 @@ namespace SharpVulkan
 
         public static bool operator ==(Swapchain left, Swapchain right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(Swapchain left, Swapchain right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(Swapchain other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
@@ -4687,7 +5092,7 @@ namespace SharpVulkan
         public IntPtr Results;
     }
 
-    public partial struct Display
+    public partial struct Display : IEquatable<Display>
     {
         public readonly static Display Null = new Display();
 
@@ -4695,16 +5100,31 @@ namespace SharpVulkan
 
         public static bool operator ==(Display left, Display right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(Display left, Display right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(Display other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
-    public partial struct DisplayMode
+    public partial struct DisplayMode : IEquatable<DisplayMode>
     {
         public readonly static DisplayMode Null = new DisplayMode();
 
@@ -4712,12 +5132,27 @@ namespace SharpVulkan
 
         public static bool operator ==(DisplayMode left, DisplayMode right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(DisplayMode left, DisplayMode right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(DisplayMode other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
@@ -4877,7 +5312,7 @@ namespace SharpVulkan
         public IntPtr WindowHandle;
     }
 
-    public partial struct DebugReportCallback
+    public partial struct DebugReportCallback : IEquatable<DebugReportCallback>
     {
         public readonly static DebugReportCallback Null = new DebugReportCallback();
 
@@ -4885,12 +5320,27 @@ namespace SharpVulkan
 
         public static bool operator ==(DebugReportCallback left, DebugReportCallback right)
         {
-            return left.NativeHandle == right.NativeHandle;
+            return left.Equals(right);
         }
 
         public static bool operator !=(DebugReportCallback left, DebugReportCallback right)
         {
-            return left.NativeHandle != right.NativeHandle;
+            return !left.Equals(right);
+        }
+
+        public bool Equals(DebugReportCallback other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
         }
     }
 
