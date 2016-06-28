@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Runtime.InteropServices;
 
 namespace SharpVulkan
@@ -54,9 +55,9 @@ namespace SharpVulkan
             }
         }
 
-        public static unsafe ExtensionProperties[] GetInstanceExtensionProperties(string layerName)
+        public static unsafe ExtensionProperties[] GetInstanceExtensionProperties(string layerName = null)
         {
-            var nativeString = Marshal.StringToHGlobalAnsi(layerName);
+            var nativeString = layerName != null ? Marshal.StringToHGlobalAnsi(layerName) : IntPtr.Zero;
             try
             {
                 uint count = 0;
