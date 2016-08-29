@@ -1,6 +1,6 @@
 # SharpVulkan
 
-C# bindings for the [Vulkan](https://www.khronos.org/vulkan/) graphics API
+C# bindings for the [Vulkan](https://www.khronos.org/vulkan/) graphics API, used by the [Xenko](http://xenko.com/) game engine.
 
 ## About
 
