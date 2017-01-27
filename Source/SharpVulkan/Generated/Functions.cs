@@ -431,6 +431,126 @@ namespace SharpVulkan
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe RawBool vkGetPhysicalDeviceWin32PresentationSupportKHR(PhysicalDevice physicalDevice, uint queueFamilyIndex);
+
+        public unsafe void GetFeatures2(out PhysicalDeviceFeatures2 features)
+        {
+            fixed (PhysicalDeviceFeatures2* __features__ = &features)
+            {
+                vkGetPhysicalDeviceFeatures2KHR(this, __features__);
+            }
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkGetPhysicalDeviceFeatures2KHR(PhysicalDevice physicalDevice, PhysicalDeviceFeatures2* features);
+
+        public unsafe void GetProperties2(out PhysicalDeviceProperties2 properties)
+        {
+            fixed (PhysicalDeviceProperties2* __properties__ = &properties)
+            {
+                vkGetPhysicalDeviceProperties2KHR(this, __properties__);
+            }
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkGetPhysicalDeviceProperties2KHR(PhysicalDevice physicalDevice, PhysicalDeviceProperties2* properties);
+
+        public unsafe void GetFormatProperties2(Format format, out FormatProperties2 formatProperties)
+        {
+            fixed (FormatProperties2* __formatProperties__ = &formatProperties)
+            {
+                vkGetPhysicalDeviceFormatProperties2KHR(this, format, __formatProperties__);
+            }
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkGetPhysicalDeviceFormatProperties2KHR(PhysicalDevice physicalDevice, Format format, FormatProperties2* formatProperties);
+
+        public unsafe void GetImageFormatProperties2(ref PhysicalDeviceImageFormatInfo2 imageFormatInfo, out ImageFormatProperties2 imageFormatProperties)
+        {
+            fixed (ImageFormatProperties2* __imageFormatProperties__ = &imageFormatProperties)
+            fixed (PhysicalDeviceImageFormatInfo2* __imageFormatInfo__ = &imageFormatInfo)
+            {
+                vkGetPhysicalDeviceImageFormatProperties2KHR(this, __imageFormatInfo__, __imageFormatProperties__).CheckError();
+            }
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkGetPhysicalDeviceImageFormatProperties2KHR(PhysicalDevice physicalDevice, PhysicalDeviceImageFormatInfo2* imageFormatInfo, ImageFormatProperties2* imageFormatProperties);
+
+        internal unsafe void GetQueueFamilyProperties2(ref uint queueFamilyPropertyCount, QueueFamilyProperties2* queueFamilyProperties)
+        {
+            fixed (uint* __queueFamilyPropertyCount__ = &queueFamilyPropertyCount)
+            {
+                vkGetPhysicalDeviceQueueFamilyProperties2KHR(this, __queueFamilyPropertyCount__, queueFamilyProperties);
+            }
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkGetPhysicalDeviceQueueFamilyProperties2KHR(PhysicalDevice physicalDevice, uint* queueFamilyPropertyCount, QueueFamilyProperties2* queueFamilyProperties);
+
+        public unsafe void GetMemoryProperties2(out PhysicalDeviceMemoryProperties2 memoryProperties)
+        {
+            fixed (PhysicalDeviceMemoryProperties2* __memoryProperties__ = &memoryProperties)
+            {
+                vkGetPhysicalDeviceMemoryProperties2KHR(this, __memoryProperties__);
+            }
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkGetPhysicalDeviceMemoryProperties2KHR(PhysicalDevice physicalDevice, PhysicalDeviceMemoryProperties2* memoryProperties);
+
+        internal unsafe void GetSparseImageFormatProperties2(PhysicalDeviceSparseImageFormatInfo2* formatInfo, ref uint propertyCount, SparseImageFormatProperties2* properties)
+        {
+            fixed (uint* __propertyCount__ = &propertyCount)
+            {
+                vkGetPhysicalDeviceSparseImageFormatProperties2KHR(this, formatInfo, __propertyCount__, properties);
+            }
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkGetPhysicalDeviceSparseImageFormatProperties2KHR(PhysicalDevice physicalDevice, PhysicalDeviceSparseImageFormatInfo2* formatInfo, uint* propertyCount, SparseImageFormatProperties2* properties);
+
+        public unsafe void GetExternalImageFormatProperties(Format format, ImageType type, ImageTiling tiling, ImageUsageFlags usage, ImageCreateFlags flags, uint externalHandleType, out ExternalImageFormatProperties externalImageFormatProperties)
+        {
+            fixed (ExternalImageFormatProperties* __externalImageFormatProperties__ = &externalImageFormatProperties)
+            {
+                vkGetPhysicalDeviceExternalImageFormatPropertiesNV(this, format, type, tiling, usage, flags, externalHandleType, __externalImageFormatProperties__).CheckError();
+            }
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkGetPhysicalDeviceExternalImageFormatPropertiesNV(PhysicalDevice physicalDevice, Format format, ImageType type, ImageTiling tiling, ImageUsageFlags usage, ImageCreateFlags flags, uint externalHandleType, ExternalImageFormatProperties* externalImageFormatProperties);
+
+        public unsafe void GetGeneratedCommandsProperties(ref DeviceGeneratedCommandsFeatures features, out DeviceGeneratedCommandsLimits limits)
+        {
+            fixed (DeviceGeneratedCommandsLimits* __limits__ = &limits)
+            fixed (DeviceGeneratedCommandsFeatures* __features__ = &features)
+            {
+                vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX(this, __features__, __limits__);
+            }
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX(PhysicalDevice physicalDevice, DeviceGeneratedCommandsFeatures* features, DeviceGeneratedCommandsLimits* limits);
+
+        public unsafe void ReleaseDisplay(Display display)
+        {
+            vkReleaseDisplayEXT(this, display).CheckError();
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkReleaseDisplayEXT(PhysicalDevice physicalDevice, Display display);
+
+        public unsafe void GetSurfaceCapabilities2(Surface surface, out SurfaceCapabilities2 surfaceCapabilities)
+        {
+            fixed (SurfaceCapabilities2* __surfaceCapabilities__ = &surfaceCapabilities)
+            {
+                vkGetPhysicalDeviceSurfaceCapabilities2EXT(this, surface, __surfaceCapabilities__).CheckError();
+            }
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkGetPhysicalDeviceSurfaceCapabilities2EXT(PhysicalDevice physicalDevice, Surface surface, SurfaceCapabilities2* surfaceCapabilities);
     }
 
     public partial struct Device
@@ -1179,6 +1299,14 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe Result vkCreateSharedSwapchainsKHR(Device device, uint swapchainCount, SwapchainCreateInfo* createInfos, AllocationCallbacks* allocator, Swapchain* swapchains);
 
+        public unsafe void TrimCommandPool(CommandPool commandPool, CommandPoolTrimFlags flags)
+        {
+            vkTrimCommandPoolKHR(this, commandPool, flags);
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkTrimCommandPoolKHR(Device device, CommandPool commandPool, CommandPoolTrimFlags flags);
+
         public unsafe void DebugMarkerSetObjectTag(ref DebugMarkerObjectTagInfo tagInfo)
         {
             fixed (DebugMarkerObjectTagInfo* __tagInfo__ = &tagInfo)
@@ -1200,6 +1328,121 @@ namespace SharpVulkan
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe Result vkDebugMarkerSetObjectNameEXT(Device device, DebugMarkerObjectNameInfo* nameInfo);
+
+        public unsafe int GetMemoryWin32Handle(DeviceMemory memory, uint handleType)
+        {
+            int handle;
+            vkGetMemoryWin32HandleNV(this, memory, handleType, &handle).CheckError();
+            return handle;
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkGetMemoryWin32HandleNV(Device device, DeviceMemory memory, uint handleType, int* handle);
+
+        public unsafe IndirectCommandsLayout CreateIndirectCommandsLayout(ref IndirectCommandsLayoutCreateInfo createInfo, AllocationCallbacks* allocator = null)
+        {
+            IndirectCommandsLayout indirectCommandsLayout;
+            fixed (IndirectCommandsLayoutCreateInfo* __createInfo__ = &createInfo)
+            {
+                vkCreateIndirectCommandsLayoutNVX(this, __createInfo__, allocator, &indirectCommandsLayout).CheckError();
+            }
+            return indirectCommandsLayout;
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkCreateIndirectCommandsLayoutNVX(Device device, IndirectCommandsLayoutCreateInfo* createInfo, AllocationCallbacks* allocator, IndirectCommandsLayout* indirectCommandsLayout);
+
+        public unsafe void DestroyIndirectCommandsLayout(IndirectCommandsLayout indirectCommandsLayout, AllocationCallbacks* allocator = null)
+        {
+            vkDestroyIndirectCommandsLayoutNVX(this, indirectCommandsLayout, allocator);
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkDestroyIndirectCommandsLayoutNVX(Device device, IndirectCommandsLayout indirectCommandsLayout, AllocationCallbacks* allocator);
+
+        public unsafe ObjectTable CreateObjectTable(ref ObjectTableCreateInfo createInfo, AllocationCallbacks* allocator = null)
+        {
+            ObjectTable objectTable;
+            fixed (ObjectTableCreateInfo* __createInfo__ = &createInfo)
+            {
+                vkCreateObjectTableNVX(this, __createInfo__, allocator, &objectTable).CheckError();
+            }
+            return objectTable;
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkCreateObjectTableNVX(Device device, ObjectTableCreateInfo* createInfo, AllocationCallbacks* allocator, ObjectTable* objectTable);
+
+        public unsafe void DestroyObjectTable(ObjectTable objectTable, AllocationCallbacks* allocator = null)
+        {
+            vkDestroyObjectTableNVX(this, objectTable, allocator);
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkDestroyObjectTableNVX(Device device, ObjectTable objectTable, AllocationCallbacks* allocator);
+
+        public unsafe void RegisterObjects(ObjectTable objectTable, uint objectCount, IntPtr objectTableEntries, uint objectIndices)
+        {
+            vkRegisterObjectsNVX(this, objectTable, objectCount, &objectTableEntries, &objectIndices).CheckError();
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkRegisterObjectsNVX(Device device, ObjectTable objectTable, uint objectCount, IntPtr* objectTableEntries, uint* objectIndices);
+
+        public unsafe void UnregisterObjects(ObjectTable objectTable, uint objectCount, ObjectEntryType objectEntryTypes, uint objectIndices)
+        {
+            vkUnregisterObjectsNVX(this, objectTable, objectCount, &objectEntryTypes, &objectIndices).CheckError();
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkUnregisterObjectsNVX(Device device, ObjectTable objectTable, uint objectCount, ObjectEntryType* objectEntryTypes, uint* objectIndices);
+
+        public unsafe void DisplayPowerControl(Display display, ref DisplayPowerInfo displayPowerInfo)
+        {
+            fixed (DisplayPowerInfo* __displayPowerInfo__ = &displayPowerInfo)
+            {
+                vkDisplayPowerControlEXT(this, display, __displayPowerInfo__).CheckError();
+            }
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkDisplayPowerControlEXT(Device device, Display display, DisplayPowerInfo* displayPowerInfo);
+
+        public unsafe Fence RegisterEvent(ref DeviceEventInfo deviceEventInfo, AllocationCallbacks* allocator = null)
+        {
+            Fence fence;
+            fixed (DeviceEventInfo* __deviceEventInfo__ = &deviceEventInfo)
+            {
+                vkRegisterDeviceEventEXT(this, __deviceEventInfo__, allocator, &fence).CheckError();
+            }
+            return fence;
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkRegisterDeviceEventEXT(Device device, DeviceEventInfo* deviceEventInfo, AllocationCallbacks* allocator, Fence* fence);
+
+        public unsafe Fence RegisterDisplayEvent(Display display, ref DisplayEventInfo displayEventInfo, AllocationCallbacks* allocator = null)
+        {
+            Fence fence;
+            fixed (DisplayEventInfo* __displayEventInfo__ = &displayEventInfo)
+            {
+                vkRegisterDisplayEventEXT(this, display, __displayEventInfo__, allocator, &fence).CheckError();
+            }
+            return fence;
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkRegisterDisplayEventEXT(Device device, Display display, DisplayEventInfo* displayEventInfo, AllocationCallbacks* allocator, Fence* fence);
+
+        public unsafe ulong GetSwapchainCounter(Swapchain swapchain, SurfaceCounterFlags counter)
+        {
+            ulong counterValue;
+            vkGetSwapchainCounterEXT(this, swapchain, counter, &counterValue).CheckError();
+            return counterValue;
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe Result vkGetSwapchainCounterEXT(Device device, Swapchain swapchain, SurfaceCounterFlags counter, ulong* counterValue);
     }
 
     public partial struct Queue
@@ -1461,13 +1704,13 @@ namespace SharpVulkan
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe void vkCmdCopyImageToBuffer(CommandBuffer commandBuffer, Image sourceImage, ImageLayout sourceImageLayout, Buffer destinationBuffer, uint regionCount, BufferImageCopy* regions);
 
-        public unsafe void UpdateBuffer(Buffer destinationBuffer, ulong destinationOffset, ulong dataSize, uint* data)
+        public unsafe void UpdateBuffer(Buffer destinationBuffer, ulong destinationOffset, ulong dataSize, IntPtr data)
         {
             vkCmdUpdateBuffer(this, destinationBuffer, destinationOffset, dataSize, data);
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
-        internal static extern unsafe void vkCmdUpdateBuffer(CommandBuffer commandBuffer, Buffer destinationBuffer, ulong destinationOffset, ulong dataSize, uint* data);
+        internal static extern unsafe void vkCmdUpdateBuffer(CommandBuffer commandBuffer, Buffer destinationBuffer, ulong destinationOffset, ulong dataSize, IntPtr data);
 
         public unsafe void FillBuffer(Buffer destinationBuffer, ulong destinationOffset, ulong size, uint data)
         {
@@ -1656,5 +1899,43 @@ namespace SharpVulkan
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
         internal static extern unsafe void vkCmdDebugMarkerInsertEXT(CommandBuffer commandBuffer, DebugMarkerMarkerInfo* markerInfo);
+
+        public unsafe void DrawIndirectCount(Buffer buffer, ulong offset, Buffer countBuffer, ulong countBufferOffset, uint maxDrawCount, uint stride)
+        {
+            vkCmdDrawIndirectCountAMD(this, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkCmdDrawIndirectCountAMD(CommandBuffer commandBuffer, Buffer buffer, ulong offset, Buffer countBuffer, ulong countBufferOffset, uint maxDrawCount, uint stride);
+
+        public unsafe void DrawIndexedIndirectCount(Buffer buffer, ulong offset, Buffer countBuffer, ulong countBufferOffset, uint maxDrawCount, uint stride)
+        {
+            vkCmdDrawIndexedIndirectCountAMD(this, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkCmdDrawIndexedIndirectCountAMD(CommandBuffer commandBuffer, Buffer buffer, ulong offset, Buffer countBuffer, ulong countBufferOffset, uint maxDrawCount, uint stride);
+
+        public unsafe void ProcessCommands(ref CommandProcessCommandsInfo processCommandsInfo)
+        {
+            fixed (CommandProcessCommandsInfo* __processCommandsInfo__ = &processCommandsInfo)
+            {
+                vkCmdProcessCommandsNVX(this, __processCommandsInfo__);
+            }
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkCmdProcessCommandsNVX(CommandBuffer commandBuffer, CommandProcessCommandsInfo* processCommandsInfo);
+
+        public unsafe void ReserveSpaceForCommands(ref CommandReserveSpaceForCommandsInfo reserveSpaceInfo)
+        {
+            fixed (CommandReserveSpaceForCommandsInfo* __reserveSpaceInfo__ = &reserveSpaceInfo)
+            {
+                vkCmdReserveSpaceForCommandsNVX(this, __reserveSpaceInfo__);
+            }
+        }
+
+        [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        internal static extern unsafe void vkCmdReserveSpaceForCommandsNVX(CommandBuffer commandBuffer, CommandReserveSpaceForCommandsInfo* reserveSpaceInfo);
     }
 }

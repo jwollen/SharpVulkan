@@ -44,6 +44,8 @@ namespace SharpVulkan
 
         ErrorFormatNotSupported = -11,
 
+        ErrorFragmentedPool = -12,
+
         ErrorSurfaceLost = -1000000000,
 
         ErrorNativeWindowInUse = -1000000001,
@@ -57,6 +59,8 @@ namespace SharpVulkan
         ErrorValidationFailed = -1000011001,
 
         ErrorInvalidShader = -1000012000,
+
+        ErrorOutOfPoolMemory = -1000069000,
     }
 
     public enum StructureType : int
@@ -190,6 +194,66 @@ namespace SharpVulkan
         DebugMarkerObjectTagInfo = 1000022001,
 
         DebugMarkerMarkerInfo = 1000022002,
+
+        DedicatedAllocationImageCreateInfo = 1000026000,
+
+        DedicatedAllocationBufferCreateInfo = 1000026001,
+
+        DedicatedAllocationMemoryAllocateInfo = 1000026002,
+
+        ExternalMemoryImageCreateInfo = 1000056000,
+
+        ExportMemoryAllocateInfo = 1000056001,
+
+        ImportMemoryWin32HandleInfo = 1000057000,
+
+        ExportMemoryWin32HandleInfo = 1000057001,
+
+        Win32KeyedMutexAcquireReleaseInfo = 1000058000,
+
+        PhysicalDeviceFeatures2 = 1000059000,
+
+        PhysicalDeviceProperties2 = 1000059001,
+
+        FormatProperties2 = 1000059002,
+
+        ImageFormatProperties2 = 1000059003,
+
+        PhysicalDeviceImageFormatInfo2 = 1000059004,
+
+        QueueFamilyProperties2 = 1000059005,
+
+        PhysicalDeviceMemoryProperties2 = 1000059006,
+
+        SparseImageFormatProperties2 = 1000059007,
+
+        PhysicalDeviceSparseImageFormatInfo2 = 1000059008,
+
+        ValidationFlags = 1000061000,
+
+        ViSurfaceCreateInfoNn = 1000062000,
+
+        ObjectTableCreateInfo = 1000086000,
+
+        IndirectCommandsLayoutCreateInfo = 1000086001,
+
+        CommandProcessCommandsInfo = 1000086002,
+
+        CommandReserveSpaceForCommandsInfo = 1000086003,
+
+        DeviceGeneratedCommandsLimits = 1000086004,
+
+        DeviceGeneratedCommandsFeatures = 1000086005,
+
+        SurfaceCapabilities2 = 1000090000,
+
+        DisplayPowerInfo = 1000091000,
+
+        DeviceEventInfo = 1000091001,
+
+        DisplayEventInfo = 1000091002,
+
+        SwapchainCounterCreateInfo = 1000091003,
     }
 
     public enum SystemAllocationScope : int
@@ -581,6 +645,22 @@ namespace SharpVulkan
         Astc12X12UNormBlock = 183,
 
         Astc12X12SRgbBlock = 184,
+
+        Pvrtc12BppUNormBlock = 1000054000,
+
+        Pvrtc14BppUNormBlock = 1000054001,
+
+        Pvrtc22BppUNormBlock = 1000054002,
+
+        Pvrtc24BppUNormBlock = 1000054003,
+
+        Pvrtc12BppSRgbBlock = 1000054004,
+
+        Pvrtc14BppSRgbBlock = 1000054005,
+
+        Pvrtc22BppSRgbBlock = 1000054006,
+
+        Pvrtc24BppSRgbBlock = 1000054007,
     }
 
     public enum ImageType : int
@@ -1032,6 +1112,10 @@ namespace SharpVulkan
         SampledImageFilterLinear = 4096,
 
         SampledImageFilterCubic = 8192,
+
+        TransferSource = 16384,
+
+        TransferDestination = 32768,
     }
 
     [Flags]
@@ -1070,6 +1154,8 @@ namespace SharpVulkan
         MutableFormat = 8,
 
         CubeCompatible = 16,
+
+        Image2DArrayCompatible = 32,
     }
 
     [Flags]
@@ -1180,6 +1266,8 @@ namespace SharpVulkan
         AllGraphics = 32768,
 
         AllCommands = 65536,
+
+        CommandProcess = 131072,
     }
 
     [Flags]
@@ -1566,6 +1654,10 @@ namespace SharpVulkan
         MemoryRead = 32768,
 
         MemoryWrite = 65536,
+
+        CommandProcessRead = 131072,
+
+        CommandProcessWrite = 262144,
     }
 
     [Flags]
@@ -1637,6 +1729,30 @@ namespace SharpVulkan
     public enum ColorSpace : int
     {
         SRgbNonlinear = 0,
+
+        DisplayP3Linear = 1000104001,
+
+        DisplayP3Nonlinear = 1000104002,
+
+        ScRgbLinear = 1000104003,
+
+        ScRgbNonlinear = 1000104004,
+
+        DciP3Linear = 1000104005,
+
+        DciP3Nonlinear = 1000104006,
+
+        Bt709Linear = 1000104007,
+
+        Bt709Nonlinear = 1000104008,
+
+        Bt2020Linear = 1000104009,
+
+        Bt2020Nonlinear = 1000104010,
+
+        AdobeRgbLinear = 1000104011,
+
+        AdobeRgbNonlinear = 1000104012,
     }
 
     public enum PresentMode : int
@@ -1744,6 +1860,12 @@ namespace SharpVulkan
         None = 0,
     }
 
+    [Flags]
+    public enum CommandPoolTrimFlags : int
+    {
+        None = 0,
+    }
+
     public enum DebugReportObjectType : int
     {
         Unknown = 0,
@@ -1798,11 +1920,19 @@ namespace SharpVulkan
 
         CommandPool = 25,
 
-        SurfaceKhr = 26,
+        Surface = 26,
 
-        SwapchainKhr = 27,
+        Swapchain = 27,
 
         DebugReport = 28,
+
+        Display = 29,
+
+        DisplayMode = 30,
+
+        ObjectTable = 31,
+
+        IndirectCommandsLayout = 32,
     }
 
     public enum DebugReportError : int
@@ -1833,5 +1963,119 @@ namespace SharpVulkan
         Strict = 0,
 
         Relaxed = 1,
+    }
+
+    [Flags]
+    public enum ExternalMemoryHandleTypeFlags : int
+    {
+        None = 0,
+
+        OpaqueWin32 = 1,
+
+        OpaqueWin32Kmt = 2,
+
+        D3D11Image = 4,
+
+        D3D11ImageKmt = 8,
+    }
+
+    [Flags]
+    public enum ExternalMemoryFeatureFlags : int
+    {
+        None = 0,
+
+        DedicatedOnly = 1,
+
+        Exportable = 2,
+
+        Importable = 4,
+    }
+
+    public enum ValidationCheck : int
+    {
+        All = 0,
+    }
+
+    public enum IndirectCommandsTokenType : int
+    {
+        Pipeline = 0,
+
+        DescriptorSet = 1,
+
+        IndexBuffer = 2,
+
+        VertexBuffer = 3,
+
+        PushConstant = 4,
+
+        DrawIndexed = 5,
+
+        Draw = 6,
+
+        Dispatch = 7,
+    }
+
+    public enum ObjectEntryType : int
+    {
+        DescriptorSet = 0,
+
+        Pipeline = 1,
+
+        IndexBuffer = 2,
+
+        VertexBuffer = 3,
+
+        PushConstant = 4,
+    }
+
+    [Flags]
+    public enum IndirectCommandsLayoutUsageFlags : int
+    {
+        None = 0,
+
+        UnorderedSequences = 1,
+
+        SparseSequences = 2,
+
+        EmptyExecutions = 4,
+
+        IndexedSequences = 8,
+    }
+
+    [Flags]
+    public enum ObjectEntryUsageFlags : int
+    {
+        None = 0,
+
+        Graphics = 1,
+
+        Compute = 2,
+    }
+
+    [Flags]
+    public enum SurfaceCounterFlags : int
+    {
+        None = 0,
+
+        VerticalBlank = 1,
+    }
+
+    public enum DisplayPowerState : int
+    {
+        Off = 0,
+
+        Suspend = 1,
+
+        On = 2,
+    }
+
+    public enum DeviceEventType : int
+    {
+        DisplayHotplug = 0,
+    }
+
+    public enum DisplayEventType : int
+    {
+        FirstPixelOut = 0,
     }
 }

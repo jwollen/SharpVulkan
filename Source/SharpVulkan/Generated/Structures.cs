@@ -5312,6 +5312,103 @@ namespace SharpVulkan
         public IntPtr WindowHandle;
     }
 
+    public partial struct PhysicalDeviceFeatures2
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public PhysicalDeviceFeatures Features;
+    }
+
+    public partial struct PhysicalDeviceProperties2
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public PhysicalDeviceProperties Properties;
+    }
+
+    public partial struct FormatProperties2
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public FormatProperties FormatProperties;
+    }
+
+    public partial struct ImageFormatProperties2
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public ImageFormatProperties ImageFormatProperties;
+    }
+
+    public partial struct PhysicalDeviceImageFormatInfo2
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public Format Format;
+
+        public ImageType Type;
+
+        public ImageTiling Tiling;
+
+        public ImageUsageFlags Usage;
+
+        public ImageCreateFlags Flags;
+    }
+
+    public partial struct QueueFamilyProperties2
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public QueueFamilyProperties QueueFamilyProperties;
+    }
+
+    public partial struct PhysicalDeviceMemoryProperties2
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public PhysicalDeviceMemoryProperties MemoryProperties;
+    }
+
+    public partial struct SparseImageFormatProperties2
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public SparseImageFormatProperties Properties;
+    }
+
+    public partial struct PhysicalDeviceSparseImageFormatInfo2
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public Format Format;
+
+        public ImageType Type;
+
+        public SampleCountFlags Samples;
+
+        public ImageUsageFlags Usage;
+
+        public ImageTiling Tiling;
+    }
+
     public partial struct DebugReportCallback : IEquatable<DebugReportCallback>
     {
         public readonly static DebugReportCallback Null = new DebugReportCallback();
@@ -5416,5 +5513,430 @@ namespace SharpVulkan
         }
 
         public ColorArray Color;
+    }
+
+    public partial struct DedicatedAllocationImageCreateInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public RawBool DedicatedAllocation;
+    }
+
+    public partial struct DedicatedAllocationBufferCreateInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public RawBool DedicatedAllocation;
+    }
+
+    public partial struct DedicatedAllocationMemoryAllocateInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public Image Image;
+
+        public Buffer Buffer;
+    }
+
+    public partial struct ExternalImageFormatProperties
+    {
+        public ImageFormatProperties ImageFormatProperties;
+
+        public uint ExternalMemoryFeatures;
+
+        public uint ExportFromImportedHandleTypes;
+
+        public uint CompatibleHandleTypes;
+    }
+
+    public partial struct ExternalMemoryImageCreateInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public uint HandleTypes;
+    }
+
+    public partial struct ExportMemoryAllocateInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public uint HandleTypes;
+    }
+
+    public partial struct ImportMemoryWin32HandleInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public uint HandleType;
+
+        public int Handle;
+    }
+
+    public partial struct ExportMemoryWin32HandleInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public IntPtr Attributes;
+
+        public int DwAccess;
+    }
+
+    public partial struct Win32KeyedMutexAcquireReleaseInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public uint AcquireCount;
+
+        public IntPtr AcquireSyncs;
+
+        public IntPtr AcquireKeys;
+
+        public IntPtr AcquireTimeoutMilliseconds;
+
+        public uint ReleaseCount;
+
+        public IntPtr ReleaseSyncs;
+
+        public IntPtr ReleaseKeys;
+    }
+
+    public partial struct ValidationFlags
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public uint DisabledValidationCheckCount;
+
+        public IntPtr DisabledValidationChecks;
+    }
+
+    public partial struct ObjectTable : IEquatable<ObjectTable>
+    {
+        public readonly static ObjectTable Null = new ObjectTable();
+
+        internal IntPtr NativeHandle;
+
+        public static bool operator ==(ObjectTable left, ObjectTable right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(ObjectTable left, ObjectTable right)
+        {
+            return !left.Equals(right);
+        }
+
+        public bool Equals(ObjectTable other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
+        }
+    }
+
+    public partial struct IndirectCommandsLayout : IEquatable<IndirectCommandsLayout>
+    {
+        public readonly static IndirectCommandsLayout Null = new IndirectCommandsLayout();
+
+        internal IntPtr NativeHandle;
+
+        public static bool operator ==(IndirectCommandsLayout left, IndirectCommandsLayout right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(IndirectCommandsLayout left, IndirectCommandsLayout right)
+        {
+            return !left.Equals(right);
+        }
+
+        public bool Equals(IndirectCommandsLayout other)
+        {
+            return NativeHandle == other.NativeHandle;
+        }
+
+        public override int GetHashCode()
+        {
+            return NativeHandle.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return NativeHandle.ToString();
+        }
+    }
+
+    public partial struct DeviceGeneratedCommandsFeatures
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public RawBool ComputeBindingPointSupport;
+    }
+
+    public partial struct DeviceGeneratedCommandsLimits
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public uint MaxIndirectCommandsLayoutTokenCount;
+
+        public uint MaxObjectEntryCounts;
+
+        public uint MinSequenceCountBufferOffsetAlignment;
+
+        public uint MinSequenceIndexBufferOffsetAlignment;
+
+        public uint MinCommandsTokenBufferOffsetAlignment;
+    }
+
+    public partial struct IndirectCommandsToken
+    {
+        public IndirectCommandsTokenType TokenType;
+
+        public Buffer Buffer;
+
+        public ulong Offset;
+    }
+
+    public partial struct IndirectCommandsLayoutToken
+    {
+        public IndirectCommandsTokenType TokenType;
+
+        public uint BindingUnit;
+
+        public uint DynamicCount;
+
+        public uint Divisor;
+    }
+
+    public partial struct IndirectCommandsLayoutCreateInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public PipelineBindPoint PipelineBindPoint;
+
+        public uint Flags;
+
+        public uint TokenCount;
+
+        public IntPtr Tokens;
+    }
+
+    public partial struct CommandProcessCommandsInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public ObjectTable ObjectTable;
+
+        public IndirectCommandsLayout IndirectCommandsLayout;
+
+        public uint IndirectCommandsTokenCount;
+
+        public IntPtr IndirectCommandsTokens;
+
+        public uint MaxSequencesCount;
+
+        public CommandBuffer TargetCommandBuffer;
+
+        public Buffer SequencesCountBuffer;
+
+        public ulong SequencesCountOffset;
+
+        public Buffer SequencesIndexBuffer;
+
+        public ulong SequencesIndexOffset;
+    }
+
+    public partial struct CommandReserveSpaceForCommandsInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public ObjectTable ObjectTable;
+
+        public IndirectCommandsLayout IndirectCommandsLayout;
+
+        public uint MaxSequencesCount;
+    }
+
+    public partial struct ObjectTableCreateInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public uint ObjectCount;
+
+        public IntPtr ObjectEntryTypes;
+
+        public IntPtr ObjectEntryCounts;
+
+        public IntPtr ObjectEntryUsageFlags;
+
+        public uint MaxUniformBuffersPerDescriptor;
+
+        public uint MaxStorageBuffersPerDescriptor;
+
+        public uint MaxStorageImagesPerDescriptor;
+
+        public uint MaxSampledImagesPerDescriptor;
+
+        public uint MaxPipelineLayouts;
+    }
+
+    public partial struct ObjectTableEntry
+    {
+        public ObjectEntryType Type;
+
+        public uint Flags;
+    }
+
+    public partial struct ObjectTablePipelineEntry
+    {
+        public ObjectEntryType Type;
+
+        public uint Flags;
+
+        public Pipeline Pipeline;
+    }
+
+    public partial struct ObjectTableDescriptorSetEntry
+    {
+        public ObjectEntryType Type;
+
+        public uint Flags;
+
+        public PipelineLayout PipelineLayout;
+
+        public DescriptorSet DescriptorSet;
+    }
+
+    public partial struct ObjectTableVertexBufferEntry
+    {
+        public ObjectEntryType Type;
+
+        public uint Flags;
+
+        public Buffer Buffer;
+    }
+
+    public partial struct ObjectTableIndexBufferEntry
+    {
+        public ObjectEntryType Type;
+
+        public uint Flags;
+
+        public Buffer Buffer;
+
+        public IndexType IndexType;
+    }
+
+    public partial struct ObjectTablePushConstantEntry
+    {
+        public ObjectEntryType Type;
+
+        public uint Flags;
+
+        public PipelineLayout PipelineLayout;
+
+        public ShaderStageFlags StageFlags;
+    }
+
+    public partial struct SurfaceCapabilities2
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public uint MinImageCount;
+
+        public uint MaxImageCount;
+
+        public Extent2D CurrentExtent;
+
+        public Extent2D MinImageExtent;
+
+        public Extent2D MaxImageExtent;
+
+        public uint MaxImageArrayLayers;
+
+        public SurfaceTransformFlags SupportedTransforms;
+
+        public SurfaceTransformFlags CurrentTransform;
+
+        public CompositeAlphaFlags SupportedCompositeAlpha;
+
+        public ImageUsageFlags SupportedUsageFlags;
+
+        public uint SupportedSurfaceCounters;
+    }
+
+    public partial struct DisplayPowerInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public DisplayPowerState PowerState;
+    }
+
+    public partial struct DeviceEventInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public DeviceEventType DeviceEvent;
+    }
+
+    public partial struct DisplayEventInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public DisplayEventType DisplayEvent;
+    }
+
+    public partial struct SwapchainCounterCreateInfo
+    {
+        public StructureType StructureType;
+
+        public IntPtr Next;
+
+        public uint SurfaceCounters;
     }
 }
