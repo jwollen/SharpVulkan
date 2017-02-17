@@ -70,6 +70,7 @@
     <Compile Include="Rect2D.cs" />
     <Compile Include="ResultExtensions.cs" />
     <Compile Include="SharpVulkanException.cs" />
+    <Compile Include="SuppressUnmanagedCodeSecurity.cs" />
     <Compile Include="Version.cs" />
     <Compile Include="Viewport.cs" />
     <Compile Include="Vulkan.cs" />

@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Security;
 
 namespace SharpVulkan
 {
@@ -18,6 +19,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateInstance(InstanceCreateInfo* createInfo, AllocationCallbacks* allocator, Instance* instance);
 
         internal static unsafe void EnumerateInstanceExtensionProperties(byte* layerName, ref uint propertyCount, ExtensionProperties* properties)
@@ -29,6 +31,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkEnumerateInstanceExtensionProperties(byte* layerName, uint* propertyCount, ExtensionProperties* properties);
 
         internal static unsafe void EnumerateInstanceLayerProperties(ref uint propertyCount, LayerProperties* properties)
@@ -40,6 +43,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkEnumerateInstanceLayerProperties(uint* propertyCount, LayerProperties* properties);
     }
 
@@ -51,6 +55,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyInstance(Instance instance, AllocationCallbacks* allocator);
 
         internal unsafe void EnumeratePhysicalDevices(ref uint physicalDeviceCount, PhysicalDevice* physicalDevices)
@@ -62,6 +67,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkEnumeratePhysicalDevices(Instance instance, uint* physicalDeviceCount, PhysicalDevice* physicalDevices);
 
         public unsafe IntPtr GetProcAddress(byte* name)
@@ -72,6 +78,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe IntPtr vkGetInstanceProcAddr(Instance instance, byte* name);
 
         public unsafe void DestroySurface(Surface surface, AllocationCallbacks* allocator = null)
@@ -80,6 +87,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroySurfaceKHR(Instance instance, Surface surface, AllocationCallbacks* allocator);
 
         public unsafe Surface CreateDisplayPlaneSurface(ref DisplaySurfaceCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -93,6 +101,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateDisplayPlaneSurfaceKHR(Instance instance, DisplaySurfaceCreateInfo* createInfo, AllocationCallbacks* allocator, Surface* surface);
 
         public unsafe Surface CreateXlibSurface(ref XlibSurfaceCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -106,6 +115,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateXlibSurfaceKHR(Instance instance, XlibSurfaceCreateInfo* createInfo, AllocationCallbacks* allocator, Surface* surface);
 
         public unsafe Surface CreateXcbSurface(ref XcbSurfaceCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -119,6 +129,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateXcbSurfaceKHR(Instance instance, XcbSurfaceCreateInfo* createInfo, AllocationCallbacks* allocator, Surface* surface);
 
         public unsafe Surface CreateAndroidSurface(ref AndroidSurfaceCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -132,6 +143,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateAndroidSurfaceKHR(Instance instance, AndroidSurfaceCreateInfo* createInfo, AllocationCallbacks* allocator, Surface* surface);
 
         public unsafe Surface CreateWin32Surface(Win32SurfaceCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -142,6 +154,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateWin32SurfaceKHR(Instance instance, Win32SurfaceCreateInfo* createInfo, AllocationCallbacks* allocator, Surface* surface);
 
         public unsafe DebugReportCallback CreateDebugReportCallback(ref DebugReportCallbackCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -155,6 +168,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateDebugReportCallbackEXT(Instance instance, DebugReportCallbackCreateInfo* createInfo, AllocationCallbacks* allocator, DebugReportCallback* callback);
 
         public unsafe void DestroyDebugReportCallback(DebugReportCallback callback, AllocationCallbacks* allocator = null)
@@ -163,6 +177,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyDebugReportCallbackEXT(Instance instance, DebugReportCallback callback, AllocationCallbacks* allocator);
 
         internal unsafe void DebugReportMessage(uint flags, DebugReportObjectType objectType, ulong @object, PointerSize location, int messageCode, ref byte layerPrefix, byte* message)
@@ -174,6 +189,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDebugReportMessageEXT(Instance instance, uint flags, DebugReportObjectType objectType, ulong @object, PointerSize location, int messageCode, byte* layerPrefix, byte* message);
     }
 
@@ -188,6 +204,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetPhysicalDeviceFeatures(PhysicalDevice physicalDevice, PhysicalDeviceFeatures* features);
 
         public unsafe void GetFormatProperties(Format format, out FormatProperties formatProperties)
@@ -199,6 +216,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetPhysicalDeviceFormatProperties(PhysicalDevice physicalDevice, Format format, FormatProperties* formatProperties);
 
         public unsafe void GetImageFormatProperties(Format format, ImageType type, ImageTiling tiling, ImageUsageFlags usage, ImageCreateFlags flags, out ImageFormatProperties imageFormatProperties)
@@ -210,6 +228,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetPhysicalDeviceImageFormatProperties(PhysicalDevice physicalDevice, Format format, ImageType type, ImageTiling tiling, ImageUsageFlags usage, ImageCreateFlags flags, ImageFormatProperties* imageFormatProperties);
 
         public unsafe void GetProperties(out PhysicalDeviceProperties properties)
@@ -221,6 +240,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetPhysicalDeviceProperties(PhysicalDevice physicalDevice, PhysicalDeviceProperties* properties);
 
         internal unsafe void GetQueueFamilyProperties(ref uint queueFamilyPropertyCount, QueueFamilyProperties* queueFamilyProperties)
@@ -232,6 +252,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetPhysicalDeviceQueueFamilyProperties(PhysicalDevice physicalDevice, uint* queueFamilyPropertyCount, QueueFamilyProperties* queueFamilyProperties);
 
         public unsafe void GetMemoryProperties(out PhysicalDeviceMemoryProperties memoryProperties)
@@ -243,6 +264,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetPhysicalDeviceMemoryProperties(PhysicalDevice physicalDevice, PhysicalDeviceMemoryProperties* memoryProperties);
 
         public unsafe Device CreateDevice(ref DeviceCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -256,6 +278,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateDevice(PhysicalDevice physicalDevice, DeviceCreateInfo* createInfo, AllocationCallbacks* allocator, Device* device);
 
         internal unsafe void EnumerateDeviceExtensionProperties(byte* layerName, ref uint propertyCount, ExtensionProperties* properties)
@@ -267,6 +290,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkEnumerateDeviceExtensionProperties(PhysicalDevice physicalDevice, byte* layerName, uint* propertyCount, ExtensionProperties* properties);
 
         internal unsafe void EnumerateDeviceLayerProperties(ref uint propertyCount, LayerProperties* properties)
@@ -278,6 +302,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkEnumerateDeviceLayerProperties(PhysicalDevice physicalDevice, uint* propertyCount, LayerProperties* properties);
 
         internal unsafe void GetSparseImageFormatProperties(Format format, ImageType type, SampleCountFlags samples, ImageUsageFlags usage, ImageTiling tiling, ref uint propertyCount, SparseImageFormatProperties* properties)
@@ -289,6 +314,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetPhysicalDeviceSparseImageFormatProperties(PhysicalDevice physicalDevice, Format format, ImageType type, SampleCountFlags samples, ImageUsageFlags usage, ImageTiling tiling, uint* propertyCount, SparseImageFormatProperties* properties);
 
         public unsafe RawBool GetSurfaceSupport(uint queueFamilyIndex, Surface surface)
@@ -299,6 +325,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetPhysicalDeviceSurfaceSupportKHR(PhysicalDevice physicalDevice, uint queueFamilyIndex, Surface surface, RawBool* supported);
 
         public unsafe void GetSurfaceCapabilities(Surface surface, out SurfaceCapabilities surfaceCapabilities)
@@ -310,6 +337,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetPhysicalDeviceSurfaceCapabilitiesKHR(PhysicalDevice physicalDevice, Surface surface, SurfaceCapabilities* surfaceCapabilities);
 
         internal unsafe void GetSurfaceFormats(Surface surface, ref uint surfaceFormatCount, SurfaceFormat* surfaceFormats)
@@ -321,6 +349,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetPhysicalDeviceSurfaceFormatsKHR(PhysicalDevice physicalDevice, Surface surface, uint* surfaceFormatCount, SurfaceFormat* surfaceFormats);
 
         internal unsafe void GetSurfacePresentModes(Surface surface, ref uint presentModeCount, PresentMode* presentModes)
@@ -332,6 +361,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetPhysicalDeviceSurfacePresentModesKHR(PhysicalDevice physicalDevice, Surface surface, uint* presentModeCount, PresentMode* presentModes);
 
         internal unsafe void GetDisplayProperties(ref uint propertyCount, DisplayProperties* properties)
@@ -343,6 +373,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetPhysicalDeviceDisplayPropertiesKHR(PhysicalDevice physicalDevice, uint* propertyCount, DisplayProperties* properties);
 
         internal unsafe void GetDisplayPlaneProperties(ref uint propertyCount, DisplayPlaneProperties* properties)
@@ -354,6 +385,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetPhysicalDeviceDisplayPlanePropertiesKHR(PhysicalDevice physicalDevice, uint* propertyCount, DisplayPlaneProperties* properties);
 
         internal unsafe void GetDisplayPlaneSupportedDisplays(uint planeIndex, ref uint displayCount, Display* displays)
@@ -365,6 +397,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetDisplayPlaneSupportedDisplaysKHR(PhysicalDevice physicalDevice, uint planeIndex, uint* displayCount, Display* displays);
 
         internal unsafe void GetDisplayModeProperties(Display display, ref uint propertyCount, DisplayModeProperties* properties)
@@ -376,6 +409,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetDisplayModePropertiesKHR(PhysicalDevice physicalDevice, Display display, uint* propertyCount, DisplayModeProperties* properties);
 
         public unsafe DisplayMode CreateDisplayMode(Display display, ref DisplayModeCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -389,6 +423,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateDisplayModeKHR(PhysicalDevice physicalDevice, Display display, DisplayModeCreateInfo* createInfo, AllocationCallbacks* allocator, DisplayMode* mode);
 
         public unsafe void GetDisplayPlaneCapabilities(DisplayMode mode, uint planeIndex, out DisplayPlaneCapabilities capabilities)
@@ -400,6 +435,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetDisplayPlaneCapabilitiesKHR(PhysicalDevice physicalDevice, DisplayMode mode, uint planeIndex, DisplayPlaneCapabilities* capabilities);
 
         public unsafe RawBool GetXlibPresentationSupport(uint queueFamilyIndex, IntPtr dpy, uint visualId)
@@ -410,6 +446,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe RawBool vkGetPhysicalDeviceXlibPresentationSupportKHR(PhysicalDevice physicalDevice, uint queueFamilyIndex, IntPtr dpy, uint visualId);
 
         public unsafe RawBool GetXcbPresentationSupport(uint queueFamilyIndex, IntPtr connection, uint visualid)
@@ -420,6 +457,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe RawBool vkGetPhysicalDeviceXcbPresentationSupportKHR(PhysicalDevice physicalDevice, uint queueFamilyIndex, IntPtr connection, uint visualid);
 
         public unsafe RawBool GetWin32PresentationSupport(uint queueFamilyIndex)
@@ -430,6 +468,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe RawBool vkGetPhysicalDeviceWin32PresentationSupportKHR(PhysicalDevice physicalDevice, uint queueFamilyIndex);
 
         public unsafe void GetFeatures2(out PhysicalDeviceFeatures2 features)
@@ -441,6 +480,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetPhysicalDeviceFeatures2KHR(PhysicalDevice physicalDevice, PhysicalDeviceFeatures2* features);
 
         public unsafe void GetProperties2(out PhysicalDeviceProperties2 properties)
@@ -452,6 +492,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetPhysicalDeviceProperties2KHR(PhysicalDevice physicalDevice, PhysicalDeviceProperties2* properties);
 
         public unsafe void GetFormatProperties2(Format format, out FormatProperties2 formatProperties)
@@ -463,6 +504,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetPhysicalDeviceFormatProperties2KHR(PhysicalDevice physicalDevice, Format format, FormatProperties2* formatProperties);
 
         public unsafe void GetImageFormatProperties2(ref PhysicalDeviceImageFormatInfo2 imageFormatInfo, out ImageFormatProperties2 imageFormatProperties)
@@ -475,6 +517,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetPhysicalDeviceImageFormatProperties2KHR(PhysicalDevice physicalDevice, PhysicalDeviceImageFormatInfo2* imageFormatInfo, ImageFormatProperties2* imageFormatProperties);
 
         internal unsafe void GetQueueFamilyProperties2(ref uint queueFamilyPropertyCount, QueueFamilyProperties2* queueFamilyProperties)
@@ -486,6 +529,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetPhysicalDeviceQueueFamilyProperties2KHR(PhysicalDevice physicalDevice, uint* queueFamilyPropertyCount, QueueFamilyProperties2* queueFamilyProperties);
 
         public unsafe void GetMemoryProperties2(out PhysicalDeviceMemoryProperties2 memoryProperties)
@@ -497,6 +541,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetPhysicalDeviceMemoryProperties2KHR(PhysicalDevice physicalDevice, PhysicalDeviceMemoryProperties2* memoryProperties);
 
         internal unsafe void GetSparseImageFormatProperties2(PhysicalDeviceSparseImageFormatInfo2* formatInfo, ref uint propertyCount, SparseImageFormatProperties2* properties)
@@ -508,6 +553,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetPhysicalDeviceSparseImageFormatProperties2KHR(PhysicalDevice physicalDevice, PhysicalDeviceSparseImageFormatInfo2* formatInfo, uint* propertyCount, SparseImageFormatProperties2* properties);
 
         public unsafe void GetExternalImageFormatProperties(Format format, ImageType type, ImageTiling tiling, ImageUsageFlags usage, ImageCreateFlags flags, uint externalHandleType, out ExternalImageFormatProperties externalImageFormatProperties)
@@ -519,6 +565,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetPhysicalDeviceExternalImageFormatPropertiesNV(PhysicalDevice physicalDevice, Format format, ImageType type, ImageTiling tiling, ImageUsageFlags usage, ImageCreateFlags flags, uint externalHandleType, ExternalImageFormatProperties* externalImageFormatProperties);
 
         public unsafe void GetGeneratedCommandsProperties(ref DeviceGeneratedCommandsFeatures features, out DeviceGeneratedCommandsLimits limits)
@@ -531,6 +578,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX(PhysicalDevice physicalDevice, DeviceGeneratedCommandsFeatures* features, DeviceGeneratedCommandsLimits* limits);
 
         public unsafe void ReleaseDisplay(Display display)
@@ -539,6 +587,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkReleaseDisplayEXT(PhysicalDevice physicalDevice, Display display);
 
         public unsafe void GetSurfaceCapabilities2(Surface surface, out SurfaceCapabilities2 surfaceCapabilities)
@@ -550,6 +599,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetPhysicalDeviceSurfaceCapabilities2EXT(PhysicalDevice physicalDevice, Surface surface, SurfaceCapabilities2* surfaceCapabilities);
     }
 
@@ -563,6 +613,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe IntPtr vkGetDeviceProcAddr(Device device, byte* name);
 
         public unsafe void Destroy(AllocationCallbacks* allocator = null)
@@ -571,6 +622,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyDevice(Device device, AllocationCallbacks* allocator);
 
         public unsafe Queue GetQueue(uint queueFamilyIndex, uint queueIndex)
@@ -581,6 +633,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetDeviceQueue(Device device, uint queueFamilyIndex, uint queueIndex, Queue* queue);
 
         public unsafe void WaitIdle()
@@ -589,6 +642,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkDeviceWaitIdle(Device device);
 
         public unsafe DeviceMemory AllocateMemory(ref MemoryAllocateInfo allocateInfo, AllocationCallbacks* allocator = null)
@@ -602,6 +656,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkAllocateMemory(Device device, MemoryAllocateInfo* allocateInfo, AllocationCallbacks* allocator, DeviceMemory* memory);
 
         public unsafe void FreeMemory(DeviceMemory memory, AllocationCallbacks* allocator = null)
@@ -610,6 +665,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkFreeMemory(Device device, DeviceMemory memory, AllocationCallbacks* allocator);
 
         public unsafe IntPtr MapMemory(DeviceMemory memory, ulong offset, ulong size, MemoryMapFlags flags)
@@ -620,6 +676,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkMapMemory(Device device, DeviceMemory memory, ulong offset, ulong size, MemoryMapFlags flags, IntPtr* data);
 
         public unsafe void UnmapMemory(DeviceMemory memory)
@@ -628,6 +685,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkUnmapMemory(Device device, DeviceMemory memory);
 
         public unsafe void FlushMappedMemoryRanges(uint memoryRangeCount, MappedMemoryRange* memoryRanges)
@@ -636,6 +694,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkFlushMappedMemoryRanges(Device device, uint memoryRangeCount, MappedMemoryRange* memoryRanges);
 
         public unsafe void InvalidateMappedMemoryRanges(uint memoryRangeCount, MappedMemoryRange* memoryRanges)
@@ -644,6 +703,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkInvalidateMappedMemoryRanges(Device device, uint memoryRangeCount, MappedMemoryRange* memoryRanges);
 
         public unsafe ulong GetMemoryCommitment(DeviceMemory memory)
@@ -654,6 +714,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetDeviceMemoryCommitment(Device device, DeviceMemory memory, ulong* committedMemoryInBytes);
 
         public unsafe void BindBufferMemory(Buffer buffer, DeviceMemory memory, ulong memoryOffset)
@@ -662,6 +723,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkBindBufferMemory(Device device, Buffer buffer, DeviceMemory memory, ulong memoryOffset);
 
         public unsafe void BindImageMemory(Image image, DeviceMemory memory, ulong memoryOffset)
@@ -670,6 +732,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkBindImageMemory(Device device, Image image, DeviceMemory memory, ulong memoryOffset);
 
         public unsafe void GetBufferMemoryRequirements(Buffer buffer, out MemoryRequirements memoryRequirements)
@@ -681,6 +744,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetBufferMemoryRequirements(Device device, Buffer buffer, MemoryRequirements* memoryRequirements);
 
         public unsafe void GetImageMemoryRequirements(Image image, out MemoryRequirements memoryRequirements)
@@ -692,6 +756,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetImageMemoryRequirements(Device device, Image image, MemoryRequirements* memoryRequirements);
 
         internal unsafe void GetImageSparseMemoryRequirements(Image image, ref uint sparseMemoryRequirementCount, SparseImageMemoryRequirements* sparseMemoryRequirements)
@@ -703,6 +768,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetImageSparseMemoryRequirements(Device device, Image image, uint* sparseMemoryRequirementCount, SparseImageMemoryRequirements* sparseMemoryRequirements);
 
         public unsafe Fence CreateFence(ref FenceCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -716,6 +782,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateFence(Device device, FenceCreateInfo* createInfo, AllocationCallbacks* allocator, Fence* fence);
 
         public unsafe void DestroyFence(Fence fence, AllocationCallbacks* allocator = null)
@@ -724,6 +791,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyFence(Device device, Fence fence, AllocationCallbacks* allocator);
 
         public unsafe void ResetFences(uint fenceCount, Fence* fences)
@@ -732,6 +800,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkResetFences(Device device, uint fenceCount, Fence* fences);
 
         public unsafe Result GetFenceStatus(Fence fence)
@@ -743,6 +812,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetFenceStatus(Device device, Fence fence);
 
         public unsafe void WaitForFences(uint fenceCount, Fence* fences, RawBool waitAll, ulong timeout)
@@ -751,6 +821,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkWaitForFences(Device device, uint fenceCount, Fence* fences, RawBool waitAll, ulong timeout);
 
         public unsafe Semaphore CreateSemaphore(ref SemaphoreCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -764,6 +835,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateSemaphore(Device device, SemaphoreCreateInfo* createInfo, AllocationCallbacks* allocator, Semaphore* semaphore);
 
         public unsafe void DestroySemaphore(Semaphore semaphore, AllocationCallbacks* allocator = null)
@@ -772,6 +844,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroySemaphore(Device device, Semaphore semaphore, AllocationCallbacks* allocator);
 
         public unsafe Event CreateEvent(ref EventCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -785,6 +858,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateEvent(Device device, EventCreateInfo* createInfo, AllocationCallbacks* allocator, Event* @event);
 
         public unsafe void DestroyEvent(Event @event, AllocationCallbacks* allocator = null)
@@ -793,6 +867,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyEvent(Device device, Event @event, AllocationCallbacks* allocator);
 
         public unsafe Result GetEventStatus(Event @event)
@@ -804,6 +879,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetEventStatus(Device device, Event @event);
 
         public unsafe void SetEvent(Event @event)
@@ -812,6 +888,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkSetEvent(Device device, Event @event);
 
         public unsafe void ResetEvent(Event @event)
@@ -820,6 +897,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkResetEvent(Device device, Event @event);
 
         public unsafe QueryPool CreateQueryPool(ref QueryPoolCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -833,6 +911,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateQueryPool(Device device, QueryPoolCreateInfo* createInfo, AllocationCallbacks* allocator, QueryPool* queryPool);
 
         public unsafe void DestroyQueryPool(QueryPool queryPool, AllocationCallbacks* allocator = null)
@@ -841,6 +920,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyQueryPool(Device device, QueryPool queryPool, AllocationCallbacks* allocator);
 
         public unsafe void GetQueryPoolResults(QueryPool queryPool, uint firstQuery, uint queryCount, PointerSize dataSize, IntPtr data, ulong stride, QueryResultFlags flags)
@@ -849,6 +929,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetQueryPoolResults(Device device, QueryPool queryPool, uint firstQuery, uint queryCount, PointerSize dataSize, IntPtr data, ulong stride, QueryResultFlags flags);
 
         public unsafe Buffer CreateBuffer(ref BufferCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -862,6 +943,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateBuffer(Device device, BufferCreateInfo* createInfo, AllocationCallbacks* allocator, Buffer* buffer);
 
         public unsafe void DestroyBuffer(Buffer buffer, AllocationCallbacks* allocator = null)
@@ -870,6 +952,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyBuffer(Device device, Buffer buffer, AllocationCallbacks* allocator);
 
         public unsafe BufferView CreateBufferView(ref BufferViewCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -883,6 +966,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateBufferView(Device device, BufferViewCreateInfo* createInfo, AllocationCallbacks* allocator, BufferView* view);
 
         public unsafe void DestroyBufferView(BufferView bufferView, AllocationCallbacks* allocator = null)
@@ -891,6 +975,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyBufferView(Device device, BufferView bufferView, AllocationCallbacks* allocator);
 
         public unsafe Image CreateImage(ref ImageCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -904,6 +989,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateImage(Device device, ImageCreateInfo* createInfo, AllocationCallbacks* allocator, Image* image);
 
         public unsafe void DestroyImage(Image image, AllocationCallbacks* allocator = null)
@@ -912,6 +998,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyImage(Device device, Image image, AllocationCallbacks* allocator);
 
         public unsafe void GetImageSubresourceLayout(Image image, ImageSubresource subresource, out SubresourceLayout layout)
@@ -923,6 +1010,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetImageSubresourceLayout(Device device, Image image, ImageSubresource* subresource, SubresourceLayout* layout);
 
         public unsafe ImageView CreateImageView(ref ImageViewCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -936,6 +1024,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateImageView(Device device, ImageViewCreateInfo* createInfo, AllocationCallbacks* allocator, ImageView* view);
 
         public unsafe void DestroyImageView(ImageView imageView, AllocationCallbacks* allocator = null)
@@ -944,6 +1033,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyImageView(Device device, ImageView imageView, AllocationCallbacks* allocator);
 
         public unsafe ShaderModule CreateShaderModule(ref ShaderModuleCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -957,6 +1047,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateShaderModule(Device device, ShaderModuleCreateInfo* createInfo, AllocationCallbacks* allocator, ShaderModule* shaderModule);
 
         public unsafe void DestroyShaderModule(ShaderModule shaderModule, AllocationCallbacks* allocator = null)
@@ -965,6 +1056,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyShaderModule(Device device, ShaderModule shaderModule, AllocationCallbacks* allocator);
 
         public unsafe PipelineCache CreatePipelineCache(ref PipelineCacheCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -978,6 +1070,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreatePipelineCache(Device device, PipelineCacheCreateInfo* createInfo, AllocationCallbacks* allocator, PipelineCache* pipelineCache);
 
         public unsafe void DestroyPipelineCache(PipelineCache pipelineCache, AllocationCallbacks* allocator = null)
@@ -986,6 +1079,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyPipelineCache(Device device, PipelineCache pipelineCache, AllocationCallbacks* allocator);
 
         public unsafe void GetPipelineCacheData(PipelineCache pipelineCache, ref PointerSize dataSize, IntPtr data)
@@ -997,6 +1091,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetPipelineCacheData(Device device, PipelineCache pipelineCache, PointerSize* dataSize, IntPtr data);
 
         public unsafe void MergePipelineCaches(PipelineCache destinationCache, uint sourceCacheCount, PipelineCache srcCaches)
@@ -1005,6 +1100,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkMergePipelineCaches(Device device, PipelineCache destinationCache, uint sourceCacheCount, PipelineCache* srcCaches);
 
         public unsafe Pipeline CreateGraphicsPipelines(PipelineCache pipelineCache, uint createInfoCount, GraphicsPipelineCreateInfo* createInfos, AllocationCallbacks* allocator = null)
@@ -1015,6 +1111,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateGraphicsPipelines(Device device, PipelineCache pipelineCache, uint createInfoCount, GraphicsPipelineCreateInfo* createInfos, AllocationCallbacks* allocator, Pipeline* pipelines);
 
         public unsafe Pipeline CreateComputePipelines(PipelineCache pipelineCache, uint createInfoCount, ComputePipelineCreateInfo* createInfos, AllocationCallbacks* allocator = null)
@@ -1025,6 +1122,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateComputePipelines(Device device, PipelineCache pipelineCache, uint createInfoCount, ComputePipelineCreateInfo* createInfos, AllocationCallbacks* allocator, Pipeline* pipelines);
 
         public unsafe void DestroyPipeline(Pipeline pipeline, AllocationCallbacks* allocator = null)
@@ -1033,6 +1131,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyPipeline(Device device, Pipeline pipeline, AllocationCallbacks* allocator);
 
         public unsafe PipelineLayout CreatePipelineLayout(ref PipelineLayoutCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -1046,6 +1145,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreatePipelineLayout(Device device, PipelineLayoutCreateInfo* createInfo, AllocationCallbacks* allocator, PipelineLayout* pipelineLayout);
 
         public unsafe void DestroyPipelineLayout(PipelineLayout pipelineLayout, AllocationCallbacks* allocator = null)
@@ -1054,6 +1154,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyPipelineLayout(Device device, PipelineLayout pipelineLayout, AllocationCallbacks* allocator);
 
         public unsafe Sampler CreateSampler(ref SamplerCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -1067,6 +1168,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateSampler(Device device, SamplerCreateInfo* createInfo, AllocationCallbacks* allocator, Sampler* sampler);
 
         public unsafe void DestroySampler(Sampler sampler, AllocationCallbacks* allocator = null)
@@ -1075,6 +1177,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroySampler(Device device, Sampler sampler, AllocationCallbacks* allocator);
 
         public unsafe DescriptorSetLayout CreateDescriptorSetLayout(ref DescriptorSetLayoutCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -1088,6 +1191,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateDescriptorSetLayout(Device device, DescriptorSetLayoutCreateInfo* createInfo, AllocationCallbacks* allocator, DescriptorSetLayout* setLayout);
 
         public unsafe void DestroyDescriptorSetLayout(DescriptorSetLayout descriptorSetLayout, AllocationCallbacks* allocator = null)
@@ -1096,6 +1200,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyDescriptorSetLayout(Device device, DescriptorSetLayout descriptorSetLayout, AllocationCallbacks* allocator);
 
         public unsafe DescriptorPool CreateDescriptorPool(ref DescriptorPoolCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -1109,6 +1214,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateDescriptorPool(Device device, DescriptorPoolCreateInfo* createInfo, AllocationCallbacks* allocator, DescriptorPool* descriptorPool);
 
         public unsafe void DestroyDescriptorPool(DescriptorPool descriptorPool, AllocationCallbacks* allocator = null)
@@ -1117,6 +1223,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyDescriptorPool(Device device, DescriptorPool descriptorPool, AllocationCallbacks* allocator);
 
         public unsafe void ResetDescriptorPool(DescriptorPool descriptorPool, DescriptorPoolResetFlags flags)
@@ -1125,6 +1232,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkResetDescriptorPool(Device device, DescriptorPool descriptorPool, DescriptorPoolResetFlags flags);
 
         public unsafe void AllocateDescriptorSets(ref DescriptorSetAllocateInfo allocateInfo, DescriptorSet* descriptorSets)
@@ -1136,6 +1244,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkAllocateDescriptorSets(Device device, DescriptorSetAllocateInfo* allocateInfo, DescriptorSet* descriptorSets);
 
         public unsafe void FreeDescriptorSets(DescriptorPool descriptorPool, uint descriptorSetCount, DescriptorSet* descriptorSets)
@@ -1144,6 +1253,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkFreeDescriptorSets(Device device, DescriptorPool descriptorPool, uint descriptorSetCount, DescriptorSet* descriptorSets);
 
         public unsafe void UpdateDescriptorSets(uint descriptorWriteCount, WriteDescriptorSet* descriptorWrites, uint descriptorCopyCount, CopyDescriptorSet* descriptorCopies)
@@ -1152,6 +1262,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkUpdateDescriptorSets(Device device, uint descriptorWriteCount, WriteDescriptorSet* descriptorWrites, uint descriptorCopyCount, CopyDescriptorSet* descriptorCopies);
 
         public unsafe Framebuffer CreateFramebuffer(ref FramebufferCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -1165,6 +1276,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateFramebuffer(Device device, FramebufferCreateInfo* createInfo, AllocationCallbacks* allocator, Framebuffer* framebuffer);
 
         public unsafe void DestroyFramebuffer(Framebuffer framebuffer, AllocationCallbacks* allocator = null)
@@ -1173,6 +1285,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyFramebuffer(Device device, Framebuffer framebuffer, AllocationCallbacks* allocator);
 
         public unsafe RenderPass CreateRenderPass(ref RenderPassCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -1186,6 +1299,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateRenderPass(Device device, RenderPassCreateInfo* createInfo, AllocationCallbacks* allocator, RenderPass* renderPass);
 
         public unsafe void DestroyRenderPass(RenderPass renderPass, AllocationCallbacks* allocator = null)
@@ -1194,6 +1308,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyRenderPass(Device device, RenderPass renderPass, AllocationCallbacks* allocator);
 
         public unsafe Extent2D GetRenderAreaGranularity(RenderPass renderPass)
@@ -1204,6 +1319,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkGetRenderAreaGranularity(Device device, RenderPass renderPass, Extent2D* granularity);
 
         public unsafe CommandPool CreateCommandPool(ref CommandPoolCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -1217,6 +1333,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateCommandPool(Device device, CommandPoolCreateInfo* createInfo, AllocationCallbacks* allocator, CommandPool* commandPool);
 
         public unsafe void DestroyCommandPool(CommandPool commandPool, AllocationCallbacks* allocator = null)
@@ -1225,6 +1342,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyCommandPool(Device device, CommandPool commandPool, AllocationCallbacks* allocator);
 
         public unsafe void ResetCommandPool(CommandPool commandPool, CommandPoolResetFlags flags)
@@ -1233,6 +1351,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkResetCommandPool(Device device, CommandPool commandPool, CommandPoolResetFlags flags);
 
         public unsafe void AllocateCommandBuffers(ref CommandBufferAllocateInfo allocateInfo, CommandBuffer* commandBuffers)
@@ -1244,6 +1363,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkAllocateCommandBuffers(Device device, CommandBufferAllocateInfo* allocateInfo, CommandBuffer* commandBuffers);
 
         public unsafe void FreeCommandBuffers(CommandPool commandPool, uint commandBufferCount, CommandBuffer* commandBuffers)
@@ -1252,6 +1372,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkFreeCommandBuffers(Device device, CommandPool commandPool, uint commandBufferCount, CommandBuffer* commandBuffers);
 
         public unsafe Swapchain CreateSwapchain(ref SwapchainCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -1265,6 +1386,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateSwapchainKHR(Device device, SwapchainCreateInfo* createInfo, AllocationCallbacks* allocator, Swapchain* swapchain);
 
         public unsafe void DestroySwapchain(Swapchain swapchain, AllocationCallbacks* allocator = null)
@@ -1273,6 +1395,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroySwapchainKHR(Device device, Swapchain swapchain, AllocationCallbacks* allocator);
 
         internal unsafe void GetSwapchainImages(Swapchain swapchain, ref uint swapchainImageCount, Image* swapchainImages)
@@ -1284,6 +1407,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetSwapchainImagesKHR(Device device, Swapchain swapchain, uint* swapchainImageCount, Image* swapchainImages);
 
         public unsafe uint AcquireNextImage(Swapchain swapchain, ulong timeout, Semaphore semaphore, Fence fence)
@@ -1294,9 +1418,11 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkAcquireNextImageKHR(Device device, Swapchain swapchain, ulong timeout, Semaphore semaphore, Fence fence, uint* imageIndex);
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateSharedSwapchainsKHR(Device device, uint swapchainCount, SwapchainCreateInfo* createInfos, AllocationCallbacks* allocator, Swapchain* swapchains);
 
         public unsafe void TrimCommandPool(CommandPool commandPool, CommandPoolTrimFlags flags)
@@ -1305,6 +1431,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkTrimCommandPoolKHR(Device device, CommandPool commandPool, CommandPoolTrimFlags flags);
 
         public unsafe void DebugMarkerSetObjectTag(ref DebugMarkerObjectTagInfo tagInfo)
@@ -1316,6 +1443,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkDebugMarkerSetObjectTagEXT(Device device, DebugMarkerObjectTagInfo* tagInfo);
 
         public unsafe void DebugMarkerSetObjectName(ref DebugMarkerObjectNameInfo nameInfo)
@@ -1327,6 +1455,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkDebugMarkerSetObjectNameEXT(Device device, DebugMarkerObjectNameInfo* nameInfo);
 
         public unsafe int GetMemoryWin32Handle(DeviceMemory memory, uint handleType)
@@ -1337,6 +1466,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetMemoryWin32HandleNV(Device device, DeviceMemory memory, uint handleType, int* handle);
 
         public unsafe IndirectCommandsLayout CreateIndirectCommandsLayout(ref IndirectCommandsLayoutCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -1350,6 +1480,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateIndirectCommandsLayoutNVX(Device device, IndirectCommandsLayoutCreateInfo* createInfo, AllocationCallbacks* allocator, IndirectCommandsLayout* indirectCommandsLayout);
 
         public unsafe void DestroyIndirectCommandsLayout(IndirectCommandsLayout indirectCommandsLayout, AllocationCallbacks* allocator = null)
@@ -1358,6 +1489,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyIndirectCommandsLayoutNVX(Device device, IndirectCommandsLayout indirectCommandsLayout, AllocationCallbacks* allocator);
 
         public unsafe ObjectTable CreateObjectTable(ref ObjectTableCreateInfo createInfo, AllocationCallbacks* allocator = null)
@@ -1371,6 +1503,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkCreateObjectTableNVX(Device device, ObjectTableCreateInfo* createInfo, AllocationCallbacks* allocator, ObjectTable* objectTable);
 
         public unsafe void DestroyObjectTable(ObjectTable objectTable, AllocationCallbacks* allocator = null)
@@ -1379,6 +1512,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkDestroyObjectTableNVX(Device device, ObjectTable objectTable, AllocationCallbacks* allocator);
 
         public unsafe void RegisterObjects(ObjectTable objectTable, uint objectCount, IntPtr objectTableEntries, uint objectIndices)
@@ -1387,6 +1521,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkRegisterObjectsNVX(Device device, ObjectTable objectTable, uint objectCount, IntPtr* objectTableEntries, uint* objectIndices);
 
         public unsafe void UnregisterObjects(ObjectTable objectTable, uint objectCount, ObjectEntryType objectEntryTypes, uint objectIndices)
@@ -1395,6 +1530,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkUnregisterObjectsNVX(Device device, ObjectTable objectTable, uint objectCount, ObjectEntryType* objectEntryTypes, uint* objectIndices);
 
         public unsafe void DisplayPowerControl(Display display, ref DisplayPowerInfo displayPowerInfo)
@@ -1406,6 +1542,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkDisplayPowerControlEXT(Device device, Display display, DisplayPowerInfo* displayPowerInfo);
 
         public unsafe Fence RegisterEvent(ref DeviceEventInfo deviceEventInfo, AllocationCallbacks* allocator = null)
@@ -1419,6 +1556,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkRegisterDeviceEventEXT(Device device, DeviceEventInfo* deviceEventInfo, AllocationCallbacks* allocator, Fence* fence);
 
         public unsafe Fence RegisterDisplayEvent(Display display, ref DisplayEventInfo displayEventInfo, AllocationCallbacks* allocator = null)
@@ -1432,6 +1570,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkRegisterDisplayEventEXT(Device device, Display display, DisplayEventInfo* displayEventInfo, AllocationCallbacks* allocator, Fence* fence);
 
         public unsafe ulong GetSwapchainCounter(Swapchain swapchain, SurfaceCounterFlags counter)
@@ -1442,6 +1581,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkGetSwapchainCounterEXT(Device device, Swapchain swapchain, SurfaceCounterFlags counter, ulong* counterValue);
     }
 
@@ -1453,6 +1593,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkQueueSubmit(Queue queue, uint submitCount, SubmitInfo* submits, Fence fence);
 
         public unsafe void WaitIdle()
@@ -1461,6 +1602,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkQueueWaitIdle(Queue queue);
 
         public unsafe void BindSparse(uint bindInfoCount, BindSparseInfo* bindInfo, Fence fence)
@@ -1469,6 +1611,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkQueueBindSparse(Queue queue, uint bindInfoCount, BindSparseInfo* bindInfo, Fence fence);
 
         public unsafe void Present(ref PresentInfo presentInfo)
@@ -1480,6 +1623,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkQueuePresentKHR(Queue queue, PresentInfo* presentInfo);
     }
 
@@ -1494,6 +1638,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkBeginCommandBuffer(CommandBuffer commandBuffer, CommandBufferBeginInfo* beginInfo);
 
         public unsafe void End()
@@ -1502,6 +1647,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkEndCommandBuffer(CommandBuffer commandBuffer);
 
         public unsafe void Reset(CommandBufferResetFlags flags)
@@ -1510,6 +1656,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe Result vkResetCommandBuffer(CommandBuffer commandBuffer, CommandBufferResetFlags flags);
 
         public unsafe void BindPipeline(PipelineBindPoint pipelineBindPoint, Pipeline pipeline)
@@ -1518,6 +1665,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdBindPipeline(CommandBuffer commandBuffer, PipelineBindPoint pipelineBindPoint, Pipeline pipeline);
 
         public unsafe void SetViewport(uint firstViewport, uint viewportCount, Viewport* viewports)
@@ -1526,6 +1674,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdSetViewport(CommandBuffer commandBuffer, uint firstViewport, uint viewportCount, Viewport* viewports);
 
         public unsafe void SetScissor(uint firstScissor, uint scissorCount, Rect2D* scissors)
@@ -1534,6 +1683,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdSetScissor(CommandBuffer commandBuffer, uint firstScissor, uint scissorCount, Rect2D* scissors);
 
         public unsafe void SetLineWidth(float lineWidth)
@@ -1542,6 +1692,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdSetLineWidth(CommandBuffer commandBuffer, float lineWidth);
 
         public unsafe void SetDepthBias(float depthBiasConstantFactor, float depthBiasClamp, float depthBiasSlopeFactor)
@@ -1550,6 +1701,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdSetDepthBias(CommandBuffer commandBuffer, float depthBiasConstantFactor, float depthBiasClamp, float depthBiasSlopeFactor);
 
         public unsafe void SetBlendConstants(float blendConstants)
@@ -1558,6 +1710,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdSetBlendConstants(CommandBuffer commandBuffer, float blendConstants);
 
         public unsafe void SetDepthBounds(float minDepthBounds, float maxDepthBounds)
@@ -1566,6 +1719,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdSetDepthBounds(CommandBuffer commandBuffer, float minDepthBounds, float maxDepthBounds);
 
         public unsafe void SetStencilCompareMask(StencilFaceFlags faceMask, uint compareMask)
@@ -1574,6 +1728,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdSetStencilCompareMask(CommandBuffer commandBuffer, StencilFaceFlags faceMask, uint compareMask);
 
         public unsafe void SetStencilWriteMask(StencilFaceFlags faceMask, uint writeMask)
@@ -1582,6 +1737,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdSetStencilWriteMask(CommandBuffer commandBuffer, StencilFaceFlags faceMask, uint writeMask);
 
         public unsafe void SetStencilReference(StencilFaceFlags faceMask, uint reference)
@@ -1590,6 +1746,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdSetStencilReference(CommandBuffer commandBuffer, StencilFaceFlags faceMask, uint reference);
 
         public unsafe void BindDescriptorSets(PipelineBindPoint pipelineBindPoint, PipelineLayout layout, uint firstSet, uint descriptorSetCount, DescriptorSet* descriptorSets, uint dynamicOffsetCount, uint* dynamicOffsets)
@@ -1598,6 +1755,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdBindDescriptorSets(CommandBuffer commandBuffer, PipelineBindPoint pipelineBindPoint, PipelineLayout layout, uint firstSet, uint descriptorSetCount, DescriptorSet* descriptorSets, uint dynamicOffsetCount, uint* dynamicOffsets);
 
         public unsafe void BindIndexBuffer(Buffer buffer, ulong offset, IndexType indexType)
@@ -1606,6 +1764,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdBindIndexBuffer(CommandBuffer commandBuffer, Buffer buffer, ulong offset, IndexType indexType);
 
         public unsafe void BindVertexBuffers(uint firstBinding, uint bindingCount, Buffer* buffers, ulong* offsets)
@@ -1614,6 +1773,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdBindVertexBuffers(CommandBuffer commandBuffer, uint firstBinding, uint bindingCount, Buffer* buffers, ulong* offsets);
 
         public unsafe void Draw(uint vertexCount, uint instanceCount, uint firstVertex, uint firstInstance)
@@ -1622,6 +1782,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdDraw(CommandBuffer commandBuffer, uint vertexCount, uint instanceCount, uint firstVertex, uint firstInstance);
 
         public unsafe void DrawIndexed(uint indexCount, uint instanceCount, uint firstIndex, int vertexOffset, uint firstInstance)
@@ -1630,6 +1791,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdDrawIndexed(CommandBuffer commandBuffer, uint indexCount, uint instanceCount, uint firstIndex, int vertexOffset, uint firstInstance);
 
         public unsafe void DrawIndirect(Buffer buffer, ulong offset, uint drawCount, uint stride)
@@ -1638,6 +1800,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdDrawIndirect(CommandBuffer commandBuffer, Buffer buffer, ulong offset, uint drawCount, uint stride);
 
         public unsafe void DrawIndexedIndirect(Buffer buffer, ulong offset, uint drawCount, uint stride)
@@ -1646,6 +1809,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdDrawIndexedIndirect(CommandBuffer commandBuffer, Buffer buffer, ulong offset, uint drawCount, uint stride);
 
         public unsafe void Dispatch(uint x, uint y, uint z)
@@ -1654,6 +1818,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdDispatch(CommandBuffer commandBuffer, uint x, uint y, uint z);
 
         public unsafe void DispatchIndirect(Buffer buffer, ulong offset)
@@ -1662,6 +1827,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdDispatchIndirect(CommandBuffer commandBuffer, Buffer buffer, ulong offset);
 
         public unsafe void CopyBuffer(Buffer sourceBuffer, Buffer destinationBuffer, uint regionCount, BufferCopy* regions)
@@ -1670,6 +1836,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdCopyBuffer(CommandBuffer commandBuffer, Buffer sourceBuffer, Buffer destinationBuffer, uint regionCount, BufferCopy* regions);
 
         public unsafe void CopyImage(Image sourceImage, ImageLayout sourceImageLayout, Image destinationImage, ImageLayout destinationImageLayout, uint regionCount, ImageCopy* regions)
@@ -1678,6 +1845,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdCopyImage(CommandBuffer commandBuffer, Image sourceImage, ImageLayout sourceImageLayout, Image destinationImage, ImageLayout destinationImageLayout, uint regionCount, ImageCopy* regions);
 
         public unsafe void BlitImage(Image sourceImage, ImageLayout sourceImageLayout, Image destinationImage, ImageLayout destinationImageLayout, uint regionCount, ImageBlit* regions, Filter filter)
@@ -1686,6 +1854,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdBlitImage(CommandBuffer commandBuffer, Image sourceImage, ImageLayout sourceImageLayout, Image destinationImage, ImageLayout destinationImageLayout, uint regionCount, ImageBlit* regions, Filter filter);
 
         public unsafe void CopyBufferToImage(Buffer sourceBuffer, Image destinationImage, ImageLayout destinationImageLayout, uint regionCount, BufferImageCopy* regions)
@@ -1694,6 +1863,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdCopyBufferToImage(CommandBuffer commandBuffer, Buffer sourceBuffer, Image destinationImage, ImageLayout destinationImageLayout, uint regionCount, BufferImageCopy* regions);
 
         public unsafe void CopyImageToBuffer(Image sourceImage, ImageLayout sourceImageLayout, Buffer destinationBuffer, uint regionCount, BufferImageCopy* regions)
@@ -1702,6 +1872,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdCopyImageToBuffer(CommandBuffer commandBuffer, Image sourceImage, ImageLayout sourceImageLayout, Buffer destinationBuffer, uint regionCount, BufferImageCopy* regions);
 
         public unsafe void UpdateBuffer(Buffer destinationBuffer, ulong destinationOffset, ulong dataSize, IntPtr data)
@@ -1710,6 +1881,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdUpdateBuffer(CommandBuffer commandBuffer, Buffer destinationBuffer, ulong destinationOffset, ulong dataSize, IntPtr data);
 
         public unsafe void FillBuffer(Buffer destinationBuffer, ulong destinationOffset, ulong size, uint data)
@@ -1718,6 +1890,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdFillBuffer(CommandBuffer commandBuffer, Buffer destinationBuffer, ulong destinationOffset, ulong size, uint data);
 
         public unsafe void ClearColorImage(Image image, ImageLayout imageLayout, ClearColorValue color, uint rangeCount, ImageSubresourceRange* ranges)
@@ -1726,6 +1899,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdClearColorImage(CommandBuffer commandBuffer, Image image, ImageLayout imageLayout, ClearColorValue* color, uint rangeCount, ImageSubresourceRange* ranges);
 
         public unsafe void ClearDepthStencilImage(Image image, ImageLayout imageLayout, ClearDepthStencilValue depthStencil, uint rangeCount, ImageSubresourceRange* ranges)
@@ -1734,6 +1908,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdClearDepthStencilImage(CommandBuffer commandBuffer, Image image, ImageLayout imageLayout, ClearDepthStencilValue* depthStencil, uint rangeCount, ImageSubresourceRange* ranges);
 
         public unsafe void ClearAttachments(uint attachmentCount, ref ClearAttachment attachments, uint rectCount, ClearRect* rects)
@@ -1745,6 +1920,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdClearAttachments(CommandBuffer commandBuffer, uint attachmentCount, ClearAttachment* attachments, uint rectCount, ClearRect* rects);
 
         public unsafe void ResolveImage(Image sourceImage, ImageLayout sourceImageLayout, Image destinationImage, ImageLayout destinationImageLayout, uint regionCount, ImageResolve* regions)
@@ -1753,6 +1929,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdResolveImage(CommandBuffer commandBuffer, Image sourceImage, ImageLayout sourceImageLayout, Image destinationImage, ImageLayout destinationImageLayout, uint regionCount, ImageResolve* regions);
 
         public unsafe void SetEvent(Event @event, PipelineStageFlags stageMask)
@@ -1761,6 +1938,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdSetEvent(CommandBuffer commandBuffer, Event @event, PipelineStageFlags stageMask);
 
         public unsafe void ResetEvent(Event @event, PipelineStageFlags stageMask)
@@ -1769,6 +1947,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdResetEvent(CommandBuffer commandBuffer, Event @event, PipelineStageFlags stageMask);
 
         public unsafe void WaitEvents(uint eventCount, Event events, PipelineStageFlags sourceStageMask, PipelineStageFlags destinationStageMask, uint memoryBarrierCount, MemoryBarrier* memoryBarriers, uint bufferMemoryBarrierCount, BufferMemoryBarrier* bufferMemoryBarriers, uint imageMemoryBarrierCount, ImageMemoryBarrier* imageMemoryBarriers)
@@ -1777,6 +1956,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdWaitEvents(CommandBuffer commandBuffer, uint eventCount, Event* events, PipelineStageFlags sourceStageMask, PipelineStageFlags destinationStageMask, uint memoryBarrierCount, MemoryBarrier* memoryBarriers, uint bufferMemoryBarrierCount, BufferMemoryBarrier* bufferMemoryBarriers, uint imageMemoryBarrierCount, ImageMemoryBarrier* imageMemoryBarriers);
 
         public unsafe void PipelineBarrier(PipelineStageFlags sourceStageMask, PipelineStageFlags destinationStageMask, DependencyFlags dependencyFlags, uint memoryBarrierCount, MemoryBarrier* memoryBarriers, uint bufferMemoryBarrierCount, BufferMemoryBarrier* bufferMemoryBarriers, uint imageMemoryBarrierCount, ImageMemoryBarrier* imageMemoryBarriers)
@@ -1785,6 +1965,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdPipelineBarrier(CommandBuffer commandBuffer, PipelineStageFlags sourceStageMask, PipelineStageFlags destinationStageMask, DependencyFlags dependencyFlags, uint memoryBarrierCount, MemoryBarrier* memoryBarriers, uint bufferMemoryBarrierCount, BufferMemoryBarrier* bufferMemoryBarriers, uint imageMemoryBarrierCount, ImageMemoryBarrier* imageMemoryBarriers);
 
         public unsafe void BeginQuery(QueryPool queryPool, uint query, QueryControlFlags flags)
@@ -1793,6 +1974,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdBeginQuery(CommandBuffer commandBuffer, QueryPool queryPool, uint query, QueryControlFlags flags);
 
         public unsafe void EndQuery(QueryPool queryPool, uint query)
@@ -1801,6 +1983,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdEndQuery(CommandBuffer commandBuffer, QueryPool queryPool, uint query);
 
         public unsafe void ResetQueryPool(QueryPool queryPool, uint firstQuery, uint queryCount)
@@ -1809,6 +1992,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdResetQueryPool(CommandBuffer commandBuffer, QueryPool queryPool, uint firstQuery, uint queryCount);
 
         public unsafe void WriteTimestamp(PipelineStageFlags pipelineStage, QueryPool queryPool, uint query)
@@ -1817,6 +2001,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdWriteTimestamp(CommandBuffer commandBuffer, PipelineStageFlags pipelineStage, QueryPool queryPool, uint query);
 
         public unsafe void CopyQueryPoolResults(QueryPool queryPool, uint firstQuery, uint queryCount, Buffer destinationBuffer, ulong destinationOffset, ulong stride, QueryResultFlags flags)
@@ -1825,6 +2010,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdCopyQueryPoolResults(CommandBuffer commandBuffer, QueryPool queryPool, uint firstQuery, uint queryCount, Buffer destinationBuffer, ulong destinationOffset, ulong stride, QueryResultFlags flags);
 
         public unsafe void PushConstants(PipelineLayout layout, ShaderStageFlags stageFlags, uint offset, uint size, IntPtr values)
@@ -1833,6 +2019,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdPushConstants(CommandBuffer commandBuffer, PipelineLayout layout, ShaderStageFlags stageFlags, uint offset, uint size, IntPtr values);
 
         public unsafe void BeginRenderPass(ref RenderPassBeginInfo renderPassBegin, SubpassContents contents)
@@ -1844,6 +2031,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdBeginRenderPass(CommandBuffer commandBuffer, RenderPassBeginInfo* renderPassBegin, SubpassContents contents);
 
         public unsafe void NextSubpass(SubpassContents contents)
@@ -1852,6 +2040,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdNextSubpass(CommandBuffer commandBuffer, SubpassContents contents);
 
         public unsafe void EndRenderPass()
@@ -1860,6 +2049,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdEndRenderPass(CommandBuffer commandBuffer);
 
         public unsafe void ExecuteCommands(uint commandBufferCount, CommandBuffer* commandBuffers)
@@ -1868,6 +2058,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdExecuteCommands(CommandBuffer commandBuffer, uint commandBufferCount, CommandBuffer* commandBuffers);
 
         public unsafe void DebugMarkerBegin(ref DebugMarkerMarkerInfo markerInfo)
@@ -1879,6 +2070,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdDebugMarkerBeginEXT(CommandBuffer commandBuffer, DebugMarkerMarkerInfo* markerInfo);
 
         public unsafe void DebugMarkerEnd()
@@ -1887,6 +2079,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdDebugMarkerEndEXT(CommandBuffer commandBuffer);
 
         public unsafe void DebugMarkerInsert(ref DebugMarkerMarkerInfo markerInfo)
@@ -1898,6 +2091,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdDebugMarkerInsertEXT(CommandBuffer commandBuffer, DebugMarkerMarkerInfo* markerInfo);
 
         public unsafe void DrawIndirectCount(Buffer buffer, ulong offset, Buffer countBuffer, ulong countBufferOffset, uint maxDrawCount, uint stride)
@@ -1906,6 +2100,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdDrawIndirectCountAMD(CommandBuffer commandBuffer, Buffer buffer, ulong offset, Buffer countBuffer, ulong countBufferOffset, uint maxDrawCount, uint stride);
 
         public unsafe void DrawIndexedIndirectCount(Buffer buffer, ulong offset, Buffer countBuffer, ulong countBufferOffset, uint maxDrawCount, uint stride)
@@ -1914,6 +2109,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdDrawIndexedIndirectCountAMD(CommandBuffer commandBuffer, Buffer buffer, ulong offset, Buffer countBuffer, ulong countBufferOffset, uint maxDrawCount, uint stride);
 
         public unsafe void ProcessCommands(ref CommandProcessCommandsInfo processCommandsInfo)
@@ -1925,6 +2121,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdProcessCommandsNVX(CommandBuffer commandBuffer, CommandProcessCommandsInfo* processCommandsInfo);
 
         public unsafe void ReserveSpaceForCommands(ref CommandReserveSpaceForCommandsInfo reserveSpaceInfo)
@@ -1936,6 +2133,7 @@ namespace SharpVulkan
         }
 
         [DllImport(Vulkan.LibraryName, CallingConvention = CallingConvention.StdCall)]
+        [SuppressUnmanagedCodeSecurity]
         internal static extern unsafe void vkCmdReserveSpaceForCommandsNVX(CommandBuffer commandBuffer, CommandReserveSpaceForCommandsInfo* reserveSpaceInfo);
     }
 }
