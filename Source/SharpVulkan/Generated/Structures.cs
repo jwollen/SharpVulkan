@@ -138,6 +138,11 @@ namespace SharpVulkan
 
         internal ulong NativeHandle;
 
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is Semaphore semaphore && Equals(semaphore);
+        }
+
         public static bool operator ==(Semaphore left, Semaphore right)
         {
             return left.Equals(right);
@@ -202,6 +207,11 @@ namespace SharpVulkan
 
         internal ulong NativeHandle;
 
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is Fence fence && Equals(fence);
+        }
+
         public static bool operator ==(Fence left, Fence right)
         {
             return left.Equals(right);
@@ -233,6 +243,11 @@ namespace SharpVulkan
         public readonly static DeviceMemory Null = new DeviceMemory();
 
         internal ulong NativeHandle;
+
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is DeviceMemory deviceMemory && Equals(deviceMemory);
+        }
 
         public static bool operator ==(DeviceMemory left, DeviceMemory right)
         {
@@ -266,6 +281,11 @@ namespace SharpVulkan
 
         internal ulong NativeHandle;
 
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is Buffer buffer && Equals(buffer);
+        }
+
         public static bool operator ==(Buffer left, Buffer right)
         {
             return left.Equals(right);
@@ -297,6 +317,11 @@ namespace SharpVulkan
         public readonly static Image Null = new Image();
 
         internal ulong NativeHandle;
+
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is Image image && Equals(image);
+        }
 
         public static bool operator ==(Image left, Image right)
         {
@@ -330,6 +355,11 @@ namespace SharpVulkan
 
         internal ulong NativeHandle;
 
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is Event eventObject && Equals(eventObject);
+        }
+
         public static bool operator ==(Event left, Event right)
         {
             return left.Equals(right);
@@ -361,6 +391,11 @@ namespace SharpVulkan
         public readonly static QueryPool Null = new QueryPool();
 
         internal ulong NativeHandle;
+
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is QueryPool queryPool && Equals(queryPool);
+        }
 
         public static bool operator ==(QueryPool left, QueryPool right)
         {
@@ -394,6 +429,11 @@ namespace SharpVulkan
 
         internal ulong NativeHandle;
 
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is BufferView bufferView && Equals(bufferView);
+        }
+
         public static bool operator ==(BufferView left, BufferView right)
         {
             return left.Equals(right);
@@ -425,6 +465,11 @@ namespace SharpVulkan
         public readonly static ImageView Null = new ImageView();
 
         internal ulong NativeHandle;
+
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is ImageView imageView && Equals(imageView);
+        }
 
         public static bool operator ==(ImageView left, ImageView right)
         {
@@ -458,6 +503,11 @@ namespace SharpVulkan
 
         internal ulong NativeHandle;
 
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is ShaderModule shaderModule && Equals(shaderModule);
+        }
+
         public static bool operator ==(ShaderModule left, ShaderModule right)
         {
             return left.Equals(right);
@@ -489,6 +539,11 @@ namespace SharpVulkan
         public readonly static PipelineCache Null = new PipelineCache();
 
         internal ulong NativeHandle;
+
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is PipelineCache pipelineCache && Equals(pipelineCache);
+        }
 
         public static bool operator ==(PipelineCache left, PipelineCache right)
         {
@@ -522,6 +577,11 @@ namespace SharpVulkan
 
         internal ulong NativeHandle;
 
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is PipelineLayout pipelineLayout && Equals(pipelineLayout);
+        }
+
         public static bool operator ==(PipelineLayout left, PipelineLayout right)
         {
             return left.Equals(right);
@@ -553,6 +613,11 @@ namespace SharpVulkan
         public readonly static RenderPass Null = new RenderPass();
 
         internal ulong NativeHandle;
+
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is RenderPass renderPass && Equals(renderPass);
+        }
 
         public static bool operator ==(RenderPass left, RenderPass right)
         {
@@ -586,6 +651,11 @@ namespace SharpVulkan
 
         internal ulong NativeHandle;
 
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is Pipeline pipeLine && Equals(pipeLine);
+        }
+
         public static bool operator ==(Pipeline left, Pipeline right)
         {
             return left.Equals(right);
@@ -617,6 +687,11 @@ namespace SharpVulkan
         public readonly static DescriptorSetLayout Null = new DescriptorSetLayout();
 
         internal ulong NativeHandle;
+
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is DescriptorSetLayout descriptorSetLayout && Equals(descriptorSetLayout);
+        }
 
         public static bool operator ==(DescriptorSetLayout left, DescriptorSetLayout right)
         {
@@ -650,6 +725,11 @@ namespace SharpVulkan
 
         internal ulong NativeHandle;
 
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is Sampler sampler && Equals(sampler);
+        }
+
         public static bool operator ==(Sampler left, Sampler right)
         {
             return left.Equals(right);
@@ -682,6 +762,11 @@ namespace SharpVulkan
 
         internal ulong NativeHandle;
 
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is DescriptorPool descriptorPool && Equals(descriptorPool);
+        }
+
         public static bool operator ==(DescriptorPool left, DescriptorPool right)
         {
             return left.Equals(right);
@@ -712,7 +797,14 @@ namespace SharpVulkan
     {
         public readonly static DescriptorSet Null = new DescriptorSet();
 
+#pragma warning disable 649
         internal ulong NativeHandle;
+#pragma warning restore 649
+
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is DescriptorSet descriptorSet && Equals(descriptorSet);
+        }
 
         public static bool operator ==(DescriptorSet left, DescriptorSet right)
         {
@@ -746,6 +838,11 @@ namespace SharpVulkan
 
         internal ulong NativeHandle;
 
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is Framebuffer frameBuffer && Equals(frameBuffer);
+        }
+
         public static bool operator ==(Framebuffer left, Framebuffer right)
         {
             return left.Equals(right);
@@ -777,6 +874,11 @@ namespace SharpVulkan
         public readonly static CommandPool Null = new CommandPool();
 
         internal ulong NativeHandle;
+
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is CommandPool commandPool && Equals(commandPool);
+        }
 
         public static bool operator ==(CommandPool left, CommandPool right)
         {
@@ -4947,6 +5049,11 @@ namespace SharpVulkan
 
         internal ulong NativeHandle;
 
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is Surface surface && Equals(surface);
+        }
+
         public static bool operator ==(Surface left, Surface right)
         {
             return left.Equals(right);
@@ -5008,6 +5115,11 @@ namespace SharpVulkan
         public readonly static Swapchain Null = new Swapchain();
 
         internal ulong NativeHandle;
+
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is Swapchain swapchain && Equals(swapchain);
+        }
 
         public static bool operator ==(Swapchain left, Swapchain right)
         {
@@ -5099,6 +5211,11 @@ namespace SharpVulkan
 
         internal ulong NativeHandle;
 
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is Display display && Equals(display);
+        }
+
         public static bool operator ==(Display left, Display right)
         {
             return left.Equals(right);
@@ -5130,6 +5247,11 @@ namespace SharpVulkan
         public readonly static DisplayMode Null = new DisplayMode();
 
         internal ulong NativeHandle;
+
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is DisplayMode layout && Equals(layout);
+        }
 
         public static bool operator ==(DisplayMode left, DisplayMode right)
         {
@@ -5416,6 +5538,11 @@ namespace SharpVulkan
 
         internal ulong NativeHandle;
 
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is DebugReportCallback callback && Equals(callback);
+        }
+
         public static bool operator ==(DebugReportCallback left, DebugReportCallback right)
         {
             return left.Equals(right);
@@ -5634,6 +5761,11 @@ namespace SharpVulkan
 
         internal IntPtr NativeHandle;
 
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is ObjectTable objectTable && Equals(objectTable);
+        }
+
         public static bool operator ==(ObjectTable left, ObjectTable right)
         {
             return left.Equals(right);
@@ -5665,6 +5797,11 @@ namespace SharpVulkan
         public readonly static IndirectCommandsLayout Null = new IndirectCommandsLayout();
 
         internal IntPtr NativeHandle;
+
+        public override bool Equals(object obj)
+        {
+            return !(obj is null) && obj is IndirectCommandsLayout layout && Equals(layout);
+        }
 
         public static bool operator ==(IndirectCommandsLayout left, IndirectCommandsLayout right)
         {

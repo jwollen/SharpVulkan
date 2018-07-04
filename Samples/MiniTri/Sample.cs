@@ -23,9 +23,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows.Forms;
 using SharpDX;
-using SharpDX.Text;
 using SharpDX.Windows;
 
 namespace MiniTri
@@ -51,8 +51,6 @@ namespace MiniTri
         private Image[] backBuffers;
         private ImageView[] backBufferViews;
         private uint currentBackBufferIndex;
-        private Image depthStencilBuffer;
-        private ImageView depthStencilView;
 
         private CommandPool commandPool;
         private CommandBuffer commandBuffer;

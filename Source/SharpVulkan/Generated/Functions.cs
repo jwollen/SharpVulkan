@@ -193,7 +193,9 @@ namespace SharpVulkan
         internal static extern unsafe void vkDebugReportMessageEXT(Instance instance, uint flags, DebugReportObjectType objectType, ulong @object, PointerSize location, int messageCode, byte* layerPrefix, byte* message);
     }
 
+#pragma warning disable CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
     public partial struct PhysicalDevice
+#pragma warning restore CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
     {
         public unsafe void GetFeatures(out PhysicalDeviceFeatures features)
         {
@@ -603,7 +605,9 @@ namespace SharpVulkan
         internal static extern unsafe Result vkGetPhysicalDeviceSurfaceCapabilities2EXT(PhysicalDevice physicalDevice, Surface surface, SurfaceCapabilities2* surfaceCapabilities);
     }
 
+#pragma warning disable CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
     public partial struct Device
+#pragma warning restore CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
     {
         public unsafe IntPtr GetProcAddress(byte* name)
         {
@@ -1585,7 +1589,9 @@ namespace SharpVulkan
         internal static extern unsafe Result vkGetSwapchainCounterEXT(Device device, Swapchain swapchain, SurfaceCounterFlags counter, ulong* counterValue);
     }
 
+#pragma warning disable CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
     public partial struct Queue
+#pragma warning restore CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
     {
         public unsafe void Submit(uint submitCount, SubmitInfo* submits, Fence fence)
         {
@@ -1627,7 +1633,9 @@ namespace SharpVulkan
         internal static extern unsafe Result vkQueuePresentKHR(Queue queue, PresentInfo* presentInfo);
     }
 
+#pragma warning disable CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
     public partial struct CommandBuffer
+#pragma warning restore CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
     {
         public unsafe void Begin(ref CommandBufferBeginInfo beginInfo)
         {
